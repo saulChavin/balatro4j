@@ -1,2 +1,2 @@
-rootProject.name = "Balatro"
+rootProject.name = "Balatro4j"
 
