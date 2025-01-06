@@ -17,6 +17,10 @@ class Lock {
         locked.remove(item);
     }
 
+    public void lock(Named named) {
+        lock(named.getName());
+    }
+
     public boolean isLocked(Named named) {
         return isLocked(named.getName());
     }

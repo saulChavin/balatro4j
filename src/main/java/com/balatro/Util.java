@@ -15,7 +15,6 @@ public class Util {
         double num = 1;
         for (int i = s.length(); i > 0; i--) {
             num = fract(1.1239285023 / num * s.charAt(i - 1) * 3.141592653589793 + 3.141592653589793 * i);
-            System.out.println(num);
         }
         if (Double.isNaN(num)) return Double.NaN;
         return num;

@@ -1,25 +1,23 @@
 package com.balatro;
 
-import java.math.BigInteger;
-
 public class LuaRandom {
     public static final long MAX_UINT64 = Long.MAX_VALUE;
 
     public final long[] state = new long[4];
 
     public LuaRandom(double d) {
-        BigInteger r = new BigInteger("11090601", 16);
+        long r = 0x11090601;
         for (int i = 0; i < 4; i++) {
-            BigInteger m = BigInteger.ONE.shiftLeft(r.and(BigInteger.valueOf(255)).intValue());
+            long m = 1L << (r & 255);
 
-            r = r.shiftRight(8);
+            r >>= 8;
             d = d * 3.14159265358979323846;
             d = d + 2.7182818284590452354;
 
             DoubleLong u = new DoubleLong(d);
 
-            if (new BigInteger(String.valueOf(u.getUlong())).compareTo(m) < 0) {
-                u.setUlong(u.getUlong() + m.longValue());
+            if(u.getUlong() < m){
+                u.setUlong(u.getUlong() + m);
             }
 
             state[i] = u.getUlong();

@@ -1,12 +1,13 @@
 package com.balatro;
 
-import com.balatro.enums.Deck;
-import com.balatro.enums.Stake;
-import com.balatro.enums.Version;
+import com.balatro.enums.*;
 import com.balatro.structs.*;
+import com.balatro.structs.Card;
+import com.balatro.structs.Pack;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -88,33 +89,45 @@ public class Balatro {
     }
 
     public static void main(String[] args) {
-        generate();
+        ForkJoinTask<?> submit = ForkJoinPool.commonPool().submit(Balatro::generate);
+        ForkJoinPool.commonPool().submit(Balatro::generate);
+        ForkJoinPool.commonPool().submit(Balatro::generate);
+        ForkJoinPool.commonPool().submit(Balatro::generate);
+        ForkJoinPool.commonPool().submit(Balatro::generate);
+        ForkJoinPool.commonPool().submit(Balatro::generate);
+        ForkJoinPool.commonPool().submit(Balatro::generate);
+        ForkJoinPool.commonPool().submit(Balatro::generate);
+
+        while (!submit.isDone()){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     static AtomicInteger count = new AtomicInteger(0);
 
     static void generate() {
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100_000; i++) {
             var seed = generateRandomString();
             var result = new Balatro()
                     .performAnalysis(seed);
 
-            if (result.contains("The Soul")) {
-                count.incrementAndGet();
-                System.out.println(seed);
+            if (result.hasLegendary(1, LegendaryJoker.Perke)  && result.hasInShop(1, RareJoker.Blueprint)) {
+                System.err.println(seed);
             }
         }
     }
 
-    public String performAnalysis(String seed) {
-        return performAnalysis(8, List.of(15, 50, 50, 50, 50, 50, 50, 50), Deck.RED_DECK, Stake.White_Stake, Version.v_100n, seed);
+    public Analysis performAnalysis(String seed) {
+        return performAnalysis(8, List.of(15, 50, 50, 50, 50, 50, 50, 50), Deck.RED_DECK, Stake.White_Stake, Version.v_101f, seed);
     }
 
-    public String performAnalysis(int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version, String seed) {
+    public Analysis performAnalysis(int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version, String seed) {
         boolean[] selectedOptions = new boolean[61];
         Arrays.fill(selectedOptions, true);
-
-        StringBuilder output = new StringBuilder();
 
         Functions inst = new Functions(seed);
         inst.setParams(new InstanceParams(deck, stake, false, version.getVersion()));
@@ -139,14 +152,18 @@ public class Balatro {
         for (int i = 0; i < options.size(); i++) {
             if (!selectedOptions[i]) inst.lock(options.get(i));
         }
+
         inst.setDeck(deck);
+        var antes = new ArrayList<Ante>(options.size());
 
         for (int a = 1; a <= ante; a++) {
             inst.initUnlocks(a, false);
-            output.append("==ANTE ").append(a).append("==\n");
-            output.append("Boss: ").append(inst.nextBoss(a)).append("\n");
-            String voucher = inst.nextVoucher(a);
-            output.append("Voucher: ").append(voucher).append("\n");
+            var play = new Ante(a, inst);
+            antes.add(play);
+            play.setBoss(inst.nextBoss(a));
+            var voucher = inst.nextVoucher(a);
+            play.setVoucher(voucher);
+
             inst.lock(voucher);
             // Unlock next level voucher
             for (int i = 0; i < Functions.VOUCHERS.size(); i += 2) {
@@ -157,115 +174,149 @@ public class Balatro {
                     }
                 }
             }
-            output.append("Tags: ").append(inst.nextTag(a)).append(", ").append(inst.nextTag(a)).append("\n");
 
-            output.append("Shop Queue: \n");
+            play.addTag(inst.nextTag(a));
+            play.addTag(inst.nextTag(a));
+
             for (int q = 1; q <= cardsPerAnte.get(a - 1); q++) {
-                output.append(q).append(") ");
+                var sticker = "";
+
                 ShopItem item = inst.nextShopItem(a);
+
                 if (item.getType().equals("Joker")) {
-                    if (item.getJokerData().getStickers().isEternal()) output.append("Eternal ");
-                    if (item.getJokerData().getStickers().isPerishable()) output.append("Perishable ");
-                    if (item.getJokerData().getStickers().isRental()) output.append("Rental ");
-                    if (!item.getJokerData().getEdition().equals("No Edition"))
-                        output.append(item.getJokerData().getEdition()).append(" ");
+                    if (item.getJokerData().getStickers().isEternal()) {
+                        sticker = "Eternal ";
+                    }
+                    if (item.getJokerData().getStickers().isPerishable()) {
+                        sticker = "Perishable ";
+                    }
+                    if (item.getJokerData().getStickers().isRental()) {
+                        sticker = "Rental ";
+                    }
+                    if (!item.getJokerData().getEdition().equals("No Edition")) {
+                        sticker = item.getJokerData().getEdition();
+                    }
                 }
-                output.append(item.getItem()).append("\n");
+
+                play.addToQueue(item, sticker);
             }
 
-            output.append("\nPacks: \n");
             int numPacks = (a == 1) ? 4 : 6;
-            for (int p = 1; p <= numPacks; p++) {
-                String pack = inst.nextPack(a);
-                output.append(pack).append(" - ");
-                Pack packInfo = inst.packInfo(pack);
-                if (packInfo.getType().equals("Celestial Pack")) {
-                    List<String> cards = inst.nextCelestialPack(packInfo.getSize(), a);
-                    for (int c = 0; c < packInfo.getSize(); c++) {
-                        output.append(cards.get(c));
-                        output.append((c + 1 != packInfo.getSize()) ? ", " : "");
-                    }
-                }
-                if (packInfo.getType().equals("Arcana Pack")) {
-                    List<String> cards = inst.nextArcanaPack(packInfo.getSize(), a);
-                    for (int c = 0; c < packInfo.getSize(); c++) {
-                        output.append(cards.get(c));
-                        output.append((c + 1 != packInfo.getSize()) ? ", " : "");
-                    }
-                }
-                if (packInfo.getType().equals("Spectral Pack")) {
-                    List<String> cards = inst.nextSpectralPack(packInfo.getSize(), a);
-                    for (int c = 0; c < packInfo.getSize(); c++) {
-                        output.append(cards.get(c));
-                        output.append((c + 1 != packInfo.getSize()) ? ", " : "");
-                    }
-                }
-                if (packInfo.getType().equals("Buffoon Pack")) {
-                    List<JokerData> cards = inst.nextBuffoonPack(packInfo.getSize(), a);
-                    for (int c = 0; c < packInfo.getSize(); c++) {
-                        JokerData joker = cards.get(c);
-                        if (joker.getStickers().isEternal()) output.append("Eternal ");
-                        if (joker.getStickers().isPerishable()) output.append("Perishable ");
-                        if (joker.getStickers().isRental()) output.append("Rental ");
-                        if (!joker.getEdition().equals("No Edition")) output.append(joker.getEdition()).append(" ");
-                        output.append(joker.getJoker());
-                        output.append((c + 1 != packInfo.getSize()) ? ", " : "");
-                    }
-                }
-                if (packInfo.getType().equals("Standard Pack")) {
-                    List<Card> cards = inst.nextStandardPack(packInfo.getSize(), a);
-                    for (int c = 0; c < packInfo.getSize(); c++) {
-                        Card card = cards.get(c);
-                        if (!card.getSeal().equals("No Seal")) output.append(card.getSeal()).append(" ");
-                        if (!card.getEdition().equals("No Edition")) output.append(card.getEdition()).append(" ");
-                        if (!card.getEnhancement().equals("No Enhancement"))
-                            output.append(card.getEnhancement()).append(" ");
-                        char rank = card.getBase().charAt(2);
-                        switch (rank) {
-                            case 'T':
-                                output.append("10");
-                                break;
-                            case 'J':
-                                output.append("Jack");
-                                break;
-                            case 'Q':
-                                output.append("Queen");
-                                break;
-                            case 'K':
-                                output.append("King");
-                                break;
-                            case 'A':
-                                output.append("Ace");
-                                break;
-                            default:
-                                output.append(rank);
-                                break;
-                        }
-                        output.append(" of ");
-                        char suit = card.getBase().charAt(0);
-                        switch (suit) {
-                            case 'C':
-                                output.append("Clubs");
-                                break;
-                            case 'S':
-                                output.append("Spades");
-                                break;
-                            case 'D':
-                                output.append("Diamonds");
-                                break;
-                            case 'H':
-                                output.append("Hearts");
-                                break;
-                        }
-                        output.append((c + 1 != packInfo.getSize()) ? ", " : "");
-                    }
-                }
-                output.append("\n");
-            }
 
-            output.append("\n");
+            for (int p = 1; p <= numPacks; p++) {
+                var pack = inst.nextPack(a);
+                Pack packInfo = inst.packInfo(pack);
+                Set<String> options = new HashSet<>();
+
+                switch (packInfo.getType()) {
+                    case "Celestial Pack" -> {
+                        List<String> cards = inst.nextCelestialPack(packInfo.getSize(), a);
+                        for (int c = 0; c < packInfo.getSize(); c++) {
+                            options.add(cards.get(c));
+                        }
+                    }
+                    case "Arcana Pack" -> {
+                        List<String> cards = inst.nextArcanaPack(packInfo.getSize(), a);
+                        for (int c = 0; c < packInfo.getSize(); c++) {
+                            options.add(cards.get(c));
+                        }
+                    }
+                    case "Spectral Pack" -> {
+                        List<String> cards = inst.nextSpectralPack(packInfo.getSize(), a);
+                        for (int c = 0; c < packInfo.getSize(); c++) {
+                            options.add(cards.get(c));
+                        }
+                    }
+                    case "Buffoon Pack" -> {
+                        List<JokerData> cards = inst.nextBuffoonPack(packInfo.getSize(), a);
+
+                        for (int c = 0; c < packInfo.getSize(); c++) {
+                            JokerData joker = cards.get(c);
+                            var sticker = getSticker(joker);
+
+                            options.add(sticker + " " + joker.getJoker());
+                        }
+                    }
+                    case "Standard Pack" -> {
+                        List<Card> cards = inst.nextStandardPack(packInfo.getSize(), a);
+
+                        for (int c = 0; c < packInfo.getSize(); c++) {
+                            Card card = cards.get(c);
+                            StringBuilder output = new StringBuilder();
+                            if (!card.getSeal().equals("No Seal")) {
+                                output.append(card.getSeal()).append(" ");
+                            }
+                            if (!card.getEdition().equals("No Edition")) {
+                                output.append(card.getEdition()).append(" ");
+                            }
+                            if (!card.getEnhancement().equals("No Enhancement")) {
+                                output.append(card.getEnhancement()).append(" ");
+                            }
+
+                            char rank = card.getBase().charAt(2);
+
+                            switch (rank) {
+                                case 'T':
+                                    output.append("10");
+                                    break;
+                                case 'J':
+                                    output.append("Jack");
+                                    break;
+                                case 'Q':
+                                    output.append("Queen");
+                                    break;
+                                case 'K':
+                                    output.append("King");
+                                    break;
+                                case 'A':
+                                    output.append("Ace");
+                                    break;
+                                default:
+                                    output.append(rank);
+                                    break;
+                            }
+                            output.append(" of ");
+                            char suit = card.getBase().charAt(0);
+                            switch (suit) {
+                                case 'C':
+                                    output.append("Clubs");
+                                    break;
+                                case 'S':
+                                    output.append("Spades");
+                                    break;
+                                case 'D':
+                                    output.append("Diamonds");
+                                    break;
+                                case 'H':
+                                    output.append("Hearts");
+                                    break;
+                            }
+                            options.add(output.toString());
+                        }
+                    }
+                }
+
+                play.addPack(packInfo, options);
+            }
         }
 
-        return output.toString();
+        return new Analysis(antes);
+    }
+
+    private static String getSticker(JokerData joker) {
+        var sticker = "";
+        if (joker.getStickers().isEternal()) {
+            sticker = "Eternal ";
+        }
+        if (joker.getStickers().isPerishable()) {
+            sticker = "Perishable ";
+        }
+        if (joker.getStickers().isRental()) {
+            sticker = "Rental ";
+        }
+        if (!joker.getEdition().equals("No Edition")) {
+            sticker = joker.getEdition();
+        }
+        return sticker;
     }
 }
