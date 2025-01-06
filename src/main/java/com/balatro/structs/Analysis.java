@@ -18,4 +18,9 @@ public record Analysis(List<Ante> antes) {
     public boolean hasInShop(int ante, Named named) {
         return antes.get(ante - 1).hasInShop(named.getName());
     }
+
+    public long countLegendary() {
+        return antes.stream()
+                .filter(a -> a.containsInPack("The Soul")).count();
+    }
 }

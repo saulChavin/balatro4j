@@ -98,9 +98,18 @@ public class Balatro {
         ForkJoinPool.commonPool().submit(Balatro::generate);
         ForkJoinPool.commonPool().submit(Balatro::generate);
 
-        while (!submit.isDone()){
+        int time = 0;
+
+        while (!submit.isDone()) {
             try {
                 Thread.sleep(1000);
+
+                time++;
+
+                if (time % 10 == 0) {
+                    System.out.println("Ops per second: " + count.getAndSet(0) / 10);
+                }
+
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -111,12 +120,17 @@ public class Balatro {
 
     static void generate() {
         for (int i = 0; i < 100_000; i++) {
+            count.incrementAndGet();
             var seed = generateRandomString();
             var result = new Balatro()
                     .performAnalysis(seed);
 
-            if (result.hasLegendary(1, LegendaryJoker.Perke)  && result.hasInShop(1, RareJoker.Blueprint)) {
+            if (result.hasLegendary(1, LegendaryJoker.Perke) && result.hasInShop(1, RareJoker.Blueprint)) {
                 System.err.println(seed);
+            }
+
+            if (result.countLegendary() > 3) {
+                System.out.println(seed);
             }
         }
     }

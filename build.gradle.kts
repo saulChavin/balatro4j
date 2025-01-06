@@ -1,5 +1,9 @@
+import org.gradle.internal.declarativedsl.parsing.main
+
 plugins {
     id("java")
+    id("application")
+    id("org.graalvm.buildtools.native") version ("0.10.4")
 }
 
 group = "com.alex"
@@ -24,4 +28,14 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+application {
+    mainClass.set("com.balatro.Balatro")
+}
+
+graalvmNative {
+    binaries.all {
+        resources.autodetect()
+    }
 }
