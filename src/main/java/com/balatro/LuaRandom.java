@@ -1,12 +1,15 @@
 package com.balatro;
 
-public class LuaRandom {
-    public static final long MAX_UINT64 = Long.MAX_VALUE;
 
+public class LuaRandom {
+
+    public static final long MAX_UINT64 = Long.MAX_VALUE;
     public final long[] state = new long[4];
+
 
     public LuaRandom(double d) {
         long r = 0x11090601;
+
         for (int i = 0; i < 4; i++) {
             long m = 1L << (r & 255);
 
@@ -14,9 +17,9 @@ public class LuaRandom {
             d = d * 3.14159265358979323846;
             d = d + 2.7182818284590452354;
 
-            DoubleLong u = new DoubleLong(d);
+            var u = new DoubleLong(d);
 
-            if(u.getUlong() < m){
+            if (u.getUlong() < m) {
                 u.setUlong(u.getUlong() + m);
             }
 
@@ -26,16 +29,6 @@ public class LuaRandom {
         for (int i = 0; i < 10; i++) {
             _randInt();
         }
-
-    }
-
-    public static void main(String[] args) {
-        System.out.println("Result: "+new LuaRandom(0).random());
-        System.out.println("Result: 0.7942062924312");
-    }
-
-    public LuaRandom() {
-        this(0);
     }
 
     public long _randInt() {

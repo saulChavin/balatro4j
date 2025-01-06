@@ -5,6 +5,7 @@ import com.balatro.enums.Boss;
 import com.balatro.enums.LegendaryJoker;
 import com.balatro.enums.Tag;
 import com.balatro.enums.Voucher;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,7 +16,7 @@ public class Ante {
 
     private final int id;
     private final Functions functions;
-    private final Set<SearchableItem> shopQueue;
+    private final List<SearchableItem> shopQueue;
     private final Set<String> shop;
     private final Set<Tag> tags;
     private Voucher voucher;
@@ -26,7 +27,7 @@ public class Ante {
         this.id = id;
         this.functions = functions;
         this.tags = new HashSet<>(2);
-        this.shopQueue = new HashSet<>(20);
+        this.shopQueue = new ArrayList<>(20);
         this.shop = new HashSet<>(20);
         this.packs = new ArrayList<>(10);
     }
@@ -35,11 +36,25 @@ public class Ante {
         return shop.contains(name);
     }
 
+    public boolean hasInShop(String named, int index) {
+        if (index > shopQueue.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < index; i++) {
+            if (shopQueue.get(i).item.equalsIgnoreCase(named)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void addTag(Tag tag) {
         tags.add(tag);
     }
 
-    public void addToQueue(ShopItem value, String sticker) {
+    public void addToQueue(@NotNull ShopItem value, String sticker) {
         shop.add(value.getItem());
         shopQueue.add(new SearchableItem(value.getItem(), sticker));
     }
@@ -86,7 +101,7 @@ public class Ante {
         return shop;
     }
 
-    public Set<SearchableItem> getShopQueue() {
+    public List<SearchableItem> getShopQueue() {
         return shopQueue;
     }
 

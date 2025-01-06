@@ -4,6 +4,7 @@ import com.balatro.enums.*;
 import com.balatro.enums.Card;
 import com.balatro.enums.Pack;
 import com.balatro.structs.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -31,45 +32,44 @@ public class Functions extends Lock {
     public static final List<CommonJoker100> COMMON_JOKERS_100 = Arrays.asList(CommonJoker100.values());
     public static final List<Boss> BOSSES = Arrays.asList(Boss.values());
 
-    private InstanceParams params;
+    private final InstanceParams params;
     private final Cache cache;
-    private LuaRandom rng;
     public final String seed;
     public final double hashedSeed;
 
-    public Functions(String s) {
+    public Functions(String s, InstanceParams params) {
         seed = s;
         hashedSeed = pseudohash(s);
-        params = new InstanceParams();
-        rng = new LuaRandom(0);
+        this.params = params;
         cache = new Cache();
     }
 
-    public void setParams(InstanceParams params) {
-        this.params = params;
+    private LuaRandom getRandom(String id) {
+        return new LuaRandom(getNode(id));
     }
 
-    public double getNode(String ID) {
-        if (!cache.nodes.containsKey(ID)) {
-            cache.nodes.put(ID, pseudohash(ID + seed));
+    private double getNode(String ID) {
+        var c = cache.nodes.get(ID);
+
+        if (c == null) {
+            c = pseudohash(ID + seed);
+            cache.nodes.put(ID, c);
         }
-        cache.nodes.put(ID, round13((cache.nodes.get(ID) * 1.72431234 + 2.134453429141) % 1));
-        return (cache.nodes.get(ID) + hashedSeed) / 2;
+
+        var value = round13((c * 1.72431234 + 2.134453429141) % 1);
+
+        cache.nodes.put(ID, value);
+
+        return (value + hashedSeed) / 2;
     }
 
-    public double random(String ID) {
-        rng = new LuaRandom(getNode(ID));
+    private double random(String ID) {
+        var rng = getRandom(ID);
         return rng.random();
     }
 
-    public int randint(String ID, int min, int max) {
-        rng = new LuaRandom(getNode(ID));
-        return rng.randint(min, max);
-    }
-
-
     public Pack randweightedchoice(String ID, List<Pack> items) {
-        rng = new LuaRandom(getNode(ID));
+        var rng = getRandom(ID);
         double poll = rng.random() * items.getFirst().getValue();
         int idx = 1;
         double weight = 0;
@@ -82,15 +82,18 @@ public class Functions extends Lock {
 
 
     public <T extends Named> T randchoice(String ID, List<T> items) {
-        rng = new LuaRandom(getNode(ID));
+        var rng = getRandom(ID);
         T item = items.get(rng.randint(0, items.size() - 1));
+
         if (!params.showman && isLocked(item) || "RETRY".equals(item.getName())) {
             int resample = 2;
             while (true) {
-                rng = new LuaRandom(getNode(ID + "_resample" + resample));
+                rng = getRandom(ID + "_resample" + resample);
                 item = items.get(rng.randint(0, items.size() - 1));
                 resample++;
-                if ((!isLocked(item) && !"RETRY".equals(item.getName())) || resample > 1000) return item;
+                if ((!isLocked(item) && !"RETRY".equals(item.getName())) || resample > 1000) {
+                    return item;
+                }
             }
         }
         return item;
@@ -134,32 +137,50 @@ public class Functions extends Lock {
 
         // Get rarity
         String rarity;
+
         switch (source) {
             case "sou" -> rarity = "4";
             case "wra", "rta" -> rarity = "3";
             case "uta" -> rarity = "2";
             default -> {
                 double rarityPoll = random("rarity" + ante + source);
-                if (rarityPoll > 0.95) rarity = "3";
-                else if (rarityPoll > 0.7) rarity = "2";
-                else rarity = "1";
+                if (rarityPoll > 0.95) {
+                    rarity = "3";
+                } else if (rarityPoll > 0.7) {
+                    rarity = "2";
+                } else {
+                    rarity = "1";
+                }
             }
         }
 
         // Get edition
         int editionRate = 1;
-        if (isVoucherActive("Glow Up")) editionRate = 4;
-        else if (isVoucherActive("Hone")) editionRate = 2;
+
+        if (isVoucherActive("Glow Up")) {
+            editionRate = 4;
+        } else if (isVoucherActive("Hone")) {
+            editionRate = 2;
+        }
+
         String edition;
         double editionPoll = random("edi" + source + ante);
-        if (editionPoll > 0.997) edition = "Negative";
-        else if (editionPoll > 1 - 0.006 * editionRate) edition = "Polychrome";
-        else if (editionPoll > 1 - 0.02 * editionRate) edition = "Holographic";
-        else if (editionPoll > 1 - 0.04 * editionRate) edition = "Foil";
-        else edition = "No Edition";
+
+        if (editionPoll > 0.997) {
+            edition = "Negative";
+        } else if (editionPoll > 1 - 0.006 * editionRate) {
+            edition = "Polychrome";
+        } else if (editionPoll > 1 - 0.02 * editionRate) {
+            edition = "Holographic";
+        } else if (editionPoll > 1 - 0.04 * editionRate) {
+            edition = "Foil";
+        } else {
+            edition = "No Edition";
+        }
 
         // Get next joker
         Named joker;
+
         switch (rarity) {
             case "4" -> {
                 if (params.version > 10099) {
@@ -264,27 +285,36 @@ public class Functions extends Lock {
     }
 
     public ShopItem nextShopItem(int ante) {
-        ShopInstance shop = getShopInstance();
+        var shop = getShopInstance();
+
         double cdtPoll = random("cdt" + ante) * shop.getTotalRate();
+
         String type;
-        if (cdtPoll < shop.jokerRate) type = "Joker";
-        else {
+
+        if (cdtPoll < shop.jokerRate) {
+            type = "Joker";
+        } else {
             cdtPoll -= shop.jokerRate;
-            if (cdtPoll < shop.tarotRate) type = "Tarot";
-            else {
+            if (cdtPoll < shop.tarotRate) {
+                type = "Tarot";
+            } else {
                 cdtPoll -= shop.tarotRate;
-                if (cdtPoll < shop.planetRate) type = "Planet";
-                else {
+                if (cdtPoll < shop.planetRate) {
+                    type = "Planet";
+                } else {
                     cdtPoll -= shop.planetRate;
-                    if (cdtPoll < shop.playingCardRate) type = "Playing Card";
-                    else type = "Spectral";
+                    if (cdtPoll < shop.playingCardRate) {
+                        type = "Playing Card";
+                    } else {
+                        type = "Spectral";
+                    }
                 }
             }
         }
 
         switch (type) {
             case "Joker" -> {
-                JokerData jkr = nextJoker("sho", ante, true);
+                var jkr = nextJoker("sho", ante, true);
                 return new ShopItem(type, jkr.joker, jkr);
             }
             case "Tarot" -> {
@@ -297,6 +327,7 @@ public class Functions extends Lock {
                 return new ShopItem(type, nextSpectral("sho", ante, false));
             }
         }
+
         return new ShopItem();
     }
 
@@ -309,7 +340,7 @@ public class Functions extends Lock {
         return randweightedchoice("shop_pack" + ante, PACKS);
     }
 
-    public com.balatro.structs.Pack packInfo(Pack p) {
+    public com.balatro.structs.Pack packInfo(@NotNull Pack p) {
         var pack = p.getName();
         if (pack.charAt(0) == 'M') {
             return new com.balatro.structs.Pack(pack.substring(5), (pack.charAt(5) == 'B' || pack.charAt(6) == 'p') ? 4 : 5, 2);
@@ -323,6 +354,7 @@ public class Functions extends Lock {
     public com.balatro.structs.Card nextStandardCard(int ante) {
         // Enhancement
         String enhancement;
+
         if (random("stdset" + ante) <= 0.6) {
             enhancement = "No Enhancement";
         } else {
@@ -334,21 +366,35 @@ public class Functions extends Lock {
 
         // Edition
         String edition;
+
         double editionPoll = random("standard_edition" + ante);
-        if (editionPoll > 0.988) edition = "Polychrome";
-        else if (editionPoll > 0.96) edition = "Holographic";
-        else if (editionPoll > 0.92) edition = "Foil";
-        else edition = "No Edition";
+
+        if (editionPoll > 0.988) {
+            edition = "Polychrome";
+        } else if (editionPoll > 0.96) {
+            edition = "Holographic";
+        } else if (editionPoll > 0.92) {
+            edition = "Foil";
+        } else {
+            edition = "No Edition";
+        }
 
         // Seal
         String seal;
-        if (random("stdseal" + ante) <= 0.8) seal = "No Seal";
-        else {
+
+        if (random("stdseal" + ante) <= 0.8) {
+            seal = "No Seal";
+        } else {
             double sealPoll = random("stdsealtype" + ante);
-            if (sealPoll > 0.75) seal = "Red Seal";
-            else if (sealPoll > 0.5) seal = "Blue Seal";
-            else if (sealPoll > 0.25) seal = "Gold Seal";
-            else seal = "Purple Seal";
+            if (sealPoll > 0.75) {
+                seal = "Red Seal";
+            } else if (sealPoll > 0.5) {
+                seal = "Blue Seal";
+            } else if (sealPoll > 0.25) {
+                seal = "Gold Seal";
+            } else {
+                seal = "Purple Seal";
+            }
         }
 
         return new com.balatro.structs.Card(base.getName(), enhancement, edition, seal);
@@ -356,23 +402,39 @@ public class Functions extends Lock {
 
     public List<String> nextArcanaPack(int size, int ante) {
         List<String> pack = new ArrayList<>(size);
+
         for (int i = 0; i < size; i++) {
             if (isVoucherActive("Omen Globe") && random("omen_globe") > 0.8) {
                 pack.add(nextSpectral("ar2", ante, true));
-            } else pack.add(nextTarot("ar1", ante, true));
-            if (!params.showman) lock(pack.get(i));
+            } else {
+                pack.add(nextTarot("ar1", ante, true));
+            }
+            if (!params.showman) {
+                lock(pack.get(i));
+            }
         }
-        for (int i = 0; i < size; i++) unlock(pack.get(i));
+
+        for (int i = 0; i < size; i++) {
+            unlock(pack.get(i));
+        }
+
         return pack;
     }
 
     public List<String> nextCelestialPack(int size, int ante) {
         List<String> pack = new ArrayList<>(size);
+
         for (int i = 0; i < size; i++) {
             pack.add(nextPlanet("pl1", ante, true));
-            if (!params.showman) lock(pack.get(i));
+            if (!params.showman) {
+                lock(pack.get(i));
+            }
         }
-        for (int i = 0; i < size; i++) unlock(pack.get(i));
+
+        for (int i = 0; i < size; i++) {
+            unlock(pack.get(i));
+        }
+
         return pack;
     }
 
@@ -381,7 +443,10 @@ public class Functions extends Lock {
 
         for (int i = 0; i < size; i++) {
             pack.add(nextSpectral("spe", ante, true));
-            if (!params.isShowman()) lock(pack.get(i));
+
+            if (!params.isShowman()) {
+                lock(pack.get(i));
+            }
         }
 
         for (int i = 0; i < size; i++) {
@@ -406,11 +471,14 @@ public class Functions extends Lock {
 
         for (int i = 0; i < size; i++) {
             pack.add(nextJoker("buf", ante, true));
-            if (!params.isShowman()) lock(pack.get(i).getJoker());
+            if (!params.isShowman()) {
+                lock(pack.get(i).getJoker());
+            }
         }
         for (int i = 0; i < size; i++) {
             unlock(pack.get(i).getJoker());
         }
+
         return pack;
     }
 

@@ -122,11 +122,16 @@ public class Balatro {
         for (int i = 0; i < 100_000; i++) {
             count.incrementAndGet();
             var seed = generateRandomString();
+
+            long init = System.currentTimeMillis();
             var result = new Balatro()
                     .performAnalysis(seed);
 
-            if (result.hasLegendary(1, LegendaryJoker.Perke) && result.hasInShop(1, RareJoker.Blueprint)) {
-                System.err.println(seed);
+            long end = System.currentTimeMillis();
+
+            if (result.hasLegendary(1, LegendaryJoker.Perke)
+                    && result.hasInShop(1, RareJoker.Blueprint, 4)) {
+                System.err.println(seed + " " + (end - init) + " ms");
             }
 
             if (result.countLegendary() > 3) {
@@ -143,8 +148,7 @@ public class Balatro {
         boolean[] selectedOptions = new boolean[61];
         Arrays.fill(selectedOptions, true);
 
-        Functions inst = new Functions(seed);
-        inst.setParams(new InstanceParams(deck, stake, false, version.getVersion()));
+        Functions inst = new Functions(seed, new InstanceParams(deck, stake, false, version.getVersion()));
         inst.initLocks(1, false, false);
         inst.lock("Overstock Plus");
         inst.lock("Liquidation");

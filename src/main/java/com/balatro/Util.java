@@ -3,10 +3,6 @@ package com.balatro;
 
 public class Util {
 
-    public static void main(String[] args) {
-        System.out.println(pseudohash("hello"));
-    }
-
     public static double fract(double n) {
         return n - Math.floor(n);
     }
@@ -27,7 +23,7 @@ public class Util {
     public static double round13(double x) {
         double tentative = Math.floor(x * inv_prec) / inv_prec;
         double truncated = (x * two_inv_prec % 1.0) * five_inv_prec;
-        if (tentative != x && tentative != Math.nextAfter(x, 1) && truncated % 1.0 >= 0.5) {
+        if (tentative != x && truncated % 1.0 >= 0.5 && tentative != Math.nextAfter(x, 1)) {
             return (Math.floor(x * inv_prec) + 1) / inv_prec;
         }
         return tentative;
