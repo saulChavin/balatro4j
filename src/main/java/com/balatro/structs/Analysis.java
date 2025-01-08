@@ -27,4 +27,8 @@ public record Analysis(List<Ante> antes) {
         return antes.stream()
                 .filter(a -> a.containsInPack("The Soul")).count();
     }
+
+    public long countLegendary(int ante) {
+        return antes.get(ante - 1).countInPack("The Soul");
+    }
 }

@@ -107,19 +107,21 @@ public class Balatro {
                 time++;
 
                 if (time % 10 == 0) {
-                    System.out.println("Ops per second: " + count.getAndSet(0) / 10);
+                    System.out.println("Ops per second: " + count.get() / time + " ops/s seeds analyzed: " + count.get());
                 }
 
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
+
+        System.out.println("Ops per second: " + (count.get() / time) + " ops/s seeds analyzed: " + count.get());
     }
 
     static AtomicInteger count = new AtomicInteger(0);
 
     static void generate() {
-        for (int i = 0; i < 100_000; i++) {
+        for (int i = 0; i < 1_000_000; i++) {
             count.incrementAndGet();
             var seed = generateRandomString();
 
@@ -127,10 +129,11 @@ public class Balatro {
             var result = new Balatro()
                     .performAnalysis(seed);
 
-            long end = System.currentTimeMillis();
+            if (result.hasLegendary(1, LegendaryJoker.Perke) &&
+                    result.hasLegendary(1, LegendaryJoker.Triboulet) &&
+                    (result.hasInShop(1, RareJoker.Blueprint, 4) || result.hasInShop(1, RareJoker.Invisible_Joker, 4))) {
+                long end = System.currentTimeMillis();
 
-            if (result.hasLegendary(1, LegendaryJoker.Perke)
-                    && result.hasInShop(1, RareJoker.Blueprint, 4)) {
                 System.err.println(seed + " " + (end - init) + " ms");
             }
 

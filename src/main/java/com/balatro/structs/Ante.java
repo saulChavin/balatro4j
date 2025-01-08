@@ -87,6 +87,16 @@ public class Ante {
         return false;
     }
 
+    public int countInPack(String name) {
+        int count = 0;
+        for (SearchablePack pack : packs) {
+            if (pack.options.contains(name)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public record SearchableItem(String item, String sticker) {
     }
 
