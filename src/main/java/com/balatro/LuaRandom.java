@@ -35,31 +35,26 @@ public class LuaRandom {
         long z;
         long r = 0;
 
-        // For state[0]
         z = state[0];
         z = (((z << 31) ^ z) >>> 45) ^ ((z & (MAX_UINT64 << 1)) << 18);
         r ^= z;
         state[0] = z;
 
-        // For state[1]
         z = state[1];
         z = (((z << 19) ^ z) >>> 30) ^ ((z & (MAX_UINT64 << 6)) << 28);
         r ^= z;
         state[1] = z;
 
-        // For state[2]
         z = state[2];
         z = (((z << 24) ^ z) >>> 48) ^ ((z & (MAX_UINT64 << 9)) << 7);
         r ^= z;
         state[2] = z;
 
-        // For state[3]
         z = state[3];
         z = (((z << 21) ^ z) >>> 39) ^ ((z & (MAX_UINT64 << 17)) << 8);
         r ^= z;
         state[3] = z;
 
-        // Return the combined result
         return r;
     }
 

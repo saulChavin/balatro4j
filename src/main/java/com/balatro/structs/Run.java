@@ -2,13 +2,28 @@ package com.balatro.structs;
 
 import com.balatro.enums.LegendaryJoker;
 import com.balatro.enums.Named;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
-public record Analysis(List<Ante> antes) {
+public record Run(String seed, List<Ante> antes) {
 
-    public boolean hasLegendary(int ante, LegendaryJoker joker) {
-        return antes.get(ante - 1).hasLegendary(joker);
+    static final ObjectMapper mapper = new ObjectMapper()
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+    public String toJson() {
+        try {
+            return mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean hasLegendary(int ante, LegendaryJoker... jokers) {
+        return antes.get(ante - 1).hasLegendary(jokers);
     }
 
     public boolean hasInPack(int ante, String name) {

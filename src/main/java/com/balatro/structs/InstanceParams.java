@@ -3,6 +3,7 @@ package com.balatro.structs;
 import com.balatro.enums.Deck;
 import com.balatro.enums.Stake;
 import com.balatro.enums.Version;
+import com.balatro.enums.Voucher;
 
 import java.util.HashSet;
 import java.util.List;
@@ -12,10 +13,10 @@ public class InstanceParams {
 
     private Deck deck;
     private Stake stake;
-    public boolean showman;
+    private boolean showman;
     public int sixesFactor;
     public long version;
-    public Set<String> vouchers;
+    public Set<Voucher> vouchers;
 
     public InstanceParams() {
         deck = Deck.RED_DECK;
@@ -75,11 +76,11 @@ public class InstanceParams {
         this.version = version;
     }
 
-    public Set<String> getVouchers() {
+    public Set<Voucher> getVouchers() {
         return vouchers;
     }
 
-    public void setVouchers(Set<String> vouchers) {
+    public void setVouchers(Set<Voucher> vouchers) {
         this.vouchers = vouchers;
     }
 }

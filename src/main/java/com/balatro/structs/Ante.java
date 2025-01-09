@@ -1,11 +1,10 @@
 package com.balatro.structs;
 
 import com.balatro.Functions;
-import com.balatro.enums.Boss;
-import com.balatro.enums.LegendaryJoker;
-import com.balatro.enums.Tag;
-import com.balatro.enums.Voucher;
+import com.balatro.enums.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,17 +13,18 @@ import java.util.Set;
 
 public class Ante {
 
-    private final int id;
+    private final int ante;
     private final Functions functions;
     private final List<SearchableItem> shopQueue;
+    @JsonIgnore
     private final Set<String> shop;
     private final Set<Tag> tags;
     private Voucher voucher;
     private Boss boss;
-    private final List<SearchablePack> packs;
+    private final List<Pack> packs;
 
-    public Ante(int id, Functions functions) {
-        this.id = id;
+    public Ante(int ante, Functions functions) {
+        this.ante = ante;
         this.functions = functions;
         this.tags = new HashSet<>(2);
         this.shopQueue = new ArrayList<>(20);
@@ -54,7 +54,7 @@ public class Ante {
         tags.add(tag);
     }
 
-    public void addToQueue(@NotNull ShopItem value, String sticker) {
+    public void addToQueue(@NotNull ShopItem value, Named sticker) {
         shop.add(value.getItem());
         shopQueue.add(new SearchableItem(value.getItem(), sticker));
     }
@@ -67,20 +67,34 @@ public class Ante {
         this.voucher = voucher;
     }
 
-    public void addPack(Pack pack, Set<String> options) {
-        packs.add(new SearchablePack(pack, options));
+    public void addPack(Pack pack, Set<Option> options) {
+        pack.setOptions(options);
+        packs.add(pack);
     }
 
-    public boolean hasLegendary(LegendaryJoker joker) {
-        if (containsInPack("The Soul")) {
-            return functions.nextJoker("sou", id, false).joker.equalsIgnoreCase(joker.getName());
+    public boolean hasLegendary(LegendaryJoker... jokers) {
+        int souls = countInPack("The Soul");
+
+        if (souls < jokers.length) return false;
+
+        var jokersFound = new HashSet<String>();
+
+        for (int i = 0; i < jokers.length; i++) {
+            jokersFound.add(functions.nextJoker("sou", ante, false).joker);
         }
-        return false;
+
+        for (LegendaryJoker joker : jokers) {
+            if (!jokersFound.contains(joker.getName())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean containsInPack(String name) {
-        for (SearchablePack pack : packs) {
-            if (pack.options.contains(name)) {
+        for (Pack pack : packs) {
+            if (pack.containsOption(name)) {
                 return true;
             }
         }
@@ -89,24 +103,27 @@ public class Ante {
 
     public int countInPack(String name) {
         int count = 0;
-        for (SearchablePack pack : packs) {
-            if (pack.options.contains(name)) {
+        for (Pack pack : packs) {
+            if (pack.containsOption(name)) {
                 count++;
             }
         }
         return count;
     }
 
-    public record SearchableItem(String item, String sticker) {
+    public record SearchableItem(String item, @Nullable Named sticker) {
+
+        public SearchableItem(String item, Named sticker) {
+            this.item = item;
+            this.sticker = sticker;
+        }
     }
 
-    public record SearchablePack(Pack pack, Set<String> options) {
+    public int getAnte() {
+        return ante;
     }
 
-    public int getId() {
-        return id;
-    }
-
+    @JsonIgnore
     public Set<String> getShop() {
         return shop;
     }
@@ -127,7 +144,7 @@ public class Ante {
         return boss;
     }
 
-    public List<SearchablePack> getPacks() {
+    public List<Pack> getPacks() {
         return packs;
     }
 }

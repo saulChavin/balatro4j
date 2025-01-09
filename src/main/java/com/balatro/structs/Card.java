@@ -1,12 +1,15 @@
 package com.balatro.structs;
 
+import com.balatro.enums.Edition;
+import com.balatro.enums.Seal;
+
 public class Card {
     private String base;
     private String enhancement;
-    private String edition;
-    private String seal;
+    private Edition edition;
+    private Seal seal;
 
-    public Card(String base, String enhancement, String edition, String seal) {
+    public Card(String base, String enhancement, Edition edition, Seal seal) {
         this.base = base;
         this.enhancement = enhancement;
         this.edition = edition;
@@ -29,19 +32,19 @@ public class Card {
         this.enhancement = enhancement;
     }
 
-    public String getEdition() {
+    public Edition getEdition() {
         return edition;
     }
 
-    public void setEdition(String edition) {
+    public void setEdition(Edition edition) {
         this.edition = edition;
     }
 
-    public String getSeal() {
+    public Seal getSeal() {
         return seal;
     }
 
-    public void setSeal(String seal) {
+    public void setSeal(Seal seal) {
         this.seal = seal;
     }
 }

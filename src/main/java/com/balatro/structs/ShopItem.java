@@ -1,33 +1,35 @@
 package com.balatro.structs;
 
+import com.balatro.enums.Type;
+
 public class ShopItem {
-    private String type;
+    private Type type;
     private String item;
     private JokerData jokerData;
 
     public ShopItem() {
-        this.type = "Tarot";
+        this.type = Type.Tarot;
         this.item = "The Fool";
         this.jokerData = new JokerData();
     }
 
-    public ShopItem(String type, String item) {
+    public ShopItem(Type type, String item) {
         this.type = type;
         this.item = item;
         this.jokerData = new JokerData();
     }
 
-    public ShopItem(String type, String item, JokerData jokerData) {
+    public ShopItem(Type type, String item, JokerData jokerData) {
         this.type = type;
         this.item = item;
         this.jokerData = jokerData;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
