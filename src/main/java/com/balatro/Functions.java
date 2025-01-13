@@ -1,5 +1,6 @@
 package com.balatro;
 
+import com.balatro.api.Named;
 import com.balatro.enums.*;
 import com.balatro.enums.Card;
 import com.balatro.enums.PackType;
@@ -11,7 +12,7 @@ import java.util.*;
 import static com.balatro.Util.pseudohash;
 import static com.balatro.Util.round13;
 
-public class Functions extends Lock {
+public final class Functions extends Lock {
 
     public static final List<Tarot> TAROTS = Arrays.asList(Tarot.values());
     public static final List<Planet> PLANETS = Arrays.asList(Planet.values());

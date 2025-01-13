@@ -1,21 +1,22 @@
-package com.balatro.structs;
+package com.balatro;
 
-import com.balatro.Functions;
+import com.balatro.api.Ante;
+import com.balatro.api.Named;
 import com.balatro.enums.*;
+import com.balatro.structs.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Ante {
+final class AnteImpl implements Ante {
 
     private final int ante;
     private final Functions functions;
-    private final List<SearchableItem> shopQueue;
+    private final ShopQueue shopQueue;
     @JsonIgnore
     private final Set<String> shop;
     private final Set<Tag> tags;
@@ -23,26 +24,28 @@ public class Ante {
     private Boss boss;
     private final List<Pack> packs;
 
-    public Ante(int ante, Functions functions) {
+    public AnteImpl(int ante, Functions functions) {
         this.ante = ante;
         this.functions = functions;
         this.tags = new HashSet<>(2);
-        this.shopQueue = new ArrayList<>(20);
+        this.shopQueue = new ShopQueue();
         this.shop = new HashSet<>(20);
         this.packs = new ArrayList<>(10);
     }
 
+    @Override
     public boolean hasInShop(String name) {
         return shop.contains(name);
     }
 
+    @Override
     public boolean hasInShop(String named, int index) {
         if (index > shopQueue.size()) {
             return false;
         }
 
         for (int i = 0; i < index; i++) {
-            if (shopQueue.get(i).item.equalsIgnoreCase(named)) {
+            if (shopQueue.get(i).item().equalsIgnoreCase(named)) {
                 return true;
             }
         }
@@ -67,11 +70,12 @@ public class Ante {
         this.voucher = voucher;
     }
 
-    public void addPack(Pack pack, Set<Option> options) {
+    public void addPack(@NotNull Pack pack, Set<Option> options) {
         pack.setOptions(options);
         packs.add(pack);
     }
 
+    @Override
     public boolean hasLegendary(LegendaryJoker... jokers) {
         int souls = countInPack("The Soul");
 
@@ -92,6 +96,7 @@ public class Ante {
         return true;
     }
 
+    @Override
     public boolean containsInPack(String name) {
         for (Pack pack : packs) {
             if (pack.containsOption(name)) {
@@ -101,6 +106,7 @@ public class Ante {
         return false;
     }
 
+    @Override
     public int countInPack(String name) {
         int count = 0;
         for (Pack pack : packs) {
@@ -111,14 +117,8 @@ public class Ante {
         return count;
     }
 
-    public record SearchableItem(String item, @Nullable Named sticker) {
 
-        public SearchableItem(String item, Named sticker) {
-            this.item = item;
-            this.sticker = sticker;
-        }
-    }
-
+    @Override
     public int getAnte() {
         return ante;
     }
@@ -128,23 +128,28 @@ public class Ante {
         return shop;
     }
 
-    public List<SearchableItem> getShopQueue() {
-        return shopQueue;
+    @Override
+    public ShopQueue getShopQueue() {
+        return new ShopQueue(shopQueue);
     }
 
+    @Override
     public Set<Tag> getTags() {
-        return tags;
+        return new HashSet<>(tags);
     }
 
+    @Override
     public Voucher getVoucher() {
         return voucher;
     }
 
+    @Override
     public Boss getBoss() {
         return boss;
     }
 
+    @Override
     public List<Pack> getPacks() {
-        return packs;
+        return new ArrayList<>(packs);
     }
 }

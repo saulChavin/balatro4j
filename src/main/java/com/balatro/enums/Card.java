@@ -1,5 +1,7 @@
 package com.balatro.enums;
 
+import com.balatro.api.Named;
+
 public enum Card implements Named {
     C_2("C_2"),
     C_3("C_3"),

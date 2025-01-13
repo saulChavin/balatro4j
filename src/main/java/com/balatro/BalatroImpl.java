@@ -1,18 +1,19 @@
 package com.balatro;
 
+import com.balatro.api.Balatro;
+import com.balatro.api.Named;
+import com.balatro.api.Run;
 import com.balatro.enums.*;
 import com.balatro.structs.*;
 import com.balatro.structs.Card;
 import com.balatro.structs.Pack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class Balatro {
+public final class BalatroImpl implements Balatro {
 
     public static final List<String> options = Arrays.asList(
             "Negative Tag",
@@ -80,7 +81,7 @@ public class Balatro {
 
     static final String CHARACTERS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public static String generateRandomString() {
+    public static String generateRandomSeed() {
         StringBuilder result = new StringBuilder(7);
         for (int i = 0; i < 7; i++) {
             int index = ThreadLocalRandom.current().nextInt(CHARACTERS.length());
@@ -89,76 +90,28 @@ public class Balatro {
         return result.toString();
     }
 
-    public static void main(String[] args) {
-        System.out.println("Searching...");
+    private final String seed;
+    private final int ante;
+    private final List<Integer> cardsPerAnte;
+    private final Deck deck;
+    private final Stake stake;
+    private final Version version;
 
-        ForkJoinTask<?> submit = ForkJoinPool.commonPool().submit(Balatro::generate);
-        ForkJoinPool.commonPool().submit(Balatro::generate);
-        ForkJoinPool.commonPool().submit(Balatro::generate);
-        ForkJoinPool.commonPool().submit(Balatro::generate);
-        ForkJoinPool.commonPool().submit(Balatro::generate);
-        ForkJoinPool.commonPool().submit(Balatro::generate);
-        ForkJoinPool.commonPool().submit(Balatro::generate);
-        ForkJoinPool.commonPool().submit(Balatro::generate);
-
-        int time = 0;
-
-        while (!submit.isDone()) {
-            try {
-                Thread.sleep(1000);
-
-                time++;
-
-                if (time % 10 == 0) {
-                    System.out.println("Ops per second: " + count.get() / time + " ops/s seeds analyzed: " + count.get());
-                }
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        System.out.println("Ops per second: " + (count.get() / time) + ", seeds analyzed: " + count.get());
-
-        var result = new Balatro()
-                .performAnalysis("2K9H9HN");
-
-        System.out.println(result.hasLegendary(2, LegendaryJoker.Perke, LegendaryJoker.Triboulet));
-
-        System.out.println(result.toJson());
+    public BalatroImpl(String seed, int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version) {
+        this.seed = seed;
+        this.ante = ante;
+        this.cardsPerAnte = cardsPerAnte;
+        this.deck = deck;
+        this.stake = stake;
+        this.version = version;
     }
 
-    static AtomicInteger count = new AtomicInteger(0);
-
-    static void generate() {
-        for (int i = 0; i < 1_000_000; i++) {
-            count.incrementAndGet();
-            var seed = generateRandomString();
-
-            long init = System.currentTimeMillis();
-            var result = new Balatro()
-                    .performAnalysis(seed);
-
-            if (result.hasLegendary(1, LegendaryJoker.Perke, LegendaryJoker.Triboulet) &&
-                    (result.hasInShop(1, RareJoker.Blueprint, 4) || result.hasInShop(1, RareJoker.Invisible_Joker, 4))) {
-                long end = System.currentTimeMillis();
-
-                System.err.println(seed + " " + (end - init) + " ms");
-
-                System.out.println(result.toJson());
-            }
-
-            if (result.countLegendary() > 3) {
-                System.out.println(seed);
-            }
-        }
+    @Override
+    public Run analyze() {
+        return performAnalysis(ante, cardsPerAnte, deck, stake, version, seed);
     }
 
-    public Run performAnalysis(String seed) {
-        return performAnalysis(8, List.of(15, 50, 50, 50, 50, 50, 50, 50), Deck.RED_DECK, Stake.White_Stake, Version.v_101f, seed);
-    }
-
-    public Run performAnalysis(int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version, String seed) {
+    private RunImpl performAnalysis(int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version, String seed) {
         boolean[] selectedOptions = new boolean[61];
         Arrays.fill(selectedOptions, true);
 
@@ -186,11 +139,11 @@ public class Balatro {
         }
 
         functions.setDeck(deck);
-        var antes = new ArrayList<Ante>(options.size());
+        var antes = new ArrayList<AnteImpl>(options.size());
 
         for (int a = 1; a <= ante; a++) {
             functions.initUnlocks(a, false);
-            var play = new Ante(a, functions);
+            var play = new AnteImpl(a, functions);
             antes.add(play);
             play.setBoss(functions.nextBoss(a));
             var voucher = functions.nextVoucher(a);
@@ -333,10 +286,10 @@ public class Balatro {
             }
         }
 
-        return new Run(seed, antes);
+        return new RunImpl(seed, Collections.unmodifiableList(antes));
     }
 
-    private static @Nullable Named getSticker(JokerData joker) {
+    private static @Nullable Named getSticker(@NotNull JokerData joker) {
         Named sticker = null;
 
         if (joker.getStickers().isEternal()) {

@@ -3,9 +3,10 @@ package com.balatro;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Cache {
-    public final Map<String, Double> nodes;
-    public boolean generatedFirstPack;
+final class Cache {
+
+    final Map<String, Double> nodes;
+    boolean generatedFirstPack;
 
     public Cache() {
         nodes = new HashMap<>();

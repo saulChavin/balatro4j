@@ -1,5 +1,7 @@
 package com.balatro.enums;
 
+import com.balatro.api.Named;
+
 public enum Rank implements Named {
     R_2("2"),
     R_3("3"),

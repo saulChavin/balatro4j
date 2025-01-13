@@ -1,19 +1,275 @@
 # balatro4j
 
-## A Balatro Seed Generator coded in Java
+A balatro seed analyzer and finder, coded in pure Java based in Immolate
 
 ```java
-    static void generate() {
-        for (int i = 0; i < 100_000; i++) {
-            var seed = generateRandomString();
-            var result = new Balatro()
-                    .performAnalysis(seed);
+var run = Balatro.builder("2K9H9HN")
+        .maxAnte(1)
+        .build()
+        .analyze();
 
-            if (result.hasLegendary(1, LegendaryJoker.Perke)  && result.hasInShop(1, RareJoker.Blueprint)) {
-                System.err.println(seed);
-            }
+System.out.
+
+println(run.toJson());
+```
+
+output:
+
+```json
+{
+  "seed": "2K9H9HN",
+  "antes": [
+    {
+      "ante": 1,
+      "shopQueue": [
+        {
+          "item": "Drunkard"
+        },
+        {
+          "item": "Half Joker"
+        },
+        {
+          "item": "Eri"
+        },
+        {
+          "item": "Burglar"
+        },
+        {
+          "item": "Blackboard"
+        },
+        {
+          "item": "The Emperor"
+        },
+        {
+          "item": "Drunkard"
+        },
+        {
+          "item": "Splash"
+        },
+        {
+          "item": "Justice"
+        },
+        {
+          "item": "To the Moon"
+        },
+        {
+          "item": "The Devil"
+        },
+        {
+          "item": "Eri"
+        },
+        {
+          "item": "Even Steven"
+        },
+        {
+          "item": "Gift Card"
+        },
+        {
+          "item": "Mercury"
         }
+      ],
+      "tags": [
+        "D6_Tag",
+        "Boss_Tag"
+      ],
+      "voucher": "Directors_Cut",
+      "boss": "The_Club",
+      "packs": [
+        {
+          "type": "Buffoon_Pack",
+          "size": 2,
+          "choices": 1,
+          "options": [
+            {
+              "name": "Raised Fist"
+            },
+            {
+              "name": "Baseball Card"
+            }
+          ],
+          "kind": "Buffoon"
+        },
+        {
+          "type": "Arcana_Pack",
+          "size": 3,
+          "choices": 1,
+          "options": [
+            {
+              "name": "The Lovers"
+            },
+            {
+              "name": "The Moon"
+            },
+            {
+              "name": "The World"
+            }
+          ],
+          "kind": "Arcana"
+        },
+        {
+          "type": "Buffoon_Pack",
+          "size": 2,
+          "choices": 1,
+          "options": [
+            {
+              "name": "Jolly Joker"
+            },
+            {
+              "name": "Gift Card"
+            }
+          ],
+          "kind": "Buffoon"
+        },
+        {
+          "type": "Standard_Pack",
+          "size": 3,
+          "choices": 1,
+          "options": [
+            {
+              "name": "Gold 3 of Clubs"
+            },
+            {
+              "name": "Bonus 5 of Hearts"
+            },
+            {
+              "name": "Gold Queen of Spades"
+            }
+          ],
+          "kind": "Standard"
+        }
+      ]
     }
+  ],
+  "firstAnte": {
+    "ante": 1,
+    "shopQueue": [
+      {
+        "item": "Drunkard"
+      },
+      {
+        "item": "Half Joker"
+      },
+      {
+        "item": "Eri"
+      },
+      {
+        "item": "Burglar"
+      },
+      {
+        "item": "Blackboard"
+      },
+      {
+        "item": "The Emperor"
+      },
+      {
+        "item": "Drunkard"
+      },
+      {
+        "item": "Splash"
+      },
+      {
+        "item": "Justice"
+      },
+      {
+        "item": "To the Moon"
+      },
+      {
+        "item": "The Devil"
+      },
+      {
+        "item": "Eri"
+      },
+      {
+        "item": "Even Steven"
+      },
+      {
+        "item": "Gift Card"
+      },
+      {
+        "item": "Mercury"
+      }
+    ],
+    "tags": [
+      "D6_Tag",
+      "Boss_Tag"
+    ],
+    "voucher": "Directors_Cut",
+    "boss": "The_Club",
+    "packs": [
+      {
+        "type": "Buffoon_Pack",
+        "size": 2,
+        "choices": 1,
+        "options": [
+          {
+            "name": "Raised Fist"
+          },
+          {
+            "name": "Baseball Card"
+          }
+        ],
+        "kind": "Buffoon"
+      },
+      {
+        "type": "Arcana_Pack",
+        "size": 3,
+        "choices": 1,
+        "options": [
+          {
+            "name": "The Lovers"
+          },
+          {
+            "name": "The Moon"
+          },
+          {
+            "name": "The World"
+          }
+        ],
+        "kind": "Arcana"
+      },
+      {
+        "type": "Buffoon_Pack",
+        "size": 2,
+        "choices": 1,
+        "options": [
+          {
+            "name": "Jolly Joker"
+          },
+          {
+            "name": "Gift Card"
+          }
+        ],
+        "kind": "Buffoon"
+      },
+      {
+        "type": "Standard_Pack",
+        "size": 3,
+        "choices": 1,
+        "options": [
+          {
+            "name": "Gold 3 of Clubs"
+          },
+          {
+            "name": "Bonus 5 of Hearts"
+          },
+          {
+            "name": "Gold Queen of Spades"
+          }
+        ],
+        "kind": "Standard"
+      }
+    ]
+  }
+}
+```
+
+```java
+var seeds = Balatro.finder(1, 1_000_000)
+        .configuration(config -> config.maxAnte(1))
+        .filter(LegendaryJoker.Perkeo.inPack(1)
+                .or(LegendaryJoker.Triboulet.inPack(1))
+                .and(RareJoker.Blueprint.inShop(1)))
+        .find();
 ```
 
 ## Example seeds found with Perkeo And Blueprint at Ante 1
@@ -71,4 +327,4 @@ WHOQQZD
 3WBK1NK
 ```
 
-Seeds found in 1 minute
+average speed: 200K seeds per second

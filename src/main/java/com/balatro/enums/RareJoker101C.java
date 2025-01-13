@@ -1,5 +1,7 @@
 package com.balatro.enums;
 
+import com.balatro.api.Named;
+
 public enum RareJoker101C implements Named {
     DNA("DNA"),
     Vampire("Vampire"),

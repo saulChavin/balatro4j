@@ -1,5 +1,7 @@
 package com.balatro.enums;
 
+import com.balatro.api.Named;
+
 public enum Voucher implements Named {
     Overstock("Overstock"),
     Overstock_Plus("Overstock Plus"),

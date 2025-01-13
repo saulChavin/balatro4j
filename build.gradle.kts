@@ -4,6 +4,7 @@ plugins {
     id("java")
     id("application")
     id("org.graalvm.buildtools.native") version ("0.10.4")
+    id("io.ktor.plugin") version "2.3.12"
 }
 
 group = "com.alex"
@@ -37,5 +38,12 @@ application {
 graalvmNative {
     binaries.all {
         resources.autodetect()
+    }
+}
+
+
+ktor {
+    fatJar {
+        archiveFileName.set("balatro4j.jar")
     }
 }

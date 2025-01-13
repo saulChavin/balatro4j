@@ -1,7 +1,6 @@
 package com.balatro;
 
-
-public class LuaRandom {
+public final class LuaRandom {
 
     public static final long MAX_UINT64 = Long.MAX_VALUE;
     public final long[] state = new long[4];

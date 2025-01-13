@@ -1,5 +1,7 @@
 package com.balatro.enums;
 
+import com.balatro.api.Named;
+
 public enum Enhancement implements Named {
     Bonus("Bonus"),
     Mult("Mult"),

@@ -1,6 +1,8 @@
 package com.balatro.enums;
 
-public enum Tag  implements Named{
+import com.balatro.api.Named;
+
+public enum Tag  implements Named {
     Uncommon_Tag("Uncommon Tag"),
     Rare_Tag("Rare Tag"),
     Negative_Tag("Negative Tag"),

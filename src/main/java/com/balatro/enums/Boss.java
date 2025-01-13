@@ -1,5 +1,7 @@
 package com.balatro.enums;
 
+import com.balatro.api.Named;
+
 public enum Boss implements Named {
 
     The_Arm("The Arm"),

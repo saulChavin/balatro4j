@@ -1,5 +1,7 @@
 package com.balatro.enums;
 
+import com.balatro.api.Named;
+
 public enum PackType implements Named {
 
     RETRY("RETRY", 22.42),

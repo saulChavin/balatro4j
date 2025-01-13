@@ -1,4 +1,4 @@
-package com.balatro.structs;
+package com.balatro;
 
 public class ShopInstance {
     public double jokerRate;

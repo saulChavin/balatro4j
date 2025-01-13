@@ -1,11 +1,11 @@
 package com.balatro;
 
-import com.balatro.enums.Named;
+import com.balatro.api.Named;
 
 import java.util.HashSet;
 import java.util.Set;
 
-class Lock {
+sealed class Lock permits Functions {
 
     private final Set<String> locked = new HashSet<>();
 
