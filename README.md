@@ -8,9 +8,7 @@ var run = Balatro.builder("2K9H9HN")
         .build()
         .analyze();
 
-System.out.
-
-println(run.toJson());
+System.out.println(run.toJson());
 ```
 
 output:
