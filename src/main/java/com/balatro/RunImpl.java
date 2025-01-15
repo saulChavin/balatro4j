@@ -38,10 +38,6 @@ record RunImpl(String seed, List<Ante> antes) implements Run {
 
     @Override
     public boolean hasInPack(int ante, Item item) {
-        if (item instanceof LegendaryJoker joker) {
-            return hasLegendary(ante, joker);
-        }
-
         return antes.get(ante - 1).hasInPack(item);
     }
 

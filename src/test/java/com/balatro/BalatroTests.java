@@ -2,7 +2,6 @@ package com.balatro;
 
 import com.balatro.api.Balatro;
 import com.balatro.api.Run;
-import com.balatro.enums.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +41,7 @@ public class BalatroTests {
                 .build();
 
         found = Perkeo.inPack()
-                .or(Triboulet.edition(Negative).inPack(1))
+                .or(Triboulet.inPack(1))
                 .and(Blueprint.inShop(1))
                 .filter(run);
 

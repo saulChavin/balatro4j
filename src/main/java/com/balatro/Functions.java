@@ -45,9 +45,9 @@ public final class Functions extends Lock {
         cache = new Cache();
     }
 
-    private LuaRandom getRandom(String id) {
-        return new LuaRandom(getNode(id));
-    }
+//    private LuaRandom getRandom(String id) {
+//        return new LuaRandom(getNode(id));
+//    }
 
     private double getNode(String ID) {
         var c = cache.nodes.get(ID);
@@ -65,13 +65,15 @@ public final class Functions extends Lock {
     }
 
     private double random(String ID) {
-        var rng = getRandom(ID);
-        return rng.random();
+        return LuaRandom.random(getNode(ID));
+    }
+
+    private int randint(String ID, int min, int max) {
+        return LuaRandom.randint(getNode(ID), min, max);
     }
 
     public PackType randweightedchoice(String ID, List<PackType> items) {
-        var rng = getRandom(ID);
-        double poll = rng.random() * items.getFirst().getValue();
+        double poll = random(ID) * items.getFirst().getValue();
         int idx = 1;
         double weight = 0;
         while (weight < poll) {
@@ -83,14 +85,12 @@ public final class Functions extends Lock {
 
 
     public <T extends Item> T randchoice(String ID, @NotNull List<T> items) {
-        var rng = getRandom(ID);
-        T item = items.get(rng.randint(0, items.size() - 1));
+        T item = items.get(randint(ID, 0, items.size() - 1));
 
         if (!params.isShowman() && isLocked(item) || "RETRY".equals(item.getName())) {
             int resample = 2;
             while (true) {
-                rng = getRandom(ID + "_resample" + resample);
-                item = items.get(rng.randint(0, items.size() - 1));
+                item = items.get(randint(ID + "_resample" + resample, 0, items.size() - 1));
                 resample++;
                 if ((!isLocked(item) && !"RETRY".equals(item.getName())) || resample > 1000) {
                     return item;

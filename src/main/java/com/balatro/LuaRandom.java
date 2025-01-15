@@ -3,71 +3,106 @@ package com.balatro;
 public final class LuaRandom {
 
     public static final long MAX_UINT64 = Long.MAX_VALUE;
-    public final long[] state = new long[4];
 
+    private static long _randInt(double seed) {
+        long state;
+        long randint = 0;
 
-    public LuaRandom(double d) {
-        long r = 0x11090601;
+        int r = 0x11090601;
 
-        for (int i = 0; i < 4; i++) {
-            long m = 1L << (r & 255);
+        long m = 1L << (r & 255);
+        r >>= 8;
+        seed = seed * 3.14159265358979323846;
+        seed = seed + 2.7182818284590452354;
 
-            r >>= 8;
-            d = d * 3.14159265358979323846;
-            d = d + 2.7182818284590452354;
+        var u = new DoubleLong(seed);
 
-            var u = new DoubleLong(d);
-
-            if (u.getUlong() < m) {
-                u.setUlong(u.getUlong() + m);
-            }
-
-            state[i] = u.getUlong();
+        if (u.getUlong() < m) {
+            u.setUlong(u.getUlong() + m);
         }
 
-        for (int i = 0; i < 10; i++) {
-            _randInt();
+        state = u.getUlong();
+        for (int i = 0; i < 11; i++) {
+            state = (((state << 31) ^ state) >>> 45) ^ ((state & (MAX_UINT64 << 1)) << 18);
         }
+
+        randint ^= state;
+
+        //State[1]
+        m = 1L << (r & 255);
+        r >>= 8;
+        seed = seed * 3.14159265358979323846;
+        seed = seed + 2.7182818284590452354;
+
+        u = new DoubleLong(seed);
+
+        if (u.getUlong() < m) {
+            u.setUlong(u.getUlong() + m);
+        }
+
+        state = u.getUlong();
+
+        for (int i = 0; i < 11; i++) {
+            state = (((state << 19) ^ state) >>> 30) ^ ((state & (MAX_UINT64 << 6)) << 28);
+        }
+
+        randint ^= state;
+
+        //State[2]
+        m = 1L << (r & 255);
+        r >>= 8;
+        seed = seed * 3.14159265358979323846;
+        seed = seed + 2.7182818284590452354;
+
+        u = new DoubleLong(seed);
+
+        if (u.getUlong() < m) {
+            u.setUlong(u.getUlong() + m);
+        }
+
+        state = u.getUlong();
+
+
+        for (int i = 0; i < 11; i++) {
+            state = (((state << 24) ^ state) >>> 48) ^ ((state & (MAX_UINT64 << 9)) << 7);
+        }
+
+        randint ^= state;
+
+        //state 3
+        m = 1L << (r & 255);
+        r >>= 8;
+        seed = seed * 3.14159265358979323846;
+        seed = seed + 2.7182818284590452354;
+
+        u = new DoubleLong(seed);
+
+        if (u.getUlong() < m) {
+            u.setUlong(u.getUlong() + m);
+        }
+
+        state = u.getUlong();
+
+        for (int i = 0; i < 11; i++) {
+            state = (((state << 21) ^ state) >>> 39) ^ ((state & (MAX_UINT64 << 17)) << 8);
+        }
+
+        randint ^= state;
+
+        return randint;
     }
 
-    public long _randInt() {
-        long z;
-        long r = 0;
-
-        z = state[0];
-        z = (((z << 31) ^ z) >>> 45) ^ ((z & (MAX_UINT64 << 1)) << 18);
-        r ^= z;
-        state[0] = z;
-
-        z = state[1];
-        z = (((z << 19) ^ z) >>> 30) ^ ((z & (MAX_UINT64 << 6)) << 28);
-        r ^= z;
-        state[1] = z;
-
-        z = state[2];
-        z = (((z << 24) ^ z) >>> 48) ^ ((z & (MAX_UINT64 << 9)) << 7);
-        r ^= z;
-        state[2] = z;
-
-        z = state[3];
-        z = (((z << 21) ^ z) >>> 39) ^ ((z & (MAX_UINT64 << 17)) << 8);
-        r ^= z;
-        state[3] = z;
-
-        return r;
+    private static long randdblmem(double seed) {
+        return (_randInt(seed) & 4503599627370495L) | 4607182418800017408L;
     }
 
-    private long randdblmem() {
-        return (_randInt() & 4503599627370495L) | 4607182418800017408L;
-    }
-
-    public double random() {
-        DoubleLong u = new DoubleLong(randdblmem());
+    public static double random(double seed) {
+        DoubleLong u = new DoubleLong(randdblmem(seed));
         return u.getDouble() - 1.0;
     }
 
-    public int randint(int min, int max) {
-        return (int) (random() * (max - min + 1)) + min;
+    public static int randint(double seed, int min, int max) {
+        return (int) (random(seed) * (max - min + 1)) + min;
     }
 
 }

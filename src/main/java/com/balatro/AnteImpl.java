@@ -27,7 +27,7 @@ final class AnteImpl implements Ante {
     //Cache
     private Set<String> legendaryJokers;
 
-    public AnteImpl(int ante, Functions functions) {
+    AnteImpl(int ante, Functions functions) {
         this.ante = ante;
         this.functions = functions;
         this.tags = new HashSet<>(2);
@@ -63,27 +63,33 @@ final class AnteImpl implements Ante {
 
     @Override
     public long countLegendary() {
-        return 0;
+        int count = 0;
+        for (Pack pack : packs) {
+            if (pack.containsOption(Specials.THE_SOUL.getName())) {
+                count++;
+            }
+        }
+        return count;
     }
 
-    public void addTag(Tag tag) {
+    void addTag(Tag tag) {
         tags.add(tag);
     }
 
-    public void addToQueue(@NotNull ShopItem value, Edition sticker) {
+    void addToQueue(@NotNull ShopItem value, Edition sticker) {
         shop.add(value.getItem());
         shopQueue.add(new SearchableItem(value.getItem(), sticker));
     }
 
-    public void setBoss(Boss boss) {
+    void setBoss(Boss boss) {
         this.boss = boss;
     }
 
-    public void setVoucher(Voucher voucher) {
+    void setVoucher(Voucher voucher) {
         this.voucher = voucher;
     }
 
-    public void addPack(@NotNull Pack pack, Set<Option> options) {
+    void addPack(@NotNull Pack pack, Set<Option> options) {
         pack.setOptions(options);
         packs.add(pack);
     }
@@ -121,6 +127,10 @@ final class AnteImpl implements Ante {
 
     @Override
     public boolean hasInPack(@NotNull Item item) {
+        if (item instanceof LegendaryJoker joker) {
+            return hasLegendary(joker);
+        }
+
         for (Pack pack : packs) {
             if (pack.containsOption(item.getName())) {
                 return true;
@@ -141,6 +151,10 @@ final class AnteImpl implements Ante {
 
     @Override
     public boolean hasInSpectral(@NotNull Item item) {
+        if (item instanceof LegendaryJoker joker) {
+            return hasLegendary(joker);
+        }
+
         for (Pack pack : packs) {
             if (pack.getKind() != PackKind.Spectral) {
                 continue;
@@ -155,11 +169,15 @@ final class AnteImpl implements Ante {
 
     @Override
     public boolean hasVoucher(Voucher voucher) {
-        return false;
+        return this.voucher == voucher;
     }
 
     @Override
     public int countInPack(@NotNull Item item) {
+        if (item instanceof LegendaryJoker) {
+            item = Specials.THE_SOUL;
+        }
+
         int count = 0;
         for (Pack pack : packs) {
             if (pack.containsOption(item.getName())) {
@@ -190,7 +208,7 @@ final class AnteImpl implements Ante {
 
     @JsonIgnore
     public Set<String> getShop() {
-        return shop;
+        return new HashSet<>(shop);
     }
 
     @Override
