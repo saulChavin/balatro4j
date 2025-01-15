@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
-public enum Spectral implements Named {
+public enum Spectral implements Item {
 
     Familiar("Familiar"),
     Grim("Grim"),

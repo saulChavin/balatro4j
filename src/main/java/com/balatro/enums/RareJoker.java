@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
-public enum RareJoker implements Named {
+public enum RareJoker implements Item {
     DNA("DNA"),
     Vagabond("Vagabond"),
     Baron("Baron"),

@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
-public enum Tarot implements Named {
+public enum Tarot implements Item {
     The_Fool("The Fool"),
     The_Magician("The Magician"),
     The_High_Priestess("The High Priestess"),

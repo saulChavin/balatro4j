@@ -1,13 +1,13 @@
 package com.balatro.structs;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class ShopQueue extends ArrayList<SearchableItem> {
+public final class ShopQueue extends ArrayList<SearchableItem> {
 
     public ShopQueue(@NotNull Collection<? extends SearchableItem> c) {
         super(c);
@@ -17,12 +17,7 @@ public class ShopQueue extends ArrayList<SearchableItem> {
         super(20);
     }
 
-    public boolean contains(Named named) {
-        return this.stream().anyMatch(item -> item.hasSticker(named));
+    public boolean contains(Item named) {
+        return this.stream().anyMatch(item -> item.equals(named));
     }
-
-    public boolean contains(Named named, @Nullable Named sticker) {
-        return this.stream().anyMatch(item -> item.hasSticker(named) && item.hasSticker(sticker));
-    }
-
 }

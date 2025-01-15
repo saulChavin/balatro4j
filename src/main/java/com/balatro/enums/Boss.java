@@ -1,8 +1,10 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.BossFilter;
+import com.balatro.api.Filter;
+import com.balatro.api.Item;
 
-public enum Boss implements Named {
+public enum Boss implements Item {
 
     The_Arm("The Arm"),
     The_Club("The Club"),
@@ -45,5 +47,9 @@ public enum Boss implements Named {
 
     public char charAt(int index) {
         return name.charAt(index);
+    }
+
+    public Filter isPresent() {
+        return new BossFilter(this);
     }
 }

@@ -45,7 +45,8 @@ public class BalatroBuilder {
         return this;
     }
 
-    public Balatro build() {
-        return new BalatroImpl(seed, maxAnte, cardsPerAnte, deck, stake, version);
+    public Run build() {
+        return new BalatroImpl(seed, maxAnte, cardsPerAnte, deck, stake, version)
+                .analyze();
     }
 }

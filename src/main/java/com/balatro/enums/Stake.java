@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
-public enum Stake implements Named {
+public enum Stake implements Item {
     White_Stake("White Stake"),
     Red_Stake("Red Stake"),
     Green_Stake("Green Stake"),

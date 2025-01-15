@@ -1,8 +1,10 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Filter;
+import com.balatro.api.Item;
+import com.balatro.api.VoucherFilter;
 
-public enum Voucher implements Named {
+public enum Voucher implements Item {
     Overstock("Overstock"),
     Overstock_Plus("Overstock Plus"),
     Clearance_Sale("Clearance Sale"),
@@ -44,5 +46,9 @@ public enum Voucher implements Named {
 
     public String getName() {
         return name;
+    }
+
+    public Filter isPresent() {
+        return new VoucherFilter(this);
     }
 }

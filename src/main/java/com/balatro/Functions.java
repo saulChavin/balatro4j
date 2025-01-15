@@ -1,6 +1,6 @@
 package com.balatro;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 import com.balatro.enums.*;
 import com.balatro.enums.Card;
 import com.balatro.enums.PackType;
@@ -82,7 +82,7 @@ public final class Functions extends Lock {
     }
 
 
-    public <T extends Named> T randchoice(String ID, List<T> items) {
+    public <T extends Item> T randchoice(String ID, @NotNull List<T> items) {
         var rng = getRandom(ID);
         T item = items.get(rng.randint(0, items.size() - 1));
 
@@ -181,7 +181,7 @@ public final class Functions extends Lock {
         }
 
         // Get next joker
-        Named joker;
+        Item joker;
 
         switch (rarity) {
             case "4" -> {

@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
-public enum Suit implements Named {
+public enum Suit implements Item {
     Spades("Spades"),
     Hearts("Hearts"),
     Clubs("Clubs"),

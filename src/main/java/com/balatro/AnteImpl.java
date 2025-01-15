@@ -1,7 +1,7 @@
 package com.balatro;
 
 import com.balatro.api.Ante;
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 import com.balatro.enums.*;
 import com.balatro.structs.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,6 +24,9 @@ final class AnteImpl implements Ante {
     private Boss boss;
     private final List<Pack> packs;
 
+    //Cache
+    private Set<String> legendaryJokers;
+
     public AnteImpl(int ante, Functions functions) {
         this.ante = ante;
         this.functions = functions;
@@ -34,18 +37,23 @@ final class AnteImpl implements Ante {
     }
 
     @Override
-    public boolean hasInShop(String name) {
-        return shop.contains(name);
+    public boolean hasBoss(Boss boss) {
+        return this.boss == boss;
     }
 
     @Override
-    public boolean hasInShop(String named, int index) {
+    public boolean hasInShop(@NotNull Item item) {
+        return shop.contains(item.getName());
+    }
+
+    @Override
+    public boolean hasInShop(@NotNull Item item, int index) {
         if (index > shopQueue.size()) {
             return false;
         }
 
         for (int i = 0; i < index; i++) {
-            if (shopQueue.get(i).item().equalsIgnoreCase(named)) {
+            if (shopQueue.get(i).equals(item)) {
                 return true;
             }
         }
@@ -53,11 +61,16 @@ final class AnteImpl implements Ante {
         return false;
     }
 
+    @Override
+    public long countLegendary() {
+        return 0;
+    }
+
     public void addTag(Tag tag) {
         tags.add(tag);
     }
 
-    public void addToQueue(@NotNull ShopItem value, Named sticker) {
+    public void addToQueue(@NotNull ShopItem value, Edition sticker) {
         shop.add(value.getItem());
         shopQueue.add(new SearchableItem(value.getItem(), sticker));
     }
@@ -77,18 +90,28 @@ final class AnteImpl implements Ante {
 
     @Override
     public boolean hasLegendary(LegendaryJoker... jokers) {
-        int souls = countInPack("The Soul");
+        if (legendaryJokers != null) {
+            for (LegendaryJoker joker : jokers) {
+                if (!legendaryJokers.contains(joker.getName())) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        legendaryJokers = new HashSet<>();
+
+        int souls = countInPack(Specials.THE_SOUL);
 
         if (souls < jokers.length) return false;
 
-        var jokersFound = new HashSet<String>();
-
-        for (int i = 0; i < jokers.length; i++) {
-            jokersFound.add(functions.nextJoker("sou", ante, false).joker);
+        for (int i = 0; i < souls; i++) {
+            legendaryJokers.add(functions.nextJoker("sou", ante, false).joker);
         }
 
         for (LegendaryJoker joker : jokers) {
-            if (!jokersFound.contains(joker.getName())) {
+            if (!legendaryJokers.contains(joker.getName())) {
                 return false;
             }
         }
@@ -97,9 +120,9 @@ final class AnteImpl implements Ante {
     }
 
     @Override
-    public boolean containsInPack(String name) {
+    public boolean hasInPack(@NotNull Item item) {
         for (Pack pack : packs) {
-            if (pack.containsOption(name)) {
+            if (pack.containsOption(item.getName())) {
                 return true;
             }
         }
@@ -107,16 +130,58 @@ final class AnteImpl implements Ante {
     }
 
     @Override
-    public int countInPack(String name) {
+    public boolean hasPack(PackType packType) {
+        for (Pack pack : packs) {
+            if (pack.getType() == packType) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasInSpectral(@NotNull Item item) {
+        for (Pack pack : packs) {
+            if (pack.getKind() != PackKind.Spectral) {
+                continue;
+            }
+
+            if (pack.containsOption(item.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasVoucher(Voucher voucher) {
+        return false;
+    }
+
+    @Override
+    public int countInPack(@NotNull Item item) {
         int count = 0;
         for (Pack pack : packs) {
-            if (pack.containsOption(name)) {
+            if (pack.containsOption(item.getName())) {
                 count++;
             }
         }
         return count;
     }
 
+    @Override
+    public boolean hasInBuffonPack(@NotNull Item item) {
+        for (Pack pack : packs) {
+            if (pack.getKind() != PackKind.Buffoon) {
+                continue;
+            }
+
+            if (pack.containsOption(item.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public int getAnte() {

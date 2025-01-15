@@ -1,7 +1,7 @@
 package com.balatro;
 
 import com.balatro.api.Balatro;
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 import com.balatro.api.Run;
 import com.balatro.enums.*;
 import com.balatro.structs.*;
@@ -164,7 +164,7 @@ public final class BalatroImpl implements Balatro {
             play.addTag(functions.nextTag(a));
 
             for (int q = 1; q <= cardsPerAnte.get(a - 1); q++) {
-                Named sticker = null;
+                Edition sticker = null;
 
                 ShopItem item = functions.nextShopItem(a);
 
@@ -232,7 +232,7 @@ public final class BalatroImpl implements Balatro {
                             if (!card.getSeal().equals("No Seal")) {
                                 output.append(card.getSeal()).append(" ");
                             }
-                            if (!card.getEdition().equals("No Edition")) {
+                            if (card.getEdition() != Edition.NoEdition) {
                                 output.append(card.getEdition()).append(" ");
                             }
                             if (!card.getEnhancement().equals("No Enhancement")) {
@@ -289,8 +289,8 @@ public final class BalatroImpl implements Balatro {
         return new RunImpl(seed, Collections.unmodifiableList(antes));
     }
 
-    private static @Nullable Named getSticker(@NotNull JokerData joker) {
-        Named sticker = null;
+    private static @Nullable Item getSticker(@NotNull JokerData joker) {
+        Item sticker = null;
 
         if (joker.getStickers().isEternal()) {
             sticker = Edition.Eternal;

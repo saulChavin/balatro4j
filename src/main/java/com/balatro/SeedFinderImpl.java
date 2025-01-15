@@ -42,10 +42,11 @@ public final class SeedFinderImpl implements SeedFinder {
 
     @Override
     public List<Run> find() {
+        search();
         return foundSeeds;
     }
 
-    public void search() {
+    private void search() {
         if (filter == null) {
             throw new IllegalStateException("No filters were added");
         }
@@ -105,8 +106,7 @@ public final class SeedFinderImpl implements SeedFinder {
             }
 
             var run = builder
-                    .build()
-                    .analyze();
+                    .build();
 
             if (checkFilters(run)) {
                 long end = System.currentTimeMillis();

@@ -11,17 +11,13 @@ public interface Balatro {
         return new BalatroBuilder(seed);
     }
 
-    static Balatro of(String seed) {
-        return builder(seed).build();
-    }
-
     @Contract(" -> new")
-    static @NotNull SeedFinder finder() {
+    static @NotNull SeedFinder search() {
         return new SeedFinderImpl();
     }
 
     @Contract("_, _ -> new")
-    static @NotNull SeedFinder finder(int parallelism, int seedsPerThread) {
+    static @NotNull SeedFinder search(int parallelism, int seedsPerThread) {
         return new SeedFinderImpl(parallelism, seedsPerThread);
     }
 

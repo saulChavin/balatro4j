@@ -1,6 +1,6 @@
 package com.balatro;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,12 +17,12 @@ sealed class Lock permits Functions {
         locked.remove(item);
     }
 
-    public void lock(Named named) {
-        lock(named.getName());
+    public void lock(Item item) {
+        lock(item.getName());
     }
 
-    public boolean isLocked(Named named) {
-        return isLocked(named.getName());
+    public boolean isLocked(Item item) {
+        return isLocked(item.getName());
     }
 
     public boolean isLocked(String item) {

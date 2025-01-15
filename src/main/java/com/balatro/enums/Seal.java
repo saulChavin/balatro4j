@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
-public enum Seal implements Named {
+public enum Seal implements Item {
     NoSeal("No Seal"),
     RedSeal("Red Seal"),
     BlueSeal("Blue Seal"),

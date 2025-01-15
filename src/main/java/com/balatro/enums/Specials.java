@@ -2,20 +2,18 @@ package com.balatro.enums;
 
 import com.balatro.api.Item;
 
-public enum Type implements Item {
-    Joker("Joker"),
-    Tarot("Tarot"),
-    Planet("Planet"),
-    Spectral("Spectral"),
-    PlayingCard("Playing Card");
+public enum Specials implements Item {
+    THE_SOUL("The Soul");
 
     private final String name;
 
-    Type(String name) {
+    Specials(String name) {
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return name;
     }
+
 }

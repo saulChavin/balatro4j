@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
-public enum Planet implements Named {
+public enum Planet implements Item {
 
     Mercury("Mercury"),
     Venus("Venus"),

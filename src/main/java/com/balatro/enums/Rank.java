@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
-public enum Rank implements Named {
+public enum Rank implements Item {
     R_2("2"),
     R_3("3"),
     R_4("4"),

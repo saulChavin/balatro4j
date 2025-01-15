@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
-public enum Edition implements Named {
+public enum Edition implements Item {
     Negative("Negative"),
     Polychrome("Polychrome"),
     Holographic("Holographic"),

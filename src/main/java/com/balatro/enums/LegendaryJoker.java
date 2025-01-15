@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Named;
+import com.balatro.api.Item;
 
-public enum LegendaryJoker implements Named {
+public enum LegendaryJoker implements Item {
     Canio("Canio"),
     Triboulet("Triboulet"),
     Yorick("Yorick"),
