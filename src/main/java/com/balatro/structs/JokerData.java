@@ -1,32 +1,34 @@
 package com.balatro.structs;
 
+import com.balatro.api.Item;
+import com.balatro.enums.CommonJoker;
 import com.balatro.enums.Edition;
 
 public class JokerData {
-    public String joker;
+    public Item joker;
     public String rarity;
     public Edition edition;
     public JokerStickers stickers;
 
     public JokerData() {
-        this.joker = "Joker";
+        this.joker = CommonJoker.Joker;
         this.rarity = "Common";
         this.edition = Edition.NoEdition;
         this.stickers = new JokerStickers();
     }
 
-    public JokerData(String joker, String rarity, Edition edition, JokerStickers stickers) {
+    public JokerData(Item joker, String rarity, Edition edition, JokerStickers stickers) {
         this.joker = joker;
         this.rarity = rarity;
         this.edition = edition;
         this.stickers = stickers;
     }
 
-    public String getJoker() {
+    public Item getJoker() {
         return joker;
     }
 
-    public void setJoker(String joker) {
+    public void setJoker(Item joker) {
         this.joker = joker;
     }
 

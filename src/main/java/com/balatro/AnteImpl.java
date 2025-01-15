@@ -77,7 +77,7 @@ final class AnteImpl implements Ante {
     }
 
     void addToQueue(@NotNull ShopItem value, Edition sticker) {
-        shop.add(value.getItem());
+        shop.add(value.getItem().getName());
         shopQueue.add(new SearchableItem(value.getItem(), sticker));
     }
 
@@ -113,7 +113,7 @@ final class AnteImpl implements Ante {
         if (souls < jokers.length) return false;
 
         for (int i = 0; i < souls; i++) {
-            legendaryJokers.add(functions.nextJoker("sou", ante, false).joker);
+            legendaryJokers.add(functions.nextJoker("sou", ante, false).joker.getName());
         }
 
         for (LegendaryJoker joker : jokers) {

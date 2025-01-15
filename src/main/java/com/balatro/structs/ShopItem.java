@@ -1,25 +1,28 @@
 package com.balatro.structs;
 
+import com.balatro.api.Item;
+import com.balatro.enums.CommonJoker;
+import com.balatro.enums.Tarot;
 import com.balatro.enums.Type;
 
 public class ShopItem {
     private Type type;
-    private String item;
+    private Item item;
     private JokerData jokerData;
 
     public ShopItem() {
         this.type = Type.Tarot;
-        this.item = "The Fool";
+        this.item = Tarot.The_Fool;
         this.jokerData = new JokerData();
     }
 
-    public ShopItem(Type type, String item) {
+    public ShopItem(Type type, Item item) {
         this.type = type;
         this.item = item;
         this.jokerData = new JokerData();
     }
 
-    public ShopItem(Type type, String item, JokerData jokerData) {
+    public ShopItem(Type type, Item item, JokerData jokerData) {
         this.type = type;
         this.item = item;
         this.jokerData = jokerData;
@@ -33,11 +36,11 @@ public class ShopItem {
         this.type = type;
     }
 
-    public String getItem() {
+    public Item getItem() {
         return item;
     }
 
-    public void setItem(String item) {
+    public void setItem(Item item) {
         this.item = item;
     }
 

@@ -1,7 +1,9 @@
 package com.balatro;
 
 import com.balatro.api.Item;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,15 +15,34 @@ sealed class Lock permits Functions {
         locked.add(item);
     }
 
+    private void lock(Collection<String> collection) {
+        locked.addAll(collection);
+    }
+
+    static Set<String> firstLock = Set.of("Overstock Plus", "Liquidation", "Glow Up", "Reroll Glut", "Omen Globe", "Observatory", "Nacho Tong", "Recyclomancy", "Tarot Tycoon", "Planet Tycoon", "Money Tree", "Antimatter", "Illusion", "Petroglyph", "Retcon", "Palette");
+    static Set<String> ante2Lock = Set.of("The Mouth", "The Fish", "The Wall", "The House", "The Mark", "The Wheel", "The Arm", "The Water", "The Needle", "The Flint", "Negative Tag", "Standard Tag", "Meteor Tag", "Buffoon Tag", "Handy Tag", "Garbage Tag", "Ethereal Tag", "Top-up Tag", "Orbital Tag");
+
+    public void firstLock() {
+        locked.addAll(firstLock);
+    }
+
     public void unlock(String item) {
         locked.remove(item);
     }
 
-    public void lock(Item item) {
+    public void unlock(Item item) {
+        unlock(item.getName());
+    }
+
+    public void unlock(Collection<String> collection) {
+        locked.removeAll(collection);
+    }
+
+    public void lock(@NotNull Item item) {
         lock(item.getName());
     }
 
-    public boolean isLocked(Item item) {
+    public boolean isLocked(@NotNull Item item) {
         return isLocked(item.getName());
     }
 
@@ -31,25 +52,7 @@ sealed class Lock permits Functions {
 
     public void initLocks(int ante, boolean freshProfile, boolean freshRun) {
         if (ante < 2) {
-            lock("The Mouth");
-            lock("The Fish");
-            lock("The Wall");
-            lock("The House");
-            lock("The Mark");
-            lock("The Wheel");
-            lock("The Arm");
-            lock("The Water");
-            lock("The Needle");
-            lock("The Flint");
-            lock("Negative Tag");
-            lock("Standard Tag");
-            lock("Meteor Tag");
-            lock("Buffoon Tag");
-            lock("Handy Tag");
-            lock("Garbage Tag");
-            lock("Ethereal Tag");
-            lock("Top-up Tag");
-            lock("Orbital Tag");
+            locked.addAll(ante2Lock);
         }
 
         if (ante < 3) {
@@ -62,121 +65,20 @@ sealed class Lock permits Functions {
         if (ante < 6) lock("The Ox");
 
         if (freshProfile) {
-            lock("Negative Tag");
-            lock("Foil Tag");
-            lock("Holographic Tag");
-            lock("Polychrome Tag");
-            lock("Rare Tag");
-            lock("Golden Ticket");
-            lock("Mr. Bones");
-            lock("Acrobat");
-            lock("Sock and Buskin");
-            lock("Swashbuckler");
-            lock("Troubadour");
-            lock("Certificate");
-            lock("Smeared Joker");
-            lock("Throwback");
-            lock("Hanging Chad");
-            lock("Rough Gem");
-            lock("Bloodstone");
-            lock("Arrowhead");
-            lock("Onyx Agate");
-            lock("Glass Joker");
-            lock("Showman");
-            lock("Flower Pot");
-            lock("Blueprint");
-            lock("Wee Joker");
-            lock("Merry Andy");
-            lock("Oops! All 6s");
-            lock("The Idol");
-            lock("Seeing Double");
-            lock("Matador");
-            lock("Hit the Road");
-            lock("The Duo");
-            lock("The Trio");
-            lock("The Family");
-            lock("The Order");
-            lock("The Tribe");
-            lock("Stuntman");
-            lock("Invisible Joker");
-            lock("Brainstorm");
-            lock("Satellite");
-            lock("Shoot the Moon");
-            lock("Driver's License");
-            lock("Cartomancer");
-            lock("Astronomer");
-            lock("Burnt Joker");
-            lock("Bootstraps");
-            lock("Overstock Plus");
-            lock("Liquidation");
-            lock("Glow Up");
-            lock("Reroll Glut");
-            lock("Omen Globe");
-            lock("Observatory");
-            lock("Nacho Tong");
-            lock("Recyclomancy");
-            lock("Tarot Tycoon");
-            lock("Planet Tycoon");
-            lock("Money Tree");
-            lock("Antimatter");
-            lock("Illusion");
-            lock("Petroglyph");
-            lock("Retcon");
-            lock("Palette");
+            lock(Set.of("Negative Tag", "Foil Tag", "Holographic Tag", "Polychrome Tag", "Rare Tag", "Golden Ticket", "Mr. Bones", "Acrobat", "Sock and Buskin", "Swashbuckler", "Troubadour", "Certificate", "Smeared Joker", "Throwback", "Hanging Chad", "Rough Gem", "Bloodstone", "Arrowhead", "Onyx Agate", "Glass Joker", "Showman", "Flower Pot", "Blueprint", "Wee Joker", "Merry Andy", "Oops! All 6s", "The Idol"));
+            lock(Set.of("Seeing Double", "Matador", "Hit the Road", "The Duo", "The Trio", "The Family", "The Order", "The Tribe", "Stuntman", "Invisible Joker", "Brainstorm", "Satellite", "Shoot the Moon", "Driver's License", "Cartomancer", "Astronomer", "Burnt Joker", "Bootstraps", "Overstock Plus", "Liquidation", "Glow Up", "Reroll Glut", "Omen Globe"));
+            lock(Set.of("Observatory", "Nacho Tong", "Recyclomancy", "Tarot Tycoon", "Planet Tycoon", "Money Tree", "Antimatter", "Illusion", "Petroglyph", "Retcon", "Palette"));
         }
         if (freshRun) {
-            lock("Planet X");
-            lock("Ceres");
-            lock("Eris");
-            lock("Five of a Kind");
-            lock("Flush House");
-            lock("Flush Five");
-            lock("Stone Joker");
-            lock("Steel Joker");
-            lock("Glass Joker");
-            lock("Golden Ticket");
-            lock("Lucky Cat");
-            lock("Cavendish");
-            lock("Overstock Plus");
-            lock("Liquidation");
-            lock("Glow Up");
-            lock("Reroll Glut");
-            lock("Omen Globe");
-            lock("Observatory");
-            lock("Nacho Tong");
-            lock("Recyclomancy");
-            lock("Tarot Tycoon");
-            lock("Planet Tycoon");
-            lock("Money Tree");
-            lock("Antimatter");
-            lock("Illusion");
-            lock("Petroglyph");
-            lock("Retcon");
-            lock("Palette");
+            lock(Set.of("Planet X", "Ceres", "Eris", "Five of a Kind", "Flush House", "Flush Five", "Stone Joker", "Steel Joker", "Glass Joker", "Golden Ticket", "Lucky Cat", "Cavendish", "Overstock Plus", "Liquidation", "Glow Up", "Reroll Glut", "Omen Globe", "Observatory", "Nacho Tong", "Recyclomancy", "Tarot Tycoon", "Planet Tycoon", "Money Tree", "Antimatter", "Illusion", "Petroglyph", "Retcon", "Palette"));
         }
     }
 
     public void initUnlocks(int ante, boolean freshProfile) {
         if (ante == 2) {
-            unlock("The Mouth");
-            unlock("The Fish");
-            unlock("The Wall");
-            unlock("The House");
-            unlock("The Mark");
-            unlock("The Wheel");
-            unlock("The Arm");
-            unlock("The Water");
-            unlock("The Needle");
-            unlock("The Flint");
+            unlock(Set.of("The Mouth", "The Fish", "The Wall", "The House", "The Mark", "The Wheel", "The Arm", "The Water", "The Needle", "The Flint"));
+            unlock(Set.of("Standard Tag", "Meteor Tag", "Buffoon Tag", "Handy Tag", "Garbage Tag", "Ethereal Tag", "Top-up Tag", "Orbital Tag"));
             if (!freshProfile) unlock("Negative Tag");
-            unlock("Standard Tag");
-            unlock("Meteor Tag");
-            unlock("Buffoon Tag");
-            unlock("Handy Tag");
-            unlock("Garbage Tag");
-            unlock("Ethereal Tag");
-            unlock("Top-up Tag");
-            unlock("Orbital Tag");
         }
         if (ante == 3) {
             unlock("The Tooth");

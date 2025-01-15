@@ -6,6 +6,10 @@ public interface Item {
 
     String getName();
 
+    default boolean eq(Item item) {
+        return getName().equalsIgnoreCase(item.getName());
+    }
+
     default boolean equals(String value) {
         return getName().equals(value);
     }

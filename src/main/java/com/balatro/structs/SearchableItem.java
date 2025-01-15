@@ -5,9 +5,9 @@ import com.balatro.api.Item;
 import com.balatro.enums.Edition;
 import org.jetbrains.annotations.Nullable;
 
-public record SearchableItem(String item, @Nullable Item edition) {
+public record SearchableItem(Item item, @Nullable Item edition) {
 
-    public SearchableItem(String item, Item edition) {
+    public SearchableItem(Item item, Item edition) {
         this.item = item;
         this.edition = edition;
     }
@@ -17,16 +17,16 @@ public record SearchableItem(String item, @Nullable Item edition) {
     }
 
     public boolean hasEdition(Edition edition) {
-        return this.edition != null && this.edition.equals(edition);
+        return this.edition != null && this.edition.eq(edition);
     }
 
     public boolean equals(Item item) {
         if (item instanceof EditionItem editionItem) {
             if (editionItem.edition() != null && edition != null) {
-                return editionItem.getName().equals(this.item) && edition.getName().equals(editionItem.edition().getName());
+                return editionItem.eq(this.item) && edition.eq(editionItem.edition());
             }
         }
 
-        return item.getName().equals(this.item);
+        return item.eq(this.item);
     }
 }

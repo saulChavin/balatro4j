@@ -1,5 +1,6 @@
 package com.balatro;
 
+import com.balatro.api.AbstractCard;
 import com.balatro.api.Balatro;
 import com.balatro.api.Item;
 import com.balatro.api.Run;
@@ -117,22 +118,7 @@ public final class BalatroImpl implements Balatro {
 
         Functions functions = new Functions(seed, new InstanceParams(deck, stake, false, version.getVersion()));
         functions.initLocks(1, false, false);
-        functions.lock("Overstock Plus");
-        functions.lock("Liquidation");
-        functions.lock("Glow Up");
-        functions.lock("Reroll Glut");
-        functions.lock("Omen Globe");
-        functions.lock("Observatory");
-        functions.lock("Nacho Tong");
-        functions.lock("Recyclomancy");
-        functions.lock("Tarot Tycoon");
-        functions.lock("Planet Tycoon");
-        functions.lock("Money Tree");
-        functions.lock("Antimatter");
-        functions.lock("Illusion");
-        functions.lock("Petroglyph");
-        functions.lock("Retcon");
-        functions.lock("Palette");
+        functions.firstLock();
 
         for (int i = 0; i < options.size(); i++) {
             if (!selectedOptions[i]) functions.lock(options.get(i));
@@ -195,19 +181,19 @@ public final class BalatroImpl implements Balatro {
 
                 switch (packInfo.getKind()) {
                     case PackKind.Celestial -> {
-                        List<String> cards = functions.nextCelestialPack(packInfo.getSize(), a);
+                        List<Item> cards = functions.nextCelestialPack(packInfo.getSize(), a);
                         for (int c = 0; c < packInfo.getSize(); c++) {
                             options.add(new Option(cards.get(c)));
                         }
                     }
                     case PackKind.Arcana -> {
-                        List<String> cards = functions.nextArcanaPack(packInfo.getSize(), a);
+                        List<Item> cards = functions.nextArcanaPack(packInfo.getSize(), a);
                         for (int c = 0; c < packInfo.getSize(); c++) {
                             options.add(new Option(cards.get(c)));
                         }
                     }
                     case PackKind.Spectral -> {
-                        List<String> cards = functions.nextSpectralPack(packInfo.getSize(), a);
+                        List<Item> cards = functions.nextSpectralPack(packInfo.getSize(), a);
                         for (int c = 0; c < packInfo.getSize(); c++) {
                             options.add(new Option(cards.get(c)));
                         }
@@ -277,7 +263,7 @@ public final class BalatroImpl implements Balatro {
                                     output.append("Hearts");
                                     break;
                             }
-                            options.add(new Option(output.toString()));
+                            options.add(new Option(new AbstractCard(output.toString())));
                         }
                     }
                 }
@@ -301,7 +287,8 @@ public final class BalatroImpl implements Balatro {
         if (joker.getStickers().isRental()) {
             sticker = Edition.Rental;
         }
-        if (!joker.getEdition().equals("No Edition")) {
+
+        if(joker.getEdition() != Edition.NoEdition){
             sticker = joker.getEdition();
         }
 

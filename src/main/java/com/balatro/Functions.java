@@ -101,34 +101,37 @@ public final class Functions extends Lock {
     }
 
     // Card Generators
-    public String nextTarot(String source, int ante, boolean soulable) {
-        if (soulable && (params.isShowman() || !isLocked("The Soul")) && random("soul_Tarot" + ante) > 0.997) {
-            return "The Soul";
+    public Item nextTarot(String source, int ante, boolean soulable) {
+        if (soulable && (params.isShowman() || !isLocked(Specials.THE_SOUL)) && random("soul_Tarot" + ante) > 0.997) {
+            return Specials.THE_SOUL;
         }
-        return randchoice("Tarot" + source + ante, TAROTS).getName();
+        return randchoice("Tarot" + source + ante, TAROTS);
     }
 
-    public String nextPlanet(String source, int ante, boolean soulable) {
-        if (soulable && (params.isShowman() || !isLocked("Black Hole")) && random("soul_Planet" + ante) > 0.997) {
-            return "Black Hole";
+    public Item nextPlanet(String source, int ante, boolean soulable) {
+        if (soulable && (params.isShowman() || !isLocked(Specials.BLACKHOLE)) && random("soul_Planet" + ante) > 0.997) {
+            return Specials.BLACKHOLE;
         }
-        return randchoice("Planet" + source + ante, PLANETS).name();
+        return randchoice("Planet" + source + ante, PLANETS);
     }
 
-    public String nextSpectral(String source, int ante, boolean soulable) {
+    public Item nextSpectral(String source, int ante, boolean soulable) {
         if (soulable) {
-            String forcedKey = "RETRY";
-            if ((params.isShowman() || !isLocked("The Soul")) && random("soul_Spectral" + ante) > 0.997) {
-                forcedKey = "The Soul";
+            Item forcedKey = null;
+
+            if ((params.isShowman() || !isLocked(Specials.THE_SOUL)) && random("soul_Spectral" + ante) > 0.997) {
+                forcedKey = Specials.THE_SOUL;
             }
-            if ((params.isShowman() || !isLocked("Black Hole")) && random("soul_Spectral" + ante) > 0.997) {
-                forcedKey = "Black Hole";
+
+            if ((params.isShowman() || !isLocked(Specials.BLACKHOLE)) && random("soul_Spectral" + ante) > 0.997) {
+                forcedKey = Specials.BLACKHOLE;
             }
-            if (!forcedKey.equals("RETRY")) {
+
+            if (forcedKey != null) {
                 return forcedKey;
             }
         }
-        return randchoice("Spectral" + source + ante, SPECTRALS).getName();
+        return randchoice("Spectral" + source + ante, SPECTRALS);
     }
 
 
@@ -136,7 +139,6 @@ public final class Functions extends Lock {
     static Set<String> setB = Set.of("Ceremonial Dagger", "Ride the Bus", "Runner", "Constellation", "Green Joker", "Red Card", "Madness", "Square Joker", "Vampire", "Rocket", "Obelisk", "Lucky Cat", "Flash Card", "Spare Trousers", "Castle", "Wee Joker");
 
     public JokerData nextJoker(String source, int ante, boolean hasStickers) {
-
         // Get rarity
         String rarity;
 
@@ -260,7 +262,7 @@ public final class Functions extends Lock {
             }
         }
 
-        return new JokerData(joker.getName(), rarity, edition, stickers);
+        return new JokerData(joker, rarity, edition, stickers);
     }
 
     // Shop Logic
@@ -405,8 +407,8 @@ public final class Functions extends Lock {
         return new com.balatro.structs.Card(base.getName(), enhancement, edition, seal);
     }
 
-    public List<String> nextArcanaPack(int size, int ante) {
-        List<String> pack = new ArrayList<>(size);
+    public List<Item> nextArcanaPack(int size, int ante) {
+        List<Item> pack = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
             if (isVoucherActive(Voucher.Omen_Globe) && random("omen_globe") > 0.8) {
@@ -426,8 +428,8 @@ public final class Functions extends Lock {
         return pack;
     }
 
-    public List<String> nextCelestialPack(int size, int ante) {
-        List<String> pack = new ArrayList<>(size);
+    public List<Item> nextCelestialPack(int size, int ante) {
+        List<Item> pack = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
             pack.add(nextPlanet("pl1", ante, true));
@@ -443,8 +445,8 @@ public final class Functions extends Lock {
         return pack;
     }
 
-    public List<String> nextSpectralPack(int size, int ante) {
-        List<String> pack = new ArrayList<>(size);
+    public List<Item> nextSpectralPack(int size, int ante) {
+        List<Item> pack = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
             pack.add(nextSpectral("spe", ante, true));
