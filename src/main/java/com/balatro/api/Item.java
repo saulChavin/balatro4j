@@ -18,6 +18,15 @@ public interface Item {
         return new InPackFilter(this);
     }
 
+    default Filter inBuffonPack() {
+        return new InBuffonPackFilter(this);
+    }
+
+    default Filter inBuffonPack(int ante) {
+        return new InBuffonPackFilter(ante, this);
+    }
+
+
     default Filter inShop() {
         return new InShopFilter(this);
     }

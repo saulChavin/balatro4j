@@ -23,6 +23,10 @@ public final class SeedFinderImpl implements SeedFinder {
         this(Runtime.getRuntime().availableProcessors(), 1_000_000);
     }
 
+    public SeedFinderImpl(int seedsPerThread) {
+        this(Runtime.getRuntime().availableProcessors(), seedsPerThread);
+    }
+
     public SeedFinderImpl(int parallelism, int seedsPerThread) {
         this.parallelism = parallelism;
         this.seedsPerThread = seedsPerThread;
@@ -75,7 +79,7 @@ public final class SeedFinderImpl implements SeedFinder {
                 time++;
 
                 if (time % 10 == 0) {
-                    System.out.println("\r" + count.get() / time + " ops/s seeds analyzed: " + count.get());
+                    System.out.print("\r" + count.get() / time + " ops/s seeds analyzed: " + count.get());
                 }
 
             } catch (InterruptedException e) {
@@ -83,7 +87,7 @@ public final class SeedFinderImpl implements SeedFinder {
             }
         }
 
-        System.out.println("\rFinished, Ops per second: " + (count.get() / time) + ", seeds analyzed: " + count.get());
+        System.out.print("\rFinished, Ops per second: " + (count.get() / time) + ", seeds analyzed: " + count.get());
     }
 
     static AtomicInteger count = new AtomicInteger(0);

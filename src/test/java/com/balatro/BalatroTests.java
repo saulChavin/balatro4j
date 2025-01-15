@@ -2,6 +2,8 @@ package com.balatro;
 
 import com.balatro.api.Balatro;
 import com.balatro.api.Run;
+import com.balatro.enums.RareJoker;
+import com.balatro.enums.UnCommonJoker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -51,8 +53,10 @@ public class BalatroTests {
     @Test
     void seedSearchTest() {
         var seeds = Balatro.search()
-                .configuration(config -> config.maxAnte(1))
-                .filter(Perkeo.inPack().and(Triboulet.inPack()))
+                .configuration(config -> config.maxAnte(2))
+                .filter(Perkeo.inPack().and(Triboulet.inPack())
+                        .and(UnCommonJoker.Sock_and_Buskin.inShop())
+                        .and(Blueprint.inShop().or(Blueprint.inBuffonPack())))
                 .find();
 
         System.out.println("Seeds found: " + seeds.size());
