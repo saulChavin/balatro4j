@@ -75,7 +75,7 @@ public final class SeedFinderImpl implements SeedFinder {
                 time++;
 
                 if (time % 10 == 0) {
-                    System.out.println(count.get() / time + " ops/s seeds analyzed: " + count.get());
+                    System.out.println("\r" + count.get() / time + " ops/s seeds analyzed: " + count.get());
                 }
 
             } catch (InterruptedException e) {
@@ -83,7 +83,7 @@ public final class SeedFinderImpl implements SeedFinder {
             }
         }
 
-        System.out.println("Finished, Ops per second: " + (count.get() / time) + ", seeds analyzed: " + count.get());
+        System.out.println("\rFinished, Ops per second: " + (count.get() / time) + ", seeds analyzed: " + count.get());
     }
 
     static AtomicInteger count = new AtomicInteger(0);
@@ -97,8 +97,6 @@ public final class SeedFinderImpl implements SeedFinder {
             count.incrementAndGet();
             var seed = BalatroImpl.generateRandomSeed();
 
-            long init = System.currentTimeMillis();
-
             var builder = Balatro.builder(seed);
 
             if (configuration != null) {
@@ -109,10 +107,6 @@ public final class SeedFinderImpl implements SeedFinder {
                     .build();
 
             if (checkFilters(run)) {
-                long end = System.currentTimeMillis();
-
-                System.err.println(seed + " " + (end - init) + " ms");
-
                 foundSeeds.add(run);
             }
         }

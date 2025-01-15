@@ -50,14 +50,9 @@ public class BalatroTests {
 
     @Test
     void seedSearchTest() {
-
         var seeds = Balatro.search()
                 .configuration(config -> config.maxAnte(1))
-                .filter(Perkeo.edition(Negative).inSpectral()
-                        .or(Triboulet.inSpectral())
-                        .and(Blueprint.inShop())
-                        .and(The_Arm.isPresent())
-                        .and(Antimatter.isPresent()))
+                .filter(Perkeo.inPack().and(Triboulet.inPack()))
                 .find();
 
         System.out.println("Seeds found: " + seeds.size());
