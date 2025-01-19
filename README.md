@@ -1,14 +1,58 @@
 # balatro4j
 
-A balatro seed analyzer and finder, coded in pure Java based in Immolate
+A balatro seed analyzer and finder, coded in pure Java based on Immolate
+
+Requeriments:
+
+- Java 23 or GraalVM 23 if you want to compile the project to native image
+- Gradle 8.12
+
+### Native compilation
+
+```shell
+./gradlew nativeCompile
+```
+
+I've seen more speed running the JVM version than the native one, so I recommend using the JVM version
+
+### Examples
 
 ```java
-var run = Balatro.builder("2K9H9HN")
-        .maxAnte(1)
-        .build()
-        .analyze();
+void find() {
+    var seeds = Balatro.search(1, 1)
+            .configuration(config -> config.maxAnte(2))
+            .filter(Perkeo.inPack().and(Triboulet.inPack())
+                    .and(UnCommonJoker.Sock_and_Buskin.inShop())
+                    .and(Blueprint.inShop().or(Blueprint.inBuffonPack())))
+            .find();
 
-System.out.println(run.toJson());
+    System.out.println("Seeds found: " + seeds.size());
+
+    for (Run seed : seeds) {
+        System.out.println(seed.toString());
+    }
+}
+```
+
+```
+ECGC4XT
+NYA8CXV
+LK2LWI8
+2MFLPG6
+1LFG6WV
+5116R1D
+U7ZYC85
+KNIGXTT
+```
+
+```java
+void runToJson() {
+    var run = Balatro.builder("2K9H9HN")
+            .maxAnte(8)
+            .build();
+
+    System.out.println(run.toJson());
+}
 ```
 
 output:
@@ -325,4 +369,4 @@ WHOQQZD
 3WBK1NK
 ```
 
-average speed: 200K seeds per second
+average speed: 200K seeds per second, max depth 1
