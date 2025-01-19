@@ -1,4 +1,7 @@
-package com.balatro.api;
+package com.balatro.api.filter;
+
+import com.balatro.api.Filter;
+import com.balatro.api.Run;
 
 public class OrFilter implements Filter {
 

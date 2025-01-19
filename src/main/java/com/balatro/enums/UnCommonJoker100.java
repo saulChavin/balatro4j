@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Item;
+import com.balatro.api.Joker;
 
-public enum UnCommonJoker100 implements Item {
+public enum UnCommonJoker100 implements Joker {
     Joker_Stencil("Joker Stencil"),
     Four_Fingers("Four Fingers"),
     Mime("Mime"),

@@ -2,17 +2,13 @@ package com.balatro;
 
 import com.balatro.api.Balatro;
 import com.balatro.api.Run;
-import com.balatro.enums.RareJoker;
 import com.balatro.enums.UnCommonJoker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static com.balatro.enums.Boss.The_Arm;
-import static com.balatro.enums.Edition.Negative;
 import static com.balatro.enums.LegendaryJoker.*;
 import static com.balatro.enums.LegendaryJoker.Triboulet;
 import static com.balatro.enums.RareJoker.Blueprint;
-import static com.balatro.enums.Voucher.Antimatter;
 
 public class BalatroTests {
 
@@ -52,7 +48,7 @@ public class BalatroTests {
 
     @Test
     void seedSearchTest() {
-        var seeds = Balatro.search()
+        var seeds = Balatro.search(1, 1)
                 .configuration(config -> config.maxAnte(2))
                 .filter(Perkeo.inPack().and(Triboulet.inPack())
                         .and(UnCommonJoker.Sock_and_Buskin.inShop())

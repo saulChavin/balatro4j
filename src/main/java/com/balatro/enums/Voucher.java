@@ -2,7 +2,7 @@ package com.balatro.enums;
 
 import com.balatro.api.Filter;
 import com.balatro.api.Item;
-import com.balatro.api.VoucherFilter;
+import com.balatro.api.filter.VoucherFilter;
 
 public enum Voucher implements Item {
     Overstock("Overstock"),

@@ -1,6 +1,9 @@
 package com.balatro.api;
 
 
+import com.balatro.api.filter.AndFilter;
+import com.balatro.api.filter.OrFilter;
+
 public interface Filter {
 
     boolean filter(Run run);

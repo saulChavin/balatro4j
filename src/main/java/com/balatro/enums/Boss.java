@@ -1,6 +1,6 @@
 package com.balatro.enums;
 
-import com.balatro.api.BossFilter;
+import com.balatro.api.filter.BossFilter;
 import com.balatro.api.Filter;
 import com.balatro.api.Item;
 
@@ -50,6 +50,10 @@ public enum Boss implements Item {
     }
 
     public Filter isPresent() {
-        return new BossFilter(this);
+        return new BossFilter(this, false);
+    }
+
+    public Filter isNotPresent() {
+        return new BossFilter(this, true);
     }
 }

@@ -1,8 +1,8 @@
 package com.balatro.enums;
 
-import com.balatro.api.Item;
+import com.balatro.api.Joker;
 
-public enum RareJoker101C implements Item {
+public enum RareJoker101C implements Joker {
     DNA("DNA"),
     Vampire("Vampire"),
     Vagabond("Vagabond"),
