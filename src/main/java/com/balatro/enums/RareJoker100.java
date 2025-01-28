@@ -32,5 +32,10 @@ public enum RareJoker100 implements Joker {
     public String getName() {
         return name;
     }
+    @Override
+    public JokerType getType() {
+        return JokerType.RARE;
+    }
+
 
 }

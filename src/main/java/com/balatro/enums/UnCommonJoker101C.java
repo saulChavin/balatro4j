@@ -77,4 +77,9 @@ public enum UnCommonJoker101C implements Joker {
     public String getName() {
         return name;
     }
+
+    @Override
+    public JokerType getType() {
+        return JokerType.UNCOMMON;
+    }
 }

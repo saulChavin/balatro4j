@@ -1,7 +1,7 @@
 package com.balatro;
 
 
-class Util {
+public class Util {
 
     static double fract(double n) {
         return n - Math.floor(n);
@@ -20,9 +20,9 @@ class Util {
     private static final double two_inv_prec = Math.pow(2, 13);
     private static final double five_inv_prec = Math.pow(5, 13);
 
-    static double round13(double x) {
+    public static double round13(double x) {
         double tentative = Math.floor(x * inv_prec) / inv_prec;
-        double truncated = (x * two_inv_prec % 1.0) * five_inv_prec;
+        double truncated = ((x * two_inv_prec) % 1.0) * five_inv_prec;
         if (tentative != x && truncated % 1.0 >= 0.5 && tentative != Math.nextAfter(x, 1)) {
             return (Math.floor(x * inv_prec) + 1) / inv_prec;
         }

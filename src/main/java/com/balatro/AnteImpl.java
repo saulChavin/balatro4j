@@ -2,19 +2,23 @@ package com.balatro;
 
 import com.balatro.api.Ante;
 import com.balatro.api.Item;
+import com.balatro.api.Joker;
 import com.balatro.enums.*;
 import com.balatro.structs.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 final class AnteImpl implements Ante {
 
     private final int ante;
+    @JsonIgnore
     private final Functions functions;
     private final ShopQueue shopQueue;
     @JsonIgnore
@@ -63,13 +67,8 @@ final class AnteImpl implements Ante {
 
     @Override
     public long countLegendary() {
-        int count = 0;
-        for (Pack pack : packs) {
-            if (pack.containsOption(Specials.THE_SOUL.getName())) {
-                count++;
-            }
-        }
-        return count;
+        hasLegendary(LegendaryJoker.Perkeo);
+        return legendaryJokers.size();
     }
 
     void addTag(Tag tag) {
@@ -92,6 +91,144 @@ final class AnteImpl implements Ante {
     void addPack(@NotNull Pack pack, Set<Option> options) {
         pack.setOptions(options);
         packs.add(pack);
+    }
+
+    @Contract(" -> new")
+    @Override
+    public @NotNull Set<String> getLegendaryJokers() {
+        hasLegendary(LegendaryJoker.Perkeo);//pre-compute
+        return new HashSet<>(legendaryJokers);
+    }
+
+    @Override
+    public int getBufferedJokerCount() {
+        return (int) shopQueue.stream()
+                .filter(SearchableItem::hasSticker)
+                .filter(a -> a.item() instanceof Joker)
+                .count();
+    }
+
+    @Override
+    public Double getScore() {
+        var score = 0.0;
+        score += countLegendary() * 5;
+
+        if (hasLegendary(LegendaryJoker.Yorick) || hasLegendary(LegendaryJoker.Canio)) {
+            score -= 5;
+        }
+
+        if (hasInShop(RareJoker.Blueprint)) {
+            score += 1.5;
+        }
+
+        if (hasInShop(RareJoker.Brainstorm)) {
+            score += 1.5;
+        }
+
+        if (hasInShop(UnCommonJoker.Showman)) {
+            score += 0.5;
+        }
+
+        if (hasInShop(UnCommonJoker.Constellation)) {
+            score += 1.0;
+        }
+
+        if (hasInShop(RareJoker.Invisible_Joker)) {
+            score += 1;
+        }
+
+        if (hasInShop(UnCommonJoker.Sock_and_Buskin)) {
+            if (hasLegendary(LegendaryJoker.Triboulet)) {
+                score += 2.0;
+            } else {
+                score += 0.5;
+            }
+        }
+
+        if (hasInShop(CommonJoker.Hanging_Chad)) {
+            if (hasLegendary(LegendaryJoker.Triboulet)) {
+                score += 1.0;
+            } else {
+                score += 0.5;
+            }
+        }
+
+        if (hasInShop(CommonJoker.Fortune_Teller)) {
+            score += 0.3;
+        }
+
+        if (hasInShop(RareJoker.DNA)) {
+            score += 0.5;
+        }
+
+        score += getShopQueue().stream()
+                .filter(SearchableItem::hasSticker)
+                .count() * 0.5;
+
+        score += getShopQueue().stream()
+                .filter(a -> a.hasEdition(Edition.Negative))
+                .count() * 1.0;
+
+        score += packs.stream()
+                .map(Pack::getKind)
+                .filter(kind -> kind == PackKind.Spectral)
+                .count() * 0.3;
+
+        for (Tag tag : tags) {
+            if (tag == Tag.Negative_Tag) {
+                score += 1.5;
+            }
+
+            if (tag == Tag.Charm_Tag) {
+                score += 0.5;
+            }
+        }
+
+        if (boss == Boss.The_Arm) {
+            score -= 0.5;
+        }
+
+        if (hasInPack(Specials.BLACKHOLE)) {
+            score += 2.0;
+        }
+
+        if (voucher == Voucher.Blank) {
+            score -= 1.0;
+        }
+
+        if (voucher == Voucher.Clearance_Sale) {
+            score += 0.5;
+        }
+
+        if (voucher == Voucher.Overstock) {
+            score += 0.2;
+        }
+
+        if (voucher == Voucher.Liquidation) {
+            score += 0.5;
+        }
+
+        if (voucher == Voucher.Hieroglyph) {
+            score += 0.5;
+        }
+
+        if (voucher == Voucher.Paint_Brush) {
+            score += 0.5;
+        }
+
+        if (voucher == Voucher.Recyclomancy) {
+            score += 0.5;
+        }
+
+        if (voucher == Voucher.Grabber) {
+            score += 0.5;
+        }
+
+        if (voucher == Voucher.Wasteful) {
+            score += 0.2;
+        }
+
+        return score;
     }
 
     @Override
@@ -234,5 +371,97 @@ final class AnteImpl implements Ante {
     @Override
     public List<Pack> getPacks() {
         return new ArrayList<>(packs);
+    }
+
+    @Override
+    public Set<Joker> getJokers() {
+        return shopQueue.stream()
+                .map(SearchableItem::item)
+                .filter(a -> a instanceof Joker)
+                .map(a -> (Joker) a)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Joker> getRareJokers() {
+        return shopQueue.stream()
+                .map(SearchableItem::item)
+                .filter(a -> a instanceof Joker)
+                .map(a -> (Joker) a)
+                .filter(Joker::isRare)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Joker> getUncommonJokers() {
+        return shopQueue.stream()
+                .map(SearchableItem::item)
+                .filter(a -> a instanceof Joker)
+                .map(a -> (Joker) a)
+                .filter(Joker::isUncommon)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public int getNegativeJokerCount() {
+        return (int) shopQueue.stream()
+                .filter(a -> a.hasEdition(Edition.Negative))
+                .map(SearchableItem::item)
+                .filter(a -> a instanceof Joker)
+                .map(a -> (Joker) a)
+                .count();
+    }
+
+    @Override
+    public Set<Tarot> getTarots() {
+        return shopQueue.stream()
+                .map(SearchableItem::item)
+                .filter(a -> a instanceof Tarot)
+                .map(a -> (Tarot) a)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Planet> getPlanets() {
+        return shopQueue.stream()
+                .map(SearchableItem::item)
+                .filter(a -> a instanceof Planet)
+                .map(a -> (Planet) a)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public int getStandardPackCount() {
+        return (int) packs.stream()
+                .filter(a -> a.getKind() == PackKind.Standard)
+                .count();
+    }
+
+    @Override
+    public int getJokerPackCount() {
+        return (int) packs.stream()
+                .filter(a -> a.getKind() == PackKind.Buffoon)
+                .count();
+    }
+
+    @Override
+    public int getSpectralPackCount() {
+        return (int) packs.stream()
+                .filter(a -> a.getKind() == PackKind.Spectral)
+                .count();
+    }
+
+    @Override
+    public int getTarotPackCount() {
+        return (int) packs.stream()
+                .filter(a -> a.getKind() == PackKind.Arcana)
+                .count();
+    }
+
+    @Override
+    public int getPlanetPackCount() {
+        return (int) packs.stream()
+                .filter(a -> a.getKind() == PackKind.Celestial)
+                .count();
     }
 }

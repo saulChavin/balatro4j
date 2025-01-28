@@ -1,14 +1,15 @@
-package com.balatro;
+package tests;
 
-import com.balatro.api.Balatro;
-import com.balatro.api.Run;
-import com.balatro.enums.UnCommonJoker;
+import com.balatro.Util;
+import com.balatro.api.*;
+import com.balatro.enums.RareJoker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static com.balatro.enums.LegendaryJoker.*;
 import static com.balatro.enums.LegendaryJoker.Triboulet;
 import static com.balatro.enums.RareJoker.Blueprint;
+import static com.balatro.enums.RareJoker.Brainstorm;
 
 public class BalatroTests {
 
@@ -21,6 +22,20 @@ public class BalatroTests {
         System.out.println(run.toJson());
     }
 
+    @Test
+    void test1234() {
+        var json = Balatro.builder("1234")
+                .maxAnte(8)
+                .build()
+                .toJson();
+
+        System.out.println(json);
+    }
+
+    @Test
+    void testUtilRound13() {
+        System.out.println(Util.round13(0.04098230016037929));
+    }
 
     @Test
     void testFilters() {
@@ -48,17 +63,19 @@ public class BalatroTests {
 
     @Test
     void seedSearchTest() {
-        var seeds = Balatro.search(1, 1)
-                .configuration(config -> config.maxAnte(2))
-                .filter(Perkeo.inPack().and(Triboulet.inPack())
-                        .and(UnCommonJoker.Sock_and_Buskin.inShop())
-                        .and(Blueprint.inShop().or(Blueprint.inBuffonPack())))
+        var seeds = Balatro.search(10, 10_000_000)
+                .configuration(config -> config.maxAnte(1))
+                .filter(Perkeo.inPack().and(Triboulet.inPack()).and(Blueprint.inShop()))
                 .find();
 
         System.out.println("Seeds found: " + seeds.size());
 
         for (Run seed : seeds) {
-            System.out.println(seed.toString());
+            var play = Balatro.builder(seed.toString())
+                    .build();
+
+            System.out.println(play.seed() + " " + play.getScore());
         }
     }
+
 }

@@ -2,6 +2,7 @@ package com.balatro;
 
 import com.balatro.api.*;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -29,6 +30,10 @@ public final class SeedFinderImpl implements SeedFinder {
 
     public SeedFinderImpl(int parallelism, int seedsPerThread) {
         this.parallelism = parallelism;
+        if (parallelism > Runtime.getRuntime().availableProcessors()) {
+            throw new IllegalArgumentException("Parallelism cannot be greater than available processors");
+        }
+
         this.seedsPerThread = seedsPerThread;
     }
 
@@ -60,8 +65,7 @@ public final class SeedFinderImpl implements SeedFinder {
         }
 
         lock.set(true);
-
-        System.out.println("Searching...");
+        count.set(0);
 
         List<ForkJoinTask<?>> tasks = new ArrayList<>(parallelism);
 
@@ -71,6 +75,10 @@ public final class SeedFinderImpl implements SeedFinder {
         }
 
         int time = 0;
+        
+        var format = new DecimalFormat("#,###");
+
+        System.out.println("Searching " + format.format((long) parallelism * seedsPerThread) + " seeds with " + parallelism + " tasks");
 
         while (!tasks.stream().allMatch(ForkJoinTask::isDone)) {
             try {
@@ -79,15 +87,14 @@ public final class SeedFinderImpl implements SeedFinder {
                 time++;
 
                 if (time % 10 == 0) {
-                    System.out.print("\r" + count.get() / time + " ops/s seeds analyzed: " + count.get());
+                    System.out.println(format.format(count.get() / time) + " ops/s seeds analyzed: " + format.format(count.get()));
                 }
-
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        System.out.print("\rFinished, Ops per second: " + (count.get() / time) + ", seeds analyzed: " + count.get());
+        System.out.print("Finished! " + format.format(count.get() / time) + " Seeds/Sec, Seeds analyzed: " + format.format(count.get()) + "\n");
     }
 
     static AtomicInteger count = new AtomicInteger(0);
@@ -98,20 +105,25 @@ public final class SeedFinderImpl implements SeedFinder {
 
     private void generate() {
         for (int i = 0; i < seedsPerThread; i++) {
-            count.incrementAndGet();
-            var seed = BalatroImpl.generateRandomSeed();
+            try {
+                count.incrementAndGet();
+                var seed = BalatroImpl.generateRandomSeed();
 
-            var builder = Balatro.builder(seed);
+                var builder = Balatro.builder(seed);
 
-            if (configuration != null) {
-                configuration.accept(builder);
-            }
+                if (configuration != null) {
+                    configuration.accept(builder);
+                }
 
-            var run = builder
-                    .build();
+                var run = builder
+                        .build();
 
-            if (checkFilters(run)) {
-                foundSeeds.add(run);
+                if (checkFilters(run)) {
+                    foundSeeds.add(run);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                break;
             }
         }
     }

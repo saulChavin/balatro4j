@@ -114,4 +114,9 @@ public enum CommonJoker implements Joker {
     public String getName() {
         return name;
     }
+
+    @Override
+    public JokerType getType() {
+        return JokerType.COMMON;
+    }
 }

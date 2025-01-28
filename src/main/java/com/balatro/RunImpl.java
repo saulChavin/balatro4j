@@ -4,17 +4,13 @@ import com.balatro.api.Ante;
 import com.balatro.api.Run;
 import com.balatro.enums.*;
 import com.balatro.api.Item;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 record RunImpl(String seed, List<Ante> antes) implements Run {
 
-    static final ObjectMapper mapper = new ObjectMapper()
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     @Override
     public String toJson() {

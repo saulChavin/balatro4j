@@ -5,6 +5,7 @@ import com.balatro.enums.*;
 import com.balatro.enums.Card;
 import com.balatro.enums.PackType;
 import com.balatro.structs.*;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -49,31 +50,31 @@ public final class Functions extends Lock {
 //        return new LuaRandom(getNode(id));
 //    }
 
-    private double getNode(String ID) {
-        var c = cache.nodes.get(ID);
+    private double getNode(String id) {
+        var c = cache.nodes.get(id);
 
         if (c == null) {
-            c = pseudohash(ID + seed);
-            cache.nodes.put(ID, c);
+            c = pseudohash(id + seed);
+            cache.nodes.put(id, c);
         }
 
         var value = round13((c * 1.72431234 + 2.134453429141) % 1);
 
-        cache.nodes.put(ID, value);
+        cache.nodes.put(id, value);
 
         return (value + hashedSeed) / 2;
     }
 
-    private double random(String ID) {
-        return LuaRandom.random(getNode(ID));
+    private double random(String id) {
+        return LuaRandom.random(getNode(id));
     }
 
-    private int randint(String ID, int min, int max) {
-        return LuaRandom.randint(getNode(ID), min, max);
+    private int randint(String ID, int max) {
+        return LuaRandom.randint(getNode(ID), 0, max);
     }
 
     public PackType randweightedchoice(String ID, List<PackType> items) {
-        double poll = random(ID) * items.getFirst().getValue();
+        double poll = random(ID) * 22.42;
         int idx = 1;
         double weight = 0;
         while (weight < poll) {
@@ -83,14 +84,13 @@ public final class Functions extends Lock {
         return items.get(idx - 1);
     }
 
-
     public <T extends Item> T randchoice(String ID, @NotNull List<T> items) {
-        T item = items.get(randint(ID, 0, items.size() - 1));
+        T item = items.get(randint(ID, items.size() - 1));
 
         if (!params.isShowman() && isLocked(item) || "RETRY".equals(item.getName())) {
             int resample = 2;
             while (true) {
-                item = items.get(randint(ID + "_resample" + resample, 0, items.size() - 1));
+                item = items.get(randint(ID + "_resample" + resample, items.size() - 1));
                 resample++;
                 if ((!isLocked(item) && !"RETRY".equals(item.getName())) || resample > 1000) {
                     return item;
@@ -140,20 +140,20 @@ public final class Functions extends Lock {
 
     public JokerData nextJoker(String source, int ante, boolean hasStickers) {
         // Get rarity
-        String rarity;
+        int rarity;
 
         switch (source) {
-            case "sou" -> rarity = "4";
-            case "wra", "rta" -> rarity = "3";
-            case "uta" -> rarity = "2";
+            case "sou" -> rarity = 4;
+            case "wra", "rta" -> rarity = 3;
+            case "uta" -> rarity = 2;
             default -> {
                 double rarityPoll = random("rarity" + ante + source);
                 if (rarityPoll > 0.95) {
-                    rarity = "3";
+                    rarity = 3;
                 } else if (rarityPoll > 0.7) {
-                    rarity = "2";
+                    rarity = 2;
                 } else {
-                    rarity = "1";
+                    rarity = 1;
                 }
             }
         }
@@ -186,14 +186,14 @@ public final class Functions extends Lock {
         Item joker;
 
         switch (rarity) {
-            case "4" -> {
+            case 4 -> {
                 if (params.version > 10099) {
                     joker = randchoice("Joker4", LEGENDARY_JOKERS);
                 } else {
                     joker = randchoice("Joker4" + source + ante, LEGENDARY_JOKERS);
                 }
             }
-            case "3" -> {
+            case 3 -> {
                 if (params.version > 10103) joker = randchoice("Joker3" + source + ante, RARE_JOKERS);
                 else {
                     if (params.version > 10099) {
@@ -203,7 +203,7 @@ public final class Functions extends Lock {
                     }
                 }
             }
-            case "2" -> {
+            case 2 -> {
                 if (params.version > 10103) {
                     joker = randchoice("Joker2" + source + ante, UNCOMMON_JOKERS);
                 } else {
@@ -227,24 +227,35 @@ public final class Functions extends Lock {
         var stickers = new JokerStickers();
         if (hasStickers) {
             if (params.version > 10103) {
-                double stickerPoll = random(((source.equals("buf")) ? "packetper" : "etperpoll") + ante);
-                if (stickerPoll > 0.7 && (params.getStake() == Stake.Black_Stake ||
+
+                boolean searchForSticker = (params.getStake() == Stake.Black_Stake ||
                         params.getStake() == Stake.Blue_Stake ||
                         params.getStake() == Stake.Purple_Stake ||
                         params.getStake() == Stake.Orange_Stake ||
-                        params.getStake() == Stake.Gold_Stake)) {
+                        params.getStake() == Stake.Gold_Stake);
+
+                double stickerPoll = 0.0;
+
+                if (searchForSticker) {
+                    stickerPoll = random(((source.equals("buf")) ? "packetper" : "etperpoll") + ante);
+                }
+
+                if (stickerPoll > 0.7) {
                     if (!setA.contains(joker.getName())) {
                         stickers.eternal = true;
                     }
                 }
+
                 if ((stickerPoll > 0.4 && stickerPoll <= 0.7) && (params.getStake() == Stake.Orange_Stake || params.getStake() == Stake.Gold_Stake)) {
                     if (!setB.contains(joker.getName())) {
                         stickers.perishable = true;
                     }
                 }
+
                 if (params.getStake() == Stake.Gold_Stake) {
                     stickers.rental = random(((source.equals("buf")) ? "packssjr" : "ssjr") + ante) > 0.7;
                 }
+
             } else {
                 if (params.getStake() == Stake.Black_Stake || params.getStake() == Stake.Blue_Stake || params.getStake() == Stake.Purple_Stake || params.getStake() == Stake.Orange_Stake || params.getStake() == Stake.Gold_Stake) {
                     if (!setA.contains(joker.getName())) {
@@ -292,7 +303,8 @@ public final class Functions extends Lock {
         return new ShopInstance(20, tarotRate, planetRate, playingCardRate, spectralRate);
     }
 
-    public ShopItem nextShopItem(int ante) {
+    @Contract("_ -> new")
+    public @NotNull ShopItem nextShopItem(int ante) {
         var shop = getShopInstance();
 
         double cdtPoll = random("cdt" + ante) * shop.getTotalRate();
@@ -368,9 +380,6 @@ public final class Functions extends Lock {
             enhancement = randchoice("Enhancedsta" + ante, ENHANCEMENTS).getName();
         }
 
-        // Base
-        var base = randchoice("frontsta" + ante, CARDS);
-
         // Edition
         Edition edition;
 
@@ -404,10 +413,12 @@ public final class Functions extends Lock {
             }
         }
 
+        var base = randchoice("frontsta" + ante, CARDS);
+
         return new com.balatro.structs.Card(base.getName(), enhancement, edition, seal);
     }
 
-    public List<Item> nextArcanaPack(int size, int ante) {
+    public @NotNull List<Item> nextArcanaPack(int size, int ante) {
         List<Item> pack = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
@@ -428,7 +439,7 @@ public final class Functions extends Lock {
         return pack;
     }
 
-    public List<Item> nextCelestialPack(int size, int ante) {
+    public @NotNull List<Item> nextCelestialPack(int size, int ante) {
         List<Item> pack = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
@@ -445,7 +456,7 @@ public final class Functions extends Lock {
         return pack;
     }
 
-    public List<Item> nextSpectralPack(int size, int ante) {
+    public @NotNull List<Item> nextSpectralPack(int size, int ante) {
         List<Item> pack = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
@@ -463,7 +474,7 @@ public final class Functions extends Lock {
         return pack;
     }
 
-    public List<com.balatro.structs.Card> nextStandardPack(int size, int ante) {
+    public @NotNull List<com.balatro.structs.Card> nextStandardPack(int size, int ante) {
         List<com.balatro.structs.Card> pack = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
@@ -473,7 +484,7 @@ public final class Functions extends Lock {
         return pack;
     }
 
-    public List<JokerData> nextBuffoonPack(int size, int ante) {
+    public @NotNull List<JokerData> nextBuffoonPack(int size, int ante) {
         List<JokerData> pack = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {

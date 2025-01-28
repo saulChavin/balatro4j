@@ -1,4 +1,6 @@
 import io.ktor.plugin.features.*
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.internal.declarativedsl.parsing.main
 
 plugins {
@@ -19,7 +21,6 @@ repositories {
 }
 
 dependencies {
-
     compileOnly("org.jetbrains:annotations:26.0.1")
     implementation("com.fasterxml.jackson.core:jackson-core:2.18.2")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
@@ -29,6 +30,25 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+
+    testLogging {
+        events = mutableSetOf(
+            TestLogEvent.FAILED,
+            TestLogEvent.PASSED,
+            TestLogEvent.SKIPPED,
+            TestLogEvent.STANDARD_OUT,
+            TestLogEvent.STANDARD_ERROR
+        )
+        showExceptions = true
+        exceptionFormat = FULL
+        showCauses = true
+        showStackTraces = true
+        showStandardStreams = true
+    }
 }
 
 java {

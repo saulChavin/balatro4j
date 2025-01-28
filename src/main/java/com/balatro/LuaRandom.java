@@ -22,9 +22,13 @@ public final class LuaRandom {
         }
 
         state = u.getUlong();
-        for (int i = 0; i < 11; i++) {
+
+        for (int i = 0; i < 5; i++) {
+            state = (((state << 31) ^ state) >>> 45) ^ ((state & (MAX_UINT64 << 1)) << 18);
             state = (((state << 31) ^ state) >>> 45) ^ ((state & (MAX_UINT64 << 1)) << 18);
         }
+
+        state = (((state << 31) ^ state) >>> 45) ^ ((state & (MAX_UINT64 << 1)) << 18);
 
         randint ^= state;
 
@@ -42,9 +46,12 @@ public final class LuaRandom {
 
         state = u.getUlong();
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 5; i++) {
+            state = (((state << 19) ^ state) >>> 30) ^ ((state & (MAX_UINT64 << 6)) << 28);
             state = (((state << 19) ^ state) >>> 30) ^ ((state & (MAX_UINT64 << 6)) << 28);
         }
+
+        state = (((state << 19) ^ state) >>> 30) ^ ((state & (MAX_UINT64 << 6)) << 28);
 
         randint ^= state;
 
@@ -63,9 +70,12 @@ public final class LuaRandom {
         state = u.getUlong();
 
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 5; i++) {
+            state = (((state << 24) ^ state) >>> 48) ^ ((state & (MAX_UINT64 << 9)) << 7);
             state = (((state << 24) ^ state) >>> 48) ^ ((state & (MAX_UINT64 << 9)) << 7);
         }
+
+        state = (((state << 24) ^ state) >>> 48) ^ ((state & (MAX_UINT64 << 9)) << 7);
 
         randint ^= state;
 
@@ -83,9 +93,12 @@ public final class LuaRandom {
 
         state = u.getUlong();
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 5; i++) {
+            state = (((state << 21) ^ state) >>> 39) ^ ((state & (MAX_UINT64 << 17)) << 8);
             state = (((state << 21) ^ state) >>> 39) ^ ((state & (MAX_UINT64 << 17)) << 8);
         }
+
+        state = (((state << 21) ^ state) >>> 39) ^ ((state & (MAX_UINT64 << 17)) << 8);
 
         randint ^= state;
 
@@ -97,8 +110,7 @@ public final class LuaRandom {
     }
 
     public static double random(double seed) {
-        DoubleLong u = new DoubleLong(randdblmem(seed));
-        return u.getDouble() - 1.0;
+        return Double.longBitsToDouble(randdblmem(seed)) - 1.0;
     }
 
     public static int randint(double seed, int min, int max) {
