@@ -6,7 +6,7 @@ import org.gradle.internal.declarativedsl.parsing.main
 plugins {
     id("java")
     id("application")
-    id("org.graalvm.buildtools.native") version ("0.10.4")
+    id("org.graalvm.buildtools.native") version "0.10.4"
     id("io.ktor.plugin") version "2.3.12"
 }
 
@@ -62,12 +62,13 @@ tasks.test {
 }
 
 application {
-    mainClass.set("com.balatro.Balatro")
+    mainClass.set("com.balatro.Main")
 }
 
 graalvmNative {
     binaries.all {
         resources.autodetect()
+        buildArgs.add("-O3")
     }
 }
 

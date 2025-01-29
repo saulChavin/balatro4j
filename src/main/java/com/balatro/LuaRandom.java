@@ -4,6 +4,7 @@ public final class LuaRandom {
 
     public static final long MAX_UINT64 = Long.MAX_VALUE;
 
+    @SuppressWarnings("all")
     private static long _randInt(double seed) {
         long state;
         long randint = 0;

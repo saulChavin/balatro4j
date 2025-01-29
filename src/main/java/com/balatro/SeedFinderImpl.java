@@ -1,6 +1,7 @@
 package com.balatro;
 
 import com.balatro.api.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public final class SeedFinderImpl implements SeedFinder {
         }
 
         int time = 0;
-        
+
         var format = new DecimalFormat("#,###");
 
         System.out.println("Searching " + format.format((long) parallelism * seedsPerThread) + " seeds with " + parallelism + " tasks");
@@ -87,7 +88,7 @@ public final class SeedFinderImpl implements SeedFinder {
                 time++;
 
                 if (time % 10 == 0) {
-                    System.out.println(format.format(count.get() / time) + " ops/s seeds analyzed: " + format.format(count.get()));
+                    System.out.println(format.format(count.get() / time) + " ops/s seeds analyzed: " + format.format(count.get()) + " " + getMemory());
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -95,6 +96,17 @@ public final class SeedFinderImpl implements SeedFinder {
         }
 
         System.out.print("Finished! " + format.format(count.get() / time) + " Seeds/Sec, Seeds analyzed: " + format.format(count.get()) + "\n");
+        System.out.println(getMemory());
+    }
+
+    private @NotNull String getMemory() {
+        Runtime runtime = Runtime.getRuntime();
+
+        long totalMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+        long usedMemory = totalMemory - freeMemory;
+
+        return "Used memory: " + usedMemory / 1024 / 1024 + " MB";
     }
 
     static AtomicInteger count = new AtomicInteger(0);

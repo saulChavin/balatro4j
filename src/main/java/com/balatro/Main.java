@@ -9,7 +9,7 @@ import static com.balatro.enums.RareJoker.Blueprint;
 
 public class Main {
     public static void main(String[] args) {
-        var seeds = Balatro.search(10, 10_000_000)
+        var seeds = Balatro.search(10, 1_000_000)
                 .configuration(config -> config.maxAnte(1))
                 .filter(Perkeo.inPack().and(Triboulet.inPack()).and(Blueprint.inShop()))
                 .find();
