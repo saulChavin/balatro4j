@@ -1,11 +1,9 @@
 package com.balatro.api;
 
 import com.balatro.enums.*;
-import com.balatro.structs.Pack;
+import com.balatro.structs.PackInfo;
 import com.balatro.structs.ShopQueue;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +19,7 @@ public interface Ante extends CommonQueries {
 
     Boss getBoss();
 
-    List<Pack> getPacks();
+    List<PackInfo> getPacks();
 
     Set<String> getLegendaryJokers();
 

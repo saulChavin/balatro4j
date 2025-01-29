@@ -5,13 +5,13 @@ import com.balatro.enums.PackType;
 
 import java.util.Set;
 
-public class Pack {
+public class PackInfo {
     private PackType type;
     private int size;
     private int choices;
     private Set<Option> options;
 
-    public Pack(PackType type, int size, int choices) {
+    public PackInfo(PackType type, int size, int choices) {
         this.type = type;
         this.size = size;
         this.choices = choices;

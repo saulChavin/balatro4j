@@ -46,21 +46,17 @@ public final class Functions extends Lock {
         cache = new Cache();
     }
 
-//    private LuaRandom getRandom(String id) {
-//        return new LuaRandom(getNode(id));
-//    }
-
     private double getNode(String id) {
-        var c = cache.nodes.get(id);
+        var c = cache.get(id);
 
         if (c == null) {
             c = pseudohash(id + seed);
-            cache.nodes.put(id, c);
+            cache.put(id, c);
         }
 
         var value = round13((c * 1.72431234 + 2.134453429141) % 1);
 
-        cache.nodes.put(id, value);
+        cache.put(id, value);
 
         return (value + hashedSeed) / 2;
     }
@@ -138,7 +134,7 @@ public final class Functions extends Lock {
     static Set<String> setA = Set.of("Gros Michel", "Ice Cream", "Cavendish", "Luchador", "Turtle Bean", "Diet Cola", "Popcorn", "Ramen", "Seltzer", "Mr. Bones", "Invisible Joker");
     static Set<String> setB = Set.of("Ceremonial Dagger", "Ride the Bus", "Runner", "Constellation", "Green Joker", "Red Card", "Madness", "Square Joker", "Vampire", "Rocket", "Obelisk", "Lucky Cat", "Flash Card", "Spare Trousers", "Castle", "Wee Joker");
 
-    public JokerData nextJoker(String source, int ante, boolean hasStickers) {
+    public JokerData nextJoker(@NotNull String source, int ante, boolean hasStickers) {
         // Get rarity
         int rarity;
 
@@ -229,10 +225,10 @@ public final class Functions extends Lock {
             if (params.version > 10103) {
 
                 boolean searchForSticker = (params.getStake() == Stake.Black_Stake ||
-                        params.getStake() == Stake.Blue_Stake ||
-                        params.getStake() == Stake.Purple_Stake ||
-                        params.getStake() == Stake.Orange_Stake ||
-                        params.getStake() == Stake.Gold_Stake);
+                                            params.getStake() == Stake.Blue_Stake ||
+                                            params.getStake() == Stake.Purple_Stake ||
+                                            params.getStake() == Stake.Orange_Stake ||
+                                            params.getStake() == Stake.Gold_Stake);
 
                 double stickerPoll = 0.0;
 
@@ -277,7 +273,8 @@ public final class Functions extends Lock {
     }
 
     // Shop Logic
-    public ShopInstance getShopInstance() {
+    @Contract(" -> new")
+    public @NotNull ShopInstance getShopInstance() {
         double tarotRate = 4;
         double planetRate = 4;
         double playingCardRate = 0;
@@ -352,25 +349,27 @@ public final class Functions extends Lock {
     }
 
     public PackType nextPack(int ante) {
-        if (ante <= 2 && !cache.generatedFirstPack && params.version > 10099) {
-            cache.generatedFirstPack = true;
+        if (ante <= 2 && !cache.isGeneratedFirstPack() && params.version > 10099) {
+            cache.setGeneratedFirstPack(true);
             return PackType.Buffoon_Pack;
         }
 
         return randweightedchoice("shop_pack" + ante, PACKS);
     }
 
-    public com.balatro.structs.Pack packInfo(@NotNull PackType pack) {
+    @Contract("_ -> new")
+    public @NotNull PackInfo packInfo(@NotNull PackType pack) {
         if (pack.isMega()) {
-            return new com.balatro.structs.Pack(pack, (pack.isBuffon() || pack.isSpectral()) ? 4 : 5, 2);
+            return new PackInfo(pack, (pack.isBuffon() || pack.isSpectral()) ? 4 : 5, 2);
         } else if (pack.isJumbo()) {
-            return new com.balatro.structs.Pack(pack, (pack.isBuffon() || pack.isSpectral()) ? 4 : 5, 1);
+            return new PackInfo(pack, (pack.isBuffon() || pack.isSpectral()) ? 4 : 5, 1);
         } else {
-            return new com.balatro.structs.Pack(pack, (pack.isBuffon() || pack.isSpectral()) ? 2 : 3, 1);
+            return new PackInfo(pack, (pack.isBuffon() || pack.isSpectral()) ? 2 : 3, 1);
         }
     }
 
-    public com.balatro.structs.Card nextStandardCard(int ante) {
+    @Contract("_ -> new")
+    public com.balatro.structs.@NotNull Card nextStandardCard(int ante) {
         // Enhancement
         String enhancement;
 
@@ -551,7 +550,7 @@ public final class Functions extends Lock {
         for (Boss boss : BOSSES) {
             if (!isLocked(boss)) {
                 if ((ante % 8 == 0 && boss.charAt(0) != 'T') ||
-                        (ante % 8 != 0 && boss.charAt(0) == 'T')) {
+                    (ante % 8 != 0 && boss.charAt(0) == 'T')) {
                     bossPool.add(boss);
                     numBosses++;
                 }
@@ -562,7 +561,7 @@ public final class Functions extends Lock {
         if (numBosses == 0) {
             for (Boss boss : BOSSES) {
                 if ((ante % 8 == 0 && boss.charAt(0) != 'T') ||
-                        (ante % 8 != 0 && boss.charAt(0) == 'T')) {
+                    (ante % 8 != 0 && boss.charAt(0) == 'T')) {
                     unlock(boss.getName());
                 }
             }

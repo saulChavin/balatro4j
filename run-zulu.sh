@@ -1,0 +1,1 @@
+ /Library/Java/JavaVirtualMachines/zulu-23.jdk/Contents/Home/bin/java -jar build/libs/balatro4j.jar

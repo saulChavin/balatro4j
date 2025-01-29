@@ -26,7 +26,7 @@ final class AnteImpl implements Ante {
     private final Set<Tag> tags;
     private Voucher voucher;
     private Boss boss;
-    private final List<Pack> packs;
+    private final List<PackInfo> packInfos;
 
     //Cache
     private Set<String> legendaryJokers;
@@ -37,7 +37,7 @@ final class AnteImpl implements Ante {
         this.tags = new HashSet<>(2);
         this.shopQueue = new ShopQueue();
         this.shop = new HashSet<>(20);
-        this.packs = new ArrayList<>(10);
+        this.packInfos = new ArrayList<>(10);
     }
 
     @Override
@@ -88,9 +88,9 @@ final class AnteImpl implements Ante {
         this.voucher = voucher;
     }
 
-    void addPack(@NotNull Pack pack, Set<Option> options) {
-        pack.setOptions(options);
-        packs.add(pack);
+    void addPack(@NotNull PackInfo packInfo, Set<Option> options) {
+        packInfo.setOptions(options);
+        packInfos.add(packInfo);
     }
 
     @Contract(" -> new")
@@ -169,8 +169,8 @@ final class AnteImpl implements Ante {
                 .filter(a -> a.hasEdition(Edition.Negative))
                 .count() * 1.0;
 
-        score += packs.stream()
-                .map(Pack::getKind)
+        score += packInfos.stream()
+                .map(PackInfo::getKind)
                 .filter(kind -> kind == PackKind.Spectral)
                 .count() * 0.3;
 
@@ -268,8 +268,8 @@ final class AnteImpl implements Ante {
             return hasLegendary(joker);
         }
 
-        for (Pack pack : packs) {
-            if (pack.containsOption(item.getName())) {
+        for (PackInfo packInfo : packInfos) {
+            if (packInfo.containsOption(item.getName())) {
                 return true;
             }
         }
@@ -278,8 +278,8 @@ final class AnteImpl implements Ante {
 
     @Override
     public boolean hasPack(PackType packType) {
-        for (Pack pack : packs) {
-            if (pack.getType() == packType) {
+        for (PackInfo packInfo : packInfos) {
+            if (packInfo.getType() == packType) {
                 return true;
             }
         }
@@ -292,12 +292,12 @@ final class AnteImpl implements Ante {
             return hasLegendary(joker);
         }
 
-        for (Pack pack : packs) {
-            if (pack.getKind() != PackKind.Spectral) {
+        for (PackInfo packInfo : packInfos) {
+            if (packInfo.getKind() != PackKind.Spectral) {
                 continue;
             }
 
-            if (pack.containsOption(item.getName())) {
+            if (packInfo.containsOption(item.getName())) {
                 return true;
             }
         }
@@ -316,8 +316,8 @@ final class AnteImpl implements Ante {
         }
 
         int count = 0;
-        for (Pack pack : packs) {
-            if (pack.containsOption(item.getName())) {
+        for (PackInfo packInfo : packInfos) {
+            if (packInfo.containsOption(item.getName())) {
                 count++;
             }
         }
@@ -326,12 +326,12 @@ final class AnteImpl implements Ante {
 
     @Override
     public boolean hasInBuffonPack(@NotNull Item item) {
-        for (Pack pack : packs) {
-            if (pack.getKind() != PackKind.Buffoon) {
+        for (PackInfo packInfo : packInfos) {
+            if (packInfo.getKind() != PackKind.Buffoon) {
                 continue;
             }
 
-            if (pack.containsOption(item.getName())) {
+            if (packInfo.containsOption(item.getName())) {
                 return true;
             }
         }
@@ -369,8 +369,8 @@ final class AnteImpl implements Ante {
     }
 
     @Override
-    public List<Pack> getPacks() {
-        return new ArrayList<>(packs);
+    public List<PackInfo> getPacks() {
+        return new ArrayList<>(packInfos);
     }
 
     @Override
@@ -432,35 +432,35 @@ final class AnteImpl implements Ante {
 
     @Override
     public int getStandardPackCount() {
-        return (int) packs.stream()
+        return (int) packInfos.stream()
                 .filter(a -> a.getKind() == PackKind.Standard)
                 .count();
     }
 
     @Override
     public int getJokerPackCount() {
-        return (int) packs.stream()
+        return (int) packInfos.stream()
                 .filter(a -> a.getKind() == PackKind.Buffoon)
                 .count();
     }
 
     @Override
     public int getSpectralPackCount() {
-        return (int) packs.stream()
+        return (int) packInfos.stream()
                 .filter(a -> a.getKind() == PackKind.Spectral)
                 .count();
     }
 
     @Override
     public int getTarotPackCount() {
-        return (int) packs.stream()
+        return (int) packInfos.stream()
                 .filter(a -> a.getKind() == PackKind.Arcana)
                 .count();
     }
 
     @Override
     public int getPlanetPackCount() {
-        return (int) packs.stream()
+        return (int) packInfos.stream()
                 .filter(a -> a.getKind() == PackKind.Celestial)
                 .count();
     }

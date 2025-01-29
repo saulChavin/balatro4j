@@ -7,7 +7,8 @@ import com.balatro.api.Run;
 import com.balatro.enums.*;
 import com.balatro.structs.*;
 import com.balatro.structs.Card;
-import com.balatro.structs.Pack;
+import com.balatro.structs.PackInfo;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -97,14 +98,31 @@ public final class BalatroImpl implements Balatro {
     private final Deck deck;
     private final Stake stake;
     private final Version version;
+    private final boolean analyzeStandardPacks;
+    private final boolean analyzeCelestialPacks;
+    private final boolean analyzeTags;
+    private final boolean analyzeBoss;
+    private final boolean analyzeShopQueue;
+    private final boolean analyzeJokers;
+    private final boolean analyzeArcana;
+    private final boolean analyzeSpectral;
 
-    public BalatroImpl(String seed, int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version) {
+    public BalatroImpl(String seed, int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version,
+                       @NotNull Set<PackKind> enabledPacks, boolean analyzeTags, boolean analyzeBoss, boolean analyzeShopQueue) {
         this.seed = seed;
         this.ante = ante;
         this.cardsPerAnte = cardsPerAnte;
         this.deck = deck;
         this.stake = stake;
         this.version = version;
+        this.analyzeStandardPacks = enabledPacks.contains(PackKind.Standard);
+        this.analyzeCelestialPacks = enabledPacks.contains(PackKind.Celestial);
+        this.analyzeArcana = enabledPacks.contains(PackKind.Arcana);
+        this.analyzeSpectral = enabledPacks.contains(PackKind.Spectral);
+        this.analyzeJokers = enabledPacks.contains(PackKind.Buffoon);
+        this.analyzeTags = analyzeTags;
+        this.analyzeBoss = analyzeBoss;
+        this.analyzeShopQueue = analyzeShopQueue;
     }
 
     @Override
@@ -112,7 +130,7 @@ public final class BalatroImpl implements Balatro {
         return performAnalysis(ante, cardsPerAnte, deck, stake, version, seed);
     }
 
-    private RunImpl performAnalysis(int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version, String seed) {
+    private @NotNull RunImpl performAnalysis(int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, @NotNull Version version, String seed) {
         boolean[] selectedOptions = new boolean[61];
         Arrays.fill(selectedOptions, true);
 
@@ -131,7 +149,11 @@ public final class BalatroImpl implements Balatro {
             functions.initUnlocks(a, false);
             var play = new AnteImpl(a, functions);
             antes.add(play);
-            play.setBoss(functions.nextBoss(a));
+
+            if (analyzeBoss) {
+                play.setBoss(functions.nextBoss(a));
+            }
+
             var voucher = functions.nextVoucher(a);
             play.setVoucher(voucher);
 
@@ -146,59 +168,68 @@ public final class BalatroImpl implements Balatro {
                 }
             }
 
-            play.addTag(functions.nextTag(a));
-            play.addTag(functions.nextTag(a));
+            if (analyzeTags) {
+                play.addTag(functions.nextTag(a));
+                play.addTag(functions.nextTag(a));
+            }
 
-            for (int q = 1; q <= cardsPerAnte.get(a - 1); q++) {
-                Edition sticker = null;
+            if (analyzeShopQueue) {
+                for (int q = 1; q <= cardsPerAnte.get(a - 1); q++) {
+                    Edition sticker = null;
 
-                ShopItem item = functions.nextShopItem(a);
+                    ShopItem item = functions.nextShopItem(a);
 
-                if (item.getType() == Type.Joker) {
-                    if (item.getJokerData().getStickers().isEternal()) {
-                        sticker = Edition.Eternal;
+                    if (item.getType() == Type.Joker) {
+                        if (item.getJokerData().getStickers().isEternal()) {
+                            sticker = Edition.Eternal;
+                        }
+                        if (item.getJokerData().getStickers().isPerishable()) {
+                            sticker = Edition.Perishable;
+                        }
+                        if (item.getJokerData().getStickers().isRental()) {
+                            sticker = Edition.Rental;
+                        }
+                        if (item.getJokerData().getEdition() != Edition.NoEdition) {
+                            sticker = item.getJokerData().getEdition();
+                        }
                     }
-                    if (item.getJokerData().getStickers().isPerishable()) {
-                        sticker = Edition.Perishable;
-                    }
-                    if (item.getJokerData().getStickers().isRental()) {
-                        sticker = Edition.Rental;
-                    }
-                    if (item.getJokerData().getEdition() != Edition.NoEdition) {
-                        sticker = item.getJokerData().getEdition();
-                    }
+
+                    play.addToQueue(item, sticker);
                 }
-
-                play.addToQueue(item, sticker);
             }
 
             int numPacks = (a == 1) ? 4 : 6;
 
             for (int p = 1; p <= numPacks; p++) {
                 var pack = functions.nextPack(a);
-                Pack packInfo = functions.packInfo(pack);
+                PackInfo packInfo = functions.packInfo(pack);
                 Set<Option> options = new HashSet<>();
 
                 switch (packInfo.getKind()) {
                     case PackKind.Celestial -> {
+                        if (!analyzeCelestialPacks) continue;
+
                         List<Item> cards = functions.nextCelestialPack(packInfo.getSize(), a);
                         for (int c = 0; c < packInfo.getSize(); c++) {
                             options.add(new Option(cards.get(c)));
                         }
                     }
                     case PackKind.Arcana -> {
+                        if (!analyzeArcana) continue;
                         List<Item> cards = functions.nextArcanaPack(packInfo.getSize(), a);
                         for (int c = 0; c < packInfo.getSize(); c++) {
                             options.add(new Option(cards.get(c)));
                         }
                     }
                     case PackKind.Spectral -> {
+                        if (!analyzeSpectral) continue;
                         List<Item> cards = functions.nextSpectralPack(packInfo.getSize(), a);
                         for (int c = 0; c < packInfo.getSize(); c++) {
                             options.add(new Option(cards.get(c)));
                         }
                     }
                     case PackKind.Buffoon -> {
+                        if (!analyzeJokers) continue;
                         List<JokerData> cards = functions.nextBuffoonPack(packInfo.getSize(), a);
 
                         for (int c = 0; c < packInfo.getSize(); c++) {
@@ -210,6 +241,8 @@ public final class BalatroImpl implements Balatro {
                         }
                     }
                     case PackKind.Standard -> {
+                        if (!analyzeStandardPacks) continue;
+
                         List<Card> cards = functions.nextStandardPack(packInfo.getSize(), a);
 
                         for (int c = 0; c < packInfo.getSize(); c++) {
@@ -288,7 +321,7 @@ public final class BalatroImpl implements Balatro {
             sticker = Edition.Rental;
         }
 
-        if(joker.getEdition() != Edition.NoEdition){
+        if (joker.getEdition() != Edition.NoEdition) {
             sticker = joker.getEdition();
         }
 
