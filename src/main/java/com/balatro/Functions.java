@@ -486,12 +486,17 @@ public final class Functions extends Lock {
     public @NotNull List<JokerData> nextBuffoonPack(int size, int ante) {
         List<JokerData> pack = new ArrayList<>(size);
 
+        JokerData joker;
+
         for (int i = 0; i < size; i++) {
-            pack.add(nextJoker("buf", ante, true));
+            joker = nextJoker("buf", ante, true);
+            pack.add(joker);
+
             if (!params.isShowman()) {
-                lock(pack.get(i).getJoker());
+                lock(joker.getJoker());
             }
         }
+
         for (int i = 0; i < size; i++) {
             unlock(pack.get(i).getJoker());
         }
@@ -508,7 +513,7 @@ public final class Functions extends Lock {
         params.getVouchers().add(voucher);
         lock(voucher);
         // Unlock next level voucher
-        for (int i = 0; i < VOUCHERS.size(); i += 2) {
+        for (int i = voucher.ordinal(); i < VOUCHERS.size(); i += 2) {
             if (VOUCHERS.get(i).equals(voucher)) {
                 unlock(VOUCHERS.get(i + 1).getName());
             }

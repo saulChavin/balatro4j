@@ -7,6 +7,10 @@ public class Util {
         return n - Math.floor(n);
     }
 
+    public static void main(String[] args) {
+        System.out.println(pseudohash("alex"));
+    }
+
     static double pseudohash(String s) {
         double num = 1;
         for (int i = s.length(); i > 0; i--) {

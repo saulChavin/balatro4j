@@ -4,6 +4,10 @@ public final class LuaRandom {
 
     public static final long MAX_UINT64 = Long.MAX_VALUE;
 
+    public static void main(String[] args) {
+        System.out.println(random(0.0));
+    }
+
     @SuppressWarnings("all")
     private static long _randInt(double seed) {
         long state;
@@ -82,7 +86,7 @@ public final class LuaRandom {
 
         //state 3
         m = 1L << (r & 255);
-        r >>= 8;
+        //r >>= 8;
         seed = seed * 3.14159265358979323846;
         seed = seed + 2.7182818284590452354;
 
