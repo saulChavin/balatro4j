@@ -9,7 +9,11 @@ import java.util.Set;
 
 sealed class Lock permits Functions {
 
-    private final Set<String> locked = new HashSet<>();
+    private final Set<String> locked;
+
+    public Lock() {
+        locked = new HashSet<>(ante2Lock);
+    }
 
     public void lock(String item) {
         locked.add(item);
@@ -51,9 +55,9 @@ sealed class Lock permits Functions {
     }
 
     public void initLocks(int ante, boolean freshProfile, boolean freshRun) {
-        if (ante < 2) {
-            locked.addAll(ante2Lock);
-        }
+//        if (ante < 2) {
+//            locked.addAll(ante2Lock);
+//        }
 
         if (ante < 3) {
             lock("The Tooth");

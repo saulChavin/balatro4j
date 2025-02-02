@@ -6,9 +6,9 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Balatro {
 
-    @Contract("_ -> new")
-    static @NotNull BalatroBuilder builder(String seed) {
-        return new BalatroBuilder(seed);
+    @Contract("_,_ -> new")
+    static @NotNull BalatroBuilder builder(String seed, int maxAnte) {
+        return new BalatroBuilder(seed, maxAnte);
     }
 
     @Contract(" -> new")

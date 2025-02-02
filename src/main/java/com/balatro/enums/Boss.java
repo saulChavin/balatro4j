@@ -49,6 +49,18 @@ public enum Boss implements Item {
         return name.charAt(index);
     }
 
+    public boolean isT() {
+        return !notT();
+    }
+
+    public boolean notT() {
+        return this == Amber_Acorn ||
+               this == Cerulean_Bell ||
+               this == Crimson_Heart ||
+               this == Verdant_Leaf ||
+               this == Violet_Vessel;
+    }
+
     public Filter isPresent() {
         return new BossFilter(this, false);
     }

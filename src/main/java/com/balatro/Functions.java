@@ -98,14 +98,14 @@ public final class Functions extends Lock {
 
     // Card Generators
     public Item nextTarot(String source, int ante, boolean soulable) {
-        if (soulable && (params.isShowman() || !isLocked(Specials.THE_SOUL)) && random("soul_Tarot" + ante) > 0.997) {
+        if (soulable && (params.isShowman() || !isLocked(Specials.THE_SOUL)) && random(soul_TarotArr[ante]) > 0.997) {
             return Specials.THE_SOUL;
         }
         return randchoice("Tarot" + source + ante, TAROTS);
     }
 
     public Item nextPlanet(String source, int ante, boolean soulable) {
-        if (soulable && (params.isShowman() || !isLocked(Specials.BLACKHOLE)) && random("soul_Planet" + ante) > 0.997) {
+        if (soulable && (params.isShowman() || !isLocked(Specials.BLACKHOLE)) && random(soul_PlanetArr[ante]) > 0.997) {
             return Specials.BLACKHOLE;
         }
         return randchoice("Planet" + source + ante, PLANETS);
@@ -113,13 +113,19 @@ public final class Functions extends Lock {
 
     public Item nextSpectral(String source, int ante, boolean soulable) {
         if (soulable) {
+            var key = soul_SpectralArr[ante];
+
+            if (random(key) < 0.997) {
+                return randchoice("Spectral" + source + ante, SPECTRALS);
+            }
+
             Item forcedKey = null;
 
-            if ((params.isShowman() || !isLocked(Specials.THE_SOUL)) && random("soul_Spectral" + ante) > 0.997) {
+            if (params.isShowman() || !isLocked(Specials.THE_SOUL)) {
                 forcedKey = Specials.THE_SOUL;
             }
 
-            if ((params.isShowman() || !isLocked(Specials.BLACKHOLE)) && random("soul_Spectral" + ante) > 0.997) {
+            if (params.isShowman() || !isLocked(Specials.BLACKHOLE)) {
                 forcedKey = Specials.BLACKHOLE;
             }
 
@@ -127,6 +133,7 @@ public final class Functions extends Lock {
                 return forcedKey;
             }
         }
+
         return randchoice("Spectral" + source + ante, SPECTRALS);
     }
 
@@ -136,20 +143,18 @@ public final class Functions extends Lock {
 
     public JokerData nextJoker(@NotNull String source, int ante, boolean hasStickers) {
         // Get rarity
-        int rarity;
+        int rarity = 1;
 
         switch (source) {
             case "sou" -> rarity = 4;
             case "wra", "rta" -> rarity = 3;
             case "uta" -> rarity = 2;
             default -> {
-                double rarityPoll = random("rarity" + ante + source);
+                double rarityPoll = random(rarityArr[ante] + source);
                 if (rarityPoll > 0.95) {
                     rarity = 3;
                 } else if (rarityPoll > 0.7) {
                     rarity = 2;
-                } else {
-                    rarity = 1;
                 }
             }
         }
@@ -163,8 +168,8 @@ public final class Functions extends Lock {
             editionRate = 2;
         }
 
-        Edition edition;
-        double editionPoll = random("edi" + source + ante);
+        var edition = Edition.NoEdition;
+        var editionPoll = random("edi" + source + ante);
 
         if (editionPoll > 0.997) {
             edition = Edition.Negative;
@@ -174,8 +179,6 @@ public final class Functions extends Lock {
             edition = Edition.Holographic;
         } else if (editionPoll > 1 - 0.04 * editionRate) {
             edition = Edition.Foil;
-        } else {
-            edition = Edition.NoEdition;
         }
 
         // Get next joker
@@ -190,8 +193,9 @@ public final class Functions extends Lock {
                 }
             }
             case 3 -> {
-                if (params.version > 10103) joker = randchoice("Joker3" + source + ante, RARE_JOKERS);
-                else {
+                if (params.version > 10103) {
+                    joker = randchoice("Joker3" + source + ante, RARE_JOKERS);
+                } else {
                     if (params.version > 10099) {
                         joker = randchoice("Joker3" + source + ante, RARE_JOKERS_101C);
                     } else {
@@ -221,9 +225,9 @@ public final class Functions extends Lock {
 
         // Get next joker stickers
         var stickers = new JokerStickers();
+
         if (hasStickers) {
             if (params.version > 10103) {
-
                 boolean searchForSticker = (params.getStake() == Stake.Black_Stake ||
                                             params.getStake() == Stake.Blue_Stake ||
                                             params.getStake() == Stake.Purple_Stake ||
@@ -233,7 +237,11 @@ public final class Functions extends Lock {
                 double stickerPoll = 0.0;
 
                 if (searchForSticker) {
-                    stickerPoll = random(((source.equals("buf")) ? "packetper" : "etperpoll") + ante);
+                    if (source.equals("buf")) {
+                        stickerPoll = random(packetperArr[ante]);
+                    } else {
+                        stickerPoll = random(etperpollArr[ante]);
+                    }
                 }
 
                 if (stickerPoll > 0.7) {
@@ -249,21 +257,26 @@ public final class Functions extends Lock {
                 }
 
                 if (params.getStake() == Stake.Gold_Stake) {
-                    stickers.rental = random(((source.equals("buf")) ? "packssjr" : "ssjr") + ante) > 0.7;
+                    if (source.equals("buf")) {
+                        stickers.rental = random(packssjrArr[ante]) > 0.7;
+                    } else {
+                        stickers.rental = random(ssjrArr[ante]) > 0.7;
+                    }
                 }
 
             } else {
-                if (params.getStake() == Stake.Black_Stake || params.getStake() == Stake.Blue_Stake || params.getStake() == Stake.Purple_Stake || params.getStake() == Stake.Orange_Stake || params.getStake() == Stake.Gold_Stake) {
+                if (params.getStake() == Stake.Black_Stake || params.getStake() == Stake.Blue_Stake ||
+                    params.getStake() == Stake.Purple_Stake || params.getStake() == Stake.Orange_Stake || params.getStake() == Stake.Gold_Stake) {
                     if (!setA.contains(joker.getName())) {
-                        stickers.eternal = random("stake_shop_joker_eternal" + ante) > 0.7;
+                        stickers.eternal = random(stake_shop_joker_eternalArr[ante]) > 0.7;
                     }
                 }
                 if (params.version > 10099) {
                     if ((params.getStake() == Stake.Orange_Stake || params.getStake() == Stake.Gold_Stake) && !stickers.eternal) {
-                        stickers.perishable = random("ssjp" + ante) > 0.49;
+                        stickers.perishable = random(ssjpArr[ante]) > 0.49;
                     }
                     if (params.getStake() == Stake.Gold_Stake) {
-                        stickers.rental = random("ssjr" + ante) > 0.7;
+                        stickers.rental = random(ssjrArr[ante]) > 0.7;
                     }
                 }
             }
@@ -304,7 +317,7 @@ public final class Functions extends Lock {
     public @NotNull ShopItem nextShopItem(int ante) {
         var shop = getShopInstance();
 
-        double cdtPoll = random("cdt" + ante) * shop.getTotalRate();
+        double cdtPoll = random(cdtArr[ante]) * shop.getTotalRate();
 
         Type type;
 
@@ -354,7 +367,7 @@ public final class Functions extends Lock {
             return PackType.Buffoon_Pack;
         }
 
-        return randweightedchoice("shop_pack" + ante, PACKS);
+        return randweightedchoice(shop_packArr[ante], PACKS);
     }
 
     @Contract("_ -> new")
@@ -368,21 +381,102 @@ public final class Functions extends Lock {
         }
     }
 
+    static String[] rarityArr;
+    static String[] packssjrArr;
+    static String[] etperpollArr;
+    static String[] packetperArr;
+    static String[] stake_shop_joker_eternalArr;
+    static String[] ssjpArr;
+    static String[] ssjrArr;
+    static String[] shop_packArr;
+    static String[] stdsetArr;
+    static String[] standard_editionArr;
+    static String[] enhancedstaArr;
+    static String[] stdsealArr;
+    static String[] stdsealtypeArr;
+    static String[] frontstaArr;
+    static String[] soul_SpectralArr;
+    static String[] soul_PlanetArr;
+    static String[] soul_TarotArr;
+    static String[] cdtArr;
+    static String[] VoucherArr;
+    static String[] TagArr;
+
+    public static void heat(int max) {
+        max = max + 1;
+
+        if (rarityArr != null && rarityArr.length == max) return;
+
+        System.out.println("Heating to: " + max);
+
+        rarityArr = new String[max];
+        packssjrArr = new String[max];
+        etperpollArr = new String[max];
+        packetperArr = new String[max];
+        stake_shop_joker_eternalArr = new String[max];
+        ssjpArr = new String[max];
+        ssjrArr = new String[max];
+        shop_packArr = new String[max];
+        TagArr = new String[max];
+        VoucherArr = new String[max];
+        cdtArr = new String[max];
+        soul_PlanetArr = new String[max];
+        stdsetArr = new String[max];
+        standard_editionArr = new String[max];
+        enhancedstaArr = new String[max];
+        stdsealArr = new String[max];
+        stdsealtypeArr = new String[max];
+        frontstaArr = new String[max];
+        soul_SpectralArr = new String[max];
+        soul_TarotArr = new String[max];
+
+        for (int ante = 0; ante < max; ante++) {
+            stdsetArr[ante] = "stdset" + ante;
+            standard_editionArr[ante] = "standard_edition" + ante;
+            enhancedstaArr[ante] = "Enhancedsta" + ante;
+            stdsealArr[ante] = "stdseal" + ante;
+            stdsealtypeArr[ante] = "stdsealtype" + ante;
+            frontstaArr[ante] = "frontsta" + ante;
+            soul_SpectralArr[ante] = "soul_Spectral" + ante;
+            soul_PlanetArr[ante] = "soul_Planet" + ante;
+            soul_TarotArr[ante] = "soul_Tarot" + ante;
+            cdtArr[ante] = "cdt" + ante;
+            VoucherArr[ante] = "Voucher" + ante;
+            TagArr[ante] = "Tag" + ante;
+            shop_packArr[ante] = "shop_pack" + ante;
+            ssjrArr[ante] = "ssjr" + ante;
+            ssjpArr[ante] = "ssjp" + ante;
+            stake_shop_joker_eternalArr[ante] = "stake_shop_joker_eternal" + ante;
+            packetperArr[ante] = "packetper" + ante;
+            etperpollArr[ante] = "etperpoll" + ante;
+            packssjrArr[ante] = "packssjr" + ante;
+            rarityArr[ante] = "rarity" + ante;
+        }
+    }
+
+
     @Contract("_ -> new")
     public com.balatro.structs.@NotNull Card nextStandardCard(int ante) {
+        var stdset = stdsetArr[ante];
+        var standard_edition = standard_editionArr[ante];
+        var enhancedsta = enhancedstaArr[ante];
+        var stdseal = stdsealArr[ante];
+        var stdsealtype = stdsealtypeArr[ante];
+        var frontsta = frontstaArr[ante];
+
         // Enhancement
         String enhancement;
 
-        if (random("stdset" + ante) <= 0.6) {
+        if (random(stdset) <= 0.6) {
             enhancement = "No Enhancement";
         } else {
-            enhancement = randchoice("Enhancedsta" + ante, ENHANCEMENTS).getName();
+            enhancement = randchoice(enhancedsta, ENHANCEMENTS).getName();
         }
 
         // Edition
-        Edition edition;
+        var edition = Edition.NoEdition;
 
-        double editionPoll = random("standard_edition" + ante);
+        double editionPoll = random(standard_edition);
 
         if (editionPoll > 0.988) {
             edition = Edition.Polychrome;
@@ -390,17 +484,13 @@ public final class Functions extends Lock {
             edition = Edition.Polychrome;
         } else if (editionPoll > 0.92) {
             edition = Edition.Foil;
-        } else {
-            edition = Edition.NoEdition;
         }
 
         // Seal
-        Seal seal;
+        var seal = Seal.NoSeal;
 
-        if (random("stdseal" + ante) <= 0.8) {
-            seal = Seal.NoSeal;
-        } else {
-            double sealPoll = random("stdsealtype" + ante);
+        if (random(stdseal) > 0.8) {
+            double sealPoll = random(stdsealtype);
             if (sealPoll > 0.75) {
                 seal = Seal.RedSeal;
             } else if (sealPoll > 0.5) {
@@ -412,7 +502,7 @@ public final class Functions extends Lock {
             }
         }
 
-        var base = randchoice("frontsta" + ante, CARDS);
+        var base = randchoice(frontsta, CARDS);
 
         return new com.balatro.structs.Card(base.getName(), enhancement, edition, seal);
     }
@@ -431,6 +521,8 @@ public final class Functions extends Lock {
             }
         }
 
+        if (params.isShowman()) return pack;
+
         for (int i = 0; i < size; i++) {
             unlock(pack.get(i));
         }
@@ -447,6 +539,8 @@ public final class Functions extends Lock {
                 lock(pack.get(i));
             }
         }
+
+        if (params.isShowman()) return pack;
 
         for (int i = 0; i < size; i++) {
             unlock(pack.get(i));
@@ -465,6 +559,8 @@ public final class Functions extends Lock {
                 lock(pack.get(i));
             }
         }
+
+        if (params.isShowman()) return pack;
 
         for (int i = 0; i < size; i++) {
             unlock(pack.get(i));
@@ -497,6 +593,8 @@ public final class Functions extends Lock {
             }
         }
 
+        if (params.isShowman()) return pack;
+
         for (int i = 0; i < size; i++) {
             unlock(pack.get(i).getJoker());
         }
@@ -521,7 +619,7 @@ public final class Functions extends Lock {
     }
 
     public Voucher nextVoucher(int ante) {
-        return randchoice("Voucher" + ante, VOUCHERS);
+        return randchoice(VoucherArr[ante], VOUCHERS);
     }
 
     public void setDeck(Deck deck) {
@@ -544,7 +642,7 @@ public final class Functions extends Lock {
     }
 
     public Tag nextTag(int ante) {
-        return randchoice("Tag" + ante, TAGS);
+        return randchoice(TagArr[ante], TAGS);
     }
 
     public Boss nextBoss(int ante) {
@@ -553,20 +651,23 @@ public final class Functions extends Lock {
 
         // First pass: Try to find unlocked bosses
         for (Boss boss : BOSSES) {
-            if (!isLocked(boss)) {
-                if ((ante % 8 == 0 && boss.charAt(0) != 'T') ||
-                    (ante % 8 != 0 && boss.charAt(0) == 'T')) {
-                    bossPool.add(boss);
-                    numBosses++;
-                }
+            if (isLocked(boss)) continue;
+
+            if (ante % 8 == 0 && boss.notT()) {
+                bossPool.add(boss);
+                numBosses++;
+            } else if (boss.isT()) {
+                bossPool.add(boss);
+                numBosses++;
             }
         }
 
         // If no bosses found, unlock appropriate bosses and try again
         if (numBosses == 0) {
             for (Boss boss : BOSSES) {
-                if ((ante % 8 == 0 && boss.charAt(0) != 'T') ||
-                    (ante % 8 != 0 && boss.charAt(0) == 'T')) {
+                if (ante % 8 == 0 && boss.notT()) {
+                    unlock(boss.getName());
+                } else if (boss.isT()) {
                     unlock(boss.getName());
                 }
             }

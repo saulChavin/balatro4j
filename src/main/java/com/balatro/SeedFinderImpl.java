@@ -4,13 +4,16 @@ import com.balatro.api.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class SeedFinderImpl implements SeedFinder {
 
@@ -52,6 +55,13 @@ public final class SeedFinderImpl implements SeedFinder {
 
     @Override
     public List<Run> find() {
+        if (configuration == null) {
+            Functions.heat(8);
+        } else {
+            var builder = Balatro.builder("1", 1);
+            configuration.accept(builder);
+            Functions.heat(builder.maxAnte());
+        }
         search();
         return foundSeeds;
     }
@@ -66,7 +76,7 @@ public final class SeedFinderImpl implements SeedFinder {
         }
 
         lock.set(true);
-        count.set(0);
+        count.reset();
 
         List<ForkJoinTask<?>> tasks = new ArrayList<>(parallelism);
 
@@ -76,9 +86,10 @@ public final class SeedFinderImpl implements SeedFinder {
         }
 
         int time = 0;
-
+        long c;
         var format = new DecimalFormat("#,###");
 
+        var init = LocalDateTime.now();
         System.out.println("Searching " + format.format((long) parallelism * seedsPerThread) + " seeds with " + parallelism + " tasks");
 
         while (!tasks.stream().allMatch(ForkJoinTask::isDone)) {
@@ -86,17 +97,21 @@ public final class SeedFinderImpl implements SeedFinder {
                 Thread.sleep(1000);
 
                 time++;
-
-                if (time % 10 == 0) {
-                    System.out.println(format.format(count.get() / time) + " ops/s seeds analyzed: " + format.format(count.get()) + " " + getMemory());
+                c = SeedFinderImpl.count.longValue();
+                if (time % 2 == 0) {
+                    System.out.println(format.format(c / time) + " ops/s seeds analyzed: " + format.format(c) + " " + getMemory());
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        System.out.print("Finished! " + format.format(count.get() / time) + " Seeds/Sec, Seeds analyzed: " + format.format(count.get()) + "\n");
+        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println("FINISHED: " + (init.until(LocalDateTime.now(), ChronoUnit.SECONDS)) + " seconds | "
+                           + format.format(count.longValue() / time) + " Seeds/sec, Seeds analyzed: " + format.format(count.longValue()));
         System.out.println(getMemory());
+        System.out.println("--------------------------------------------------------------------------------------------");
+
     }
 
     private @NotNull String getMemory() {
@@ -109,7 +124,7 @@ public final class SeedFinderImpl implements SeedFinder {
         return "Used memory: " + usedMemory / 1024 / 1024 + " MB";
     }
 
-    static AtomicInteger count = new AtomicInteger(0);
+    static LongAdder count = new LongAdder();
 
     private boolean checkFilters(Run run) {
         return filter.filter(run);
@@ -118,10 +133,10 @@ public final class SeedFinderImpl implements SeedFinder {
     private void generate() {
         for (int i = 0; i < seedsPerThread; i++) {
             try {
-                count.incrementAndGet();
+                count.increment();
                 var seed = BalatroImpl.generateRandomSeed();
 
-                var builder = Balatro.builder(seed);
+                var builder = Balatro.builder(seed, 0);
 
                 if (configuration != null) {
                     configuration.accept(builder);
@@ -134,7 +149,7 @@ public final class SeedFinderImpl implements SeedFinder {
                     foundSeeds.add(run);
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.getLogger(SeedFinderImpl.class.getName()).log(Level.SEVERE, null, ex);
                 break;
             }
         }

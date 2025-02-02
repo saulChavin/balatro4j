@@ -23,10 +23,11 @@ public class BalatroBuilder {
     private boolean analyzeBoss;
     private boolean analyzeShopQueue;
 
-    public BalatroBuilder(String seed) {
+    public BalatroBuilder(String seed, int maxAnte) {
         this.seed = seed;
         this.enabledPacks = new HashSet<>(Set.of(PackKind.Arcana, PackKind.Buffoon, PackKind.Spectral));
         this.analyzeShopQueue = true;
+        this.maxAnte = maxAnte;
     }
 
     public BalatroBuilder analyzeAll() {
@@ -39,6 +40,10 @@ public class BalatroBuilder {
     public BalatroBuilder maxAnte(int maxAnte) {
         this.maxAnte = maxAnte;
         return this;
+    }
+
+    public int maxAnte() {
+        return maxAnte;
     }
 
     public BalatroBuilder cardsPerAnte(List<Integer> cardsPerAnte) {

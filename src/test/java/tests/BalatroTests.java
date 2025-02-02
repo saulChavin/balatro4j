@@ -15,8 +15,8 @@ public class BalatroTests {
 
     @Test
     void apiTest() {
-        var run = Balatro.builder("PUSSY")
-                .maxAnte(8)
+        var run = Balatro.builder("alex", 8)
+                .analyzeAll()
                 .build();
 
         System.out.println(run.toJson());
@@ -24,8 +24,7 @@ public class BalatroTests {
 
     @Test
     void test1234() {
-        var json = Balatro.builder("1234")
-                .maxAnte(8)
+        var json = Balatro.builder("1234", 8)
                 .build()
                 .toJson();
 
@@ -39,8 +38,7 @@ public class BalatroTests {
 
     @Test
     void testFilters() {
-        var run = Balatro.builder("66HETU9")
-                .maxAnte(8)
+        var run = Balatro.builder("66HETU9", 8)
                 .build();
 
         var found = Perkeo.inPack(1)
@@ -49,8 +47,7 @@ public class BalatroTests {
 
         Assertions.assertTrue(found);
 
-        run = Balatro.builder("IQ6789I")
-                .maxAnte(8)
+        run = Balatro.builder("IQ6789I", 8)
                 .build();
 
         found = Perkeo.inPack()
@@ -71,7 +68,7 @@ public class BalatroTests {
         System.out.println("Seeds found: " + seeds.size());
 
         for (Run seed : seeds) {
-            var play = Balatro.builder(seed.toString())
+            var play = Balatro.builder(seed.toString(), 8)
                     .build();
 
             System.out.println(play.seed() + " " + play.getScore());

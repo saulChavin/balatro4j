@@ -1,17 +1,16 @@
 package com.balatro;
 
 
+import org.jetbrains.annotations.NotNull;
+
 public class Util {
 
     static double fract(double n) {
         return n - Math.floor(n);
     }
 
-    public static void main(String[] args) {
-        System.out.println(pseudohash("alex"));
-    }
 
-    static double pseudohash(String s) {
+    static double pseudohash(@NotNull String s) {
         double num = 1;
         for (int i = s.length(); i > 0; i--) {
             num = fract(1.1239285023 / num * s.charAt(i - 1) * 3.141592653589793 + 3.141592653589793 * i);
