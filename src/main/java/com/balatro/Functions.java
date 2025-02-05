@@ -356,9 +356,14 @@ public final class Functions extends Lock {
             case Type.Spectral -> {
                 return new ShopItem(type, nextSpectral("sho", ante, false));
             }
+            case Type.PlayingCard -> {
+                return new ShopItem(type, nextStandardCard(ante));
+            }
         }
 
-        return new ShopItem();
+        throw new IllegalStateException("Error: ShopItem type not found");
+
+//        return new ShopItem();
     }
 
     public PackType nextPack(int ante) {

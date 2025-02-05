@@ -1,9 +1,10 @@
 package com.balatro.structs;
 
+import com.balatro.api.Item;
 import com.balatro.enums.Edition;
 import com.balatro.enums.Seal;
 
-public class Card {
+public class Card implements Item {
     private String base;
     private String enhancement;
     private Edition edition;
@@ -14,6 +15,11 @@ public class Card {
         this.enhancement = enhancement;
         this.edition = edition;
         this.seal = seal;
+    }
+
+    @Override
+    public String getName() {
+        return base;
     }
 
     public String getBase() {

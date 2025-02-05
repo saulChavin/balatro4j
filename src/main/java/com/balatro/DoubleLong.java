@@ -1,6 +1,6 @@
 package com.balatro;
 
-final class DoubleLong {
+public final class DoubleLong {
     // Internally store the bits as a signed long.
     // In C++ union, 'ulong' is often considered 64-bit unsigned,
     // but Java does not have a built-in unsigned long type.

@@ -1,6 +1,7 @@
 package com.balatro.api;
 
 import com.balatro.BalatroImpl;
+import com.balatro.Functions;
 import com.balatro.enums.Deck;
 import com.balatro.enums.PackKind;
 import com.balatro.enums.Stake;
