@@ -65,4 +65,11 @@ public enum Card implements Item {
     public String getName() {
         return name;
     }
+
+    @Override
+    public int getYIndex() {
+        return 10;
+    }
+
+
 }

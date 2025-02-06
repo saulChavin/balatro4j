@@ -79,7 +79,14 @@ public enum UnCommonJoker101C implements Joker {
     }
 
     @Override
+    public int getYIndex() {
+        return 1;
+    }
+
+    @Override
     public JokerType getType() {
         return JokerType.UNCOMMON;
     }
+
+
 }

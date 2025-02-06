@@ -2,7 +2,7 @@ package com.balatro.enums;
 
 import com.balatro.api.Item;
 
-public enum Tag  implements Item {
+public enum Tag implements Item {
     Uncommon_Tag("Uncommon Tag"),
     Rare_Tag("Rare Tag"),
     Negative_Tag("Negative Tag"),
@@ -37,4 +37,10 @@ public enum Tag  implements Item {
     public String getName() {
         return name;
     }
+
+    @Override
+    public int getYIndex() {
+        return 8;
+    }
+
 }

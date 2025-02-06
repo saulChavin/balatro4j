@@ -75,7 +75,14 @@ public enum CommonJoker100 implements Joker {
     }
 
     @Override
+    public int getYIndex() {
+        return 0;
+    }
+
+    @Override
     public JokerType getType() {
         return JokerType.COMMON;
     }
+
+
 }

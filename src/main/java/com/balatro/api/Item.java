@@ -9,6 +9,10 @@ public interface Item {
 
     String getName();
 
+    int getYIndex();
+
+    int ordinal();
+
     default boolean eq(Item item) {
         return getName().equalsIgnoreCase(item.getName());
     }

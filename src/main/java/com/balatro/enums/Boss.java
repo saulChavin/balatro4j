@@ -45,6 +45,11 @@ public enum Boss implements Item {
         return name;
     }
 
+    @Override
+    public int getYIndex() {
+        return 6;
+    }
+
     public char charAt(int index) {
         return name.charAt(index);
     }
@@ -68,4 +73,5 @@ public enum Boss implements Item {
     public Filter isNotPresent() {
         return new BossFilter(this, true);
     }
+
 }

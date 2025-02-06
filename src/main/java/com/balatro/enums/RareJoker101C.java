@@ -35,7 +35,14 @@ public enum RareJoker101C implements Joker {
     }
 
     @Override
+    public int getYIndex() {
+        return 2;
+    }
+
+    @Override
     public JokerType getType() {
         return JokerType.RARE;
     }
+
+
 }

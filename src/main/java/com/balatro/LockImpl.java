@@ -1,17 +1,18 @@
 package com.balatro;
 
 import com.balatro.api.Item;
+import com.balatro.api.Lock;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-sealed class Lock permits Functions {
+class LockImpl implements Lock {
 
     private final Set<String> locked;
 
-    public Lock() {
+    public LockImpl() {
         locked = new HashSet<>(ante2Lock);
     }
 
@@ -23,8 +24,44 @@ sealed class Lock permits Functions {
         locked.addAll(collection);
     }
 
-    static Set<String> firstLock = Set.of("Overstock Plus", "Liquidation", "Glow Up", "Reroll Glut", "Omen Globe", "Observatory", "Nacho Tong", "Recyclomancy", "Tarot Tycoon", "Planet Tycoon", "Money Tree", "Antimatter", "Illusion", "Petroglyph", "Retcon", "Palette");
-    static Set<String> ante2Lock = Set.of("The Mouth", "The Fish", "The Wall", "The House", "The Mark", "The Wheel", "The Arm", "The Water", "The Needle", "The Flint", "Negative Tag", "Standard Tag", "Meteor Tag", "Buffoon Tag", "Handy Tag", "Garbage Tag", "Ethereal Tag", "Top-up Tag", "Orbital Tag");
+    static Set<String> firstLock = Set.of(
+            "Overstock Plus",
+            "Liquidation",
+            "Glow Up",
+            "Reroll Glut",
+            "Omen Globe",
+            "Observatory",
+            "Nacho Tong",
+            "Recyclomancy",
+            "Tarot Tycoon",
+            "Planet Tycoon",
+            "Money Tree",
+            "Antimatter",
+            "Illusion",
+            "Petroglyph",
+            "Retcon",
+            "Palette");
+
+    static Set<String> ante2Lock = Set.of(
+            "The Mouth",
+            "The Fish",
+            "The Wall",
+            "The House",
+            "The Mark",
+            "The Wheel",
+            "The Arm",
+            "The Water",
+            "The Needle",
+            "The Flint",
+            "Negative Tag",
+            "Standard Tag",
+            "Meteor Tag",
+            "Buffoon Tag",
+            "Handy Tag",
+            "Garbage Tag",
+            "Ethereal Tag",
+            "Top-up Tag",
+            "Orbital Tag");
 
     public void firstLock() {
         locked.addAll(firstLock);

@@ -1,6 +1,7 @@
 package com.balatro;
 
 import com.balatro.api.Item;
+import com.balatro.api.Lock;
 import com.balatro.enums.*;
 import com.balatro.enums.Card;
 import com.balatro.enums.PackType;
@@ -13,7 +14,7 @@ import java.util.*;
 import static com.balatro.Util.pseudohash;
 import static com.balatro.Util.round13;
 
-public final class Functions extends Lock {
+public final class Functions implements Lock {
 
     public static final List<Tarot> TAROTS = Arrays.asList(Tarot.values());
     public static final List<Planet> PLANETS = Arrays.asList(Planet.values());
@@ -38,12 +39,14 @@ public final class Functions extends Lock {
     private final Cache cache;
     public final String seed;
     public final double hashedSeed;
+    private final Lock lock;
 
     public Functions(String s, InstanceParams params) {
         seed = s;
         hashedSeed = pseudohash(s);
         this.params = params;
         cache = new Cache();
+        this.lock = new BooleanArrayLock();
     }
 
     private double getNode(String id) {
@@ -407,7 +410,11 @@ public final class Functions extends Lock {
     static String[] VoucherArr;
     static String[] TagArr;
 
-    public static void heat(int max) {
+    static {
+        heat(8);
+    }
+
+    private static void heat(int max) {
         max = max + 1;
 
         if (rarityArr != null && rarityArr.length == max) return;
@@ -618,7 +625,7 @@ public final class Functions extends Lock {
         // Unlock next level voucher
         for (int i = voucher.ordinal(); i < VOUCHERS.size(); i += 2) {
             if (VOUCHERS.get(i).equals(voucher)) {
-                unlock(VOUCHERS.get(i + 1).getName());
+                unlock(VOUCHERS.get(i + 1));
             }
         }
     }
@@ -671,9 +678,9 @@ public final class Functions extends Lock {
         if (numBosses == 0) {
             for (Boss boss : BOSSES) {
                 if (ante % 8 == 0 && boss.notT()) {
-                    unlock(boss.getName());
+                    unlock(boss);
                 } else if (boss.isT()) {
-                    unlock(boss.getName());
+                    unlock(boss);
                 }
             }
             return nextBoss(ante);
@@ -684,5 +691,34 @@ public final class Functions extends Lock {
         return chosenBoss;
     }
 
+    @Override
+    public void unlock(Item item) {
+        lock.unlock(item);
+    }
+
+    @Override
+    public void lock(@NotNull Item item) {
+        lock.lock(item);
+    }
+
+    @Override
+    public boolean isLocked(@NotNull Item item) {
+        return lock.isLocked(item);
+    }
+
+    @Override
+    public void initUnlocks(int ante, boolean freshProfile) {
+        lock.initUnlocks(ante, freshProfile);
+    }
+
+    @Override
+    public void initLocks(int ante, boolean freshProfile, boolean freshRun) {
+        lock.initLocks(ante, freshProfile, freshRun);
+    }
+
+    @Override
+    public void firstLock() {
+        lock.firstLock();
+    }
 }
 

@@ -55,13 +55,6 @@ public final class SeedFinderImpl implements SeedFinder {
 
     @Override
     public List<Run> find() {
-        if (configuration == null) {
-            Functions.heat(8);
-        } else {
-            var builder = Balatro.builder("1", 1);
-            configuration.accept(builder);
-            Functions.heat(builder.maxAnte());
-        }
         search();
         return foundSeeds;
     }

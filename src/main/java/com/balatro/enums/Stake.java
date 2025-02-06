@@ -22,4 +22,10 @@ public enum Stake implements Item {
         return name;
     }
 
+    @Override
+    public int getYIndex() {
+        return -1;
+    }
+
+
 }

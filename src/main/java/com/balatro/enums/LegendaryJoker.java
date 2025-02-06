@@ -18,4 +18,9 @@ public enum LegendaryJoker implements Item {
     public String getName() {
         return name;
     }
+
+    @Override
+    public int getYIndex() {
+        return 12;
+    }
 }

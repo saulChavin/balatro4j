@@ -11,7 +11,7 @@ import static com.balatro.enums.LegendaryJoker.Triboulet;
 
 public class Main {
     public static void main(String[] args) {
-        var seeds = Balatro.search(10, 1_000_000)
+        var seeds = Balatro.search(1, 10_000_000)
                 .configuration(config -> config.maxAnte(1).disableShopQueue()
                         .disablePack(PackKind.Buffoon))
                 .filter(Perkeo.inPack().and(Triboulet.inPack()))

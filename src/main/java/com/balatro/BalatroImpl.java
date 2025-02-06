@@ -17,68 +17,68 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public final class BalatroImpl implements Balatro {
 
-    public static final List<String> options = Arrays.asList(
-            "Negative Tag",
-            "Foil Tag",
-            "Holographic Tag",
-            "Polychrome Tag",
-            "Rare Tag",
-            "Golden Ticket",
-            "Mr. Bones",
-            "Acrobat",
-            "Sock and Buskin",
-            "Swashbuckler",
-            "Troubadour",
-            "Certificate",
-            "Smeared Joker",
-            "Throwback",
-            "Hanging Chad",
-            "Rough Gem",
-            "Bloodstone",
-            "Arrowhead",
-            "Onyx Agate",
-            "Glass Joker",
-            "Showman",
-            "Flower Pot",
-            "Blueprint",
-            "Wee Joker",
-            "Merry Andy",
-            "Oops! All 6s",
-            "The Idol",
-            "Seeing Double",
-            "Matador",
-            "Hit the Road",
-            "The Duo",
-            "The Trio",
-            "The Family",
-            "The Order",
-            "The Tribe",
-            "Stuntman",
-            "Invisible Joker",
-            "Brainstorm",
-            "Satellite",
-            "Shoot the Moon",
-            "Driver's License",
-            "Cartomancer",
-            "Astronomer",
-            "Burnt Joker",
-            "Bootstraps",
-            "Overstock Plus",
-            "Liquidation",
-            "Glow Up",
-            "Reroll Glut",
-            "Omen Globe",
-            "Observatory",
-            "Nacho Tong",
-            "Recyclomancy",
-            "Tarot Tycoon",
-            "Planet Tycoon",
-            "Money Tree",
-            "Antimatter",
-            "Illusion",
-            "Petroglyph",
-            "Retcon",
-            "Palette"
+    public static final List<? extends Item> options = Arrays.asList(
+            CommonJoker.Golden_Ticket,
+            CommonJoker.Hanging_Chad,
+            CommonJoker.Shoot_the_Moo,
+            CommonJoker.Swashbuckler,
+            RareJoker.Blueprint,
+            RareJoker.Brainstorm,
+            RareJoker.Burnt_Joke,
+            RareJoker.Drivers_License,
+            RareJoker.Hit_the_Road,
+            RareJoker.Invisible_Joker,
+            RareJoker.Stuntman,
+            RareJoker.The_Duo,
+            RareJoker.The_Family,
+            RareJoker.The_Order,
+            RareJoker.The_Tribe,
+            RareJoker.The_Trio,
+            RareJoker.Wee_Joker,
+            Tag.Foil_Tag,
+            Tag.Holographic_Tag,
+            Tag.Negative_Tag,
+            Tag.Polychrome_Tag,
+            Tag.Rare_Tag,
+            UnCommonJoker.Acrobat,
+            UnCommonJoker.Arrowhead,
+            UnCommonJoker.Astronomer,
+            UnCommonJoker.Bloodstone,
+            UnCommonJoker.Cartomancer,
+            UnCommonJoker.Certificate,
+            UnCommonJoker.Flower_Pot,
+            UnCommonJoker.Glass_Joker,
+            UnCommonJoker.Matador,
+            UnCommonJoker.Merry_Andy,
+            UnCommonJoker.Mr_Bones,
+            UnCommonJoker.Onyx_Agate,
+            UnCommonJoker.Oops_All_6s,
+            UnCommonJoker.Rough_Gem,
+            UnCommonJoker.Satellite,
+            UnCommonJoker.Seeing_Double,
+            UnCommonJoker.Showman,
+            UnCommonJoker.Smeared_Joker,
+            UnCommonJoker.Sock_and_Buskin,
+            UnCommonJoker.The_Idol,
+            UnCommonJoker.Throwback,
+            UnCommonJoker.Troubadour,
+            UnCommonJoker100.Bootstraps,
+            Voucher.Antimatter,
+            Voucher.Glow_Up,
+            Voucher.Illusion,
+            Voucher.Liquidation,
+            Voucher.Money_Tree,
+            Voucher.Nacho_Tong,
+            Voucher.Observatory,
+            Voucher.Omen_Globe,
+            Voucher.Overstock_Plus,
+            Voucher.Palett,
+            Voucher.Petroglyph,
+            Voucher.Planet_Tycoon,
+            Voucher.Recyclomancy,
+            Voucher.Reroll_Glut,
+            Voucher.Retcon,
+            Voucher.Tarot_Tycoon
     );
 
     static final String CHARACTERS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -162,8 +162,8 @@ public final class BalatroImpl implements Balatro {
             for (int i = 0; i < Functions.VOUCHERS.size(); i += 2) {
                 if (Functions.VOUCHERS.get(i).equals(voucher)) {
                     // Only unlock it if it's unlockable
-                    if (selectedOptions[options.indexOf(Functions.VOUCHERS.get(i + 1).getName())]) {
-                        functions.unlock(Functions.VOUCHERS.get(i + 1).getName());
+                    if (selectedOptions[options.indexOf(Functions.VOUCHERS.get(i + 1))]) {
+                        functions.unlock(Functions.VOUCHERS.get(i + 1));
                     }
                 }
             }
@@ -216,7 +216,7 @@ public final class BalatroImpl implements Balatro {
                     }
                     case PackKind.Arcana -> {
                         if (!analyzeArcana) continue;
-                        List<Item> cards = functions.nextArcanaPack(packInfo.getSize(), a);
+                        var cards = functions.nextArcanaPack(packInfo.getSize(), a);
                         for (int c = 0; c < packInfo.getSize(); c++) {
                             options.add(new Option(cards.get(c)));
                         }

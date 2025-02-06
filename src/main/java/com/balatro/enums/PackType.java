@@ -38,6 +38,11 @@ public enum PackType implements Item {
         return name;
     }
 
+    @Override
+    public int getYIndex() {
+        return 0;
+    }
+
     public double getValue() {
         return value;
     }
@@ -68,4 +73,6 @@ public enum PackType implements Item {
     public boolean isSpectral() {
         return this == Spectral_Pack || this == Jumbo_Spectral_Pack || this == Mega_Spectral_Pack;
     }
+
+
 }

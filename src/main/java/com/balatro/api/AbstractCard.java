@@ -12,4 +12,14 @@ public class AbstractCard implements Item{
     public String getName() {
         return name;
     }
+
+    @Override
+    public int getYIndex() {
+        return -1;
+    }
+
+    @Override
+    public int ordinal() {
+        return 0;
+    }
 }

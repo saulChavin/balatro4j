@@ -48,7 +48,14 @@ public enum Voucher implements Item {
         return name;
     }
 
+    @Override
+    public int getYIndex() {
+        return 7;
+    }
+
     public Filter isPresent() {
         return new VoucherFilter(this);
     }
+
+
 }

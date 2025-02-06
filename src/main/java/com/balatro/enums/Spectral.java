@@ -32,4 +32,10 @@ public enum Spectral implements Item {
     public String getName() {
         return name;
     }
+
+    @Override
+    public int getYIndex() {
+        return 5;
+    }
+
 }

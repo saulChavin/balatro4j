@@ -22,6 +22,16 @@ public class Card implements Item {
         return base;
     }
 
+    @Override
+    public int getYIndex() {
+        return -1;
+    }
+
+    @Override
+    public int ordinal() {
+        return 0;
+    }
+
     public String getBase() {
         return base;
     }
