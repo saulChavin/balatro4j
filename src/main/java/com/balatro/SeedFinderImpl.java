@@ -107,7 +107,7 @@ public final class SeedFinderImpl implements SeedFinder {
 
     }
 
-    private @NotNull String getMemory() {
+    public static @NotNull String getMemory() {
         Runtime runtime = Runtime.getRuntime();
 
         long totalMemory = runtime.totalMemory();

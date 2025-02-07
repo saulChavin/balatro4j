@@ -2,7 +2,7 @@ package com.balatro;
 
 import com.balatro.api.Balatro;
 import com.balatro.api.Run;
-import com.balatro.enums.PackKind;
+import com.balatro.enums.*;
 
 import java.text.DecimalFormat;
 
@@ -11,10 +11,18 @@ import static com.balatro.enums.LegendaryJoker.Triboulet;
 
 public class Main {
     public static void main(String[] args) {
-        var seeds = Balatro.search(1, 10_000_000)
-                .configuration(config -> config.maxAnte(1).disableShopQueue()
-                        .disablePack(PackKind.Buffoon))
-                .filter(Perkeo.inPack().and(Triboulet.inPack()))
+        if (System.getenv("STARTUP_TIMEOUT") != null) {
+            long startTime = Long.parseLong(System.getenv("STARTUP_TIMEOUT"));
+            long currentTime = System.currentTimeMillis();
+
+            System.out.println("-------------------------------------------------");
+            System.out.println("STARTUP TIME: " + (currentTime - startTime) + " ms " + SeedFinderImpl.getMemory());
+            System.out.println("-------------------------------------------------");
+        }
+
+        var seeds = Balatro.search(1, 100_000)
+                .configuration(config -> config.maxAnte(1))
+                .filter(RareJoker.Blueprint.inShop())
                 .find();
 
         System.out.println("Seeds found: " + seeds.size());

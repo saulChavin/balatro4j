@@ -116,24 +116,16 @@ public final class Functions implements Lock {
 
     public Item nextSpectral(String source, int ante, boolean soulable) {
         if (soulable) {
-            var key = soul_SpectralArr[ante];
-
-            if (random(key) < 0.997) {
+            if (random(soul_SpectralArr[ante]) < 0.997) {
                 return randchoice("Spectral" + source + ante, SPECTRALS);
             }
 
-            Item forcedKey = null;
+            if (params.isShowman() || !isLocked(Specials.BLACKHOLE)) {
+                return Specials.BLACKHOLE;
+            }
 
             if (params.isShowman() || !isLocked(Specials.THE_SOUL)) {
-                forcedKey = Specials.THE_SOUL;
-            }
-
-            if (params.isShowman() || !isLocked(Specials.BLACKHOLE)) {
-                forcedKey = Specials.BLACKHOLE;
-            }
-
-            if (forcedKey != null) {
-                return forcedKey;
+                return Specials.THE_SOUL;
             }
         }
 
