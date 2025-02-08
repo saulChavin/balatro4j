@@ -2,15 +2,17 @@ package com.balatro.structs;
 
 import com.balatro.api.Item;
 import com.balatro.enums.Edition;
+import com.balatro.enums.Enhancement;
 import com.balatro.enums.Seal;
+import org.jetbrains.annotations.Nullable;
 
 public class Card implements Item {
     private String base;
-    private String enhancement;
+    private @Nullable Enhancement enhancement;
     private Edition edition;
     private Seal seal;
 
-    public Card(String base, String enhancement, Edition edition, Seal seal) {
+    public Card(String base, @Nullable Enhancement enhancement, Edition edition, Seal seal) {
         this.base = base;
         this.enhancement = enhancement;
         this.edition = edition;
@@ -40,11 +42,11 @@ public class Card implements Item {
         this.base = base;
     }
 
-    public String getEnhancement() {
+    public @Nullable Enhancement getEnhancement() {
         return enhancement;
     }
 
-    public void setEnhancement(String enhancement) {
+    public void setEnhancement(@Nullable Enhancement enhancement) {
         this.enhancement = enhancement;
     }
 

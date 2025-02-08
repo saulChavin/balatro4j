@@ -254,8 +254,8 @@ public final class BalatroImpl implements Balatro {
                             if (card.getEdition() != Edition.NoEdition) {
                                 output.append(card.getEdition()).append(" ");
                             }
-                            if (!card.getEnhancement().equals("No Enhancement")) {
-                                output.append(card.getEnhancement()).append(" ");
+                            if (card.getEnhancement() != null) {
+                                output.append(card.getEnhancement().getName()).append(" ");
                             }
 
                             char rank = card.getBase().charAt(2);

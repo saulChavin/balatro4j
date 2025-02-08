@@ -499,10 +499,6 @@ public final class Functions implements Lock {
         editionBufArr = new String[max];
         editionSouArr = new String[max];
 
-        rarityShoArr = new String[max];
-        rarityBufArr = new String[max];
-        raritySouArr = new String[max];
-
         for (int ante = 0; ante < max; ante++) {
             stdsetArr[ante] = "stdset" + ante;
             standard_editionArr[ante] = "standard_edition" + ante;
@@ -564,26 +560,17 @@ public final class Functions implements Lock {
 
     @Contract("_ -> new")
     public com.balatro.structs.@NotNull Card nextStandardCard(int ante) {
-        var stdset = stdsetArr[ante];
-        var standard_edition = standard_editionArr[ante];
-        var enhancedsta = enhancedstaArr[ante];
-        var stdseal = stdsealArr[ante];
-        var stdsealtype = stdsealtypeArr[ante];
-        var frontsta = frontstaArr[ante];
-
         // Enhancement
-        String enhancement;
+        Enhancement enhancement = null;
 
-        if (random(stdset) <= 0.6) {
-            enhancement = "No Enhancement";
-        } else {
-            enhancement = randchoice(enhancedsta, ENHANCEMENTS).getName();
+        if (random(stdsetArr[ante]) > 0.6) {
+            enhancement = randchoice(enhancedstaArr[ante], ENHANCEMENTS);
         }
 
         // Edition
         var edition = Edition.NoEdition;
 
-        double editionPoll = random(standard_edition);
+        double editionPoll = random(standard_editionArr[ante]);
 
         if (editionPoll > 0.988) {
             edition = Edition.Polychrome;
@@ -596,8 +583,8 @@ public final class Functions implements Lock {
         // Seal
         var seal = Seal.NoSeal;
 
-        if (random(stdseal) > 0.8) {
-            double sealPoll = random(stdsealtype);
+        if (random(stdsealArr[ante]) > 0.8) {
+            double sealPoll = random(stdsealtypeArr[ante]);
             if (sealPoll > 0.75) {
                 seal = Seal.RedSeal;
             } else if (sealPoll > 0.5) {
@@ -609,9 +596,7 @@ public final class Functions implements Lock {
             }
         }
 
-        var base = randchoice(frontsta, CARDS);
-
-        return new com.balatro.structs.Card(base.getName(), enhancement, edition, seal);
+        return new com.balatro.structs.Card(randchoice(frontstaArr[ante], CARDS).getName(), enhancement, edition, seal);
     }
 
     public @NotNull List<Item> nextArcanaPack(int size, int ante) {
