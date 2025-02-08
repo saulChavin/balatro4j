@@ -162,17 +162,17 @@ final class AnteImpl implements Ante {
         }
 
         score += getShopQueue().stream()
-                .filter(SearchableItem::hasSticker)
-                .count() * 0.5;
+                         .filter(SearchableItem::hasSticker)
+                         .count() * 0.5;
 
         score += getShopQueue().stream()
-                .filter(a -> a.hasEdition(Edition.Negative))
-                .count() * 1.0;
+                         .filter(a -> a.hasEdition(Edition.Negative))
+                         .count() * 1.0;
 
         score += packInfos.stream()
-                .map(PackInfo::getKind)
-                .filter(kind -> kind == PackKind.Spectral)
-                .count() * 0.3;
+                         .map(PackInfo::getKind)
+                         .filter(kind -> kind == PackKind.Spectral)
+                         .count() * 0.3;
 
         for (Tag tag : tags) {
             if (tag == Tag.Negative_Tag) {
@@ -250,7 +250,8 @@ final class AnteImpl implements Ante {
         if (souls < jokers.length) return false;
 
         for (int i = 0; i < souls; i++) {
-            legendaryJokers.add(functions.nextJoker("sou", ante, false).joker.getName());
+            legendaryJokers.add(functions.nextJoker("sou", Functions.joker1SouArr, Functions.joker2SouArr, Functions.joker3SouArr,
+                    Functions.joker4SouArr, Functions.raritySouArr, Functions.editionSouArr, ante, false).joker.getName());
         }
 
         for (LegendaryJoker joker : jokers) {

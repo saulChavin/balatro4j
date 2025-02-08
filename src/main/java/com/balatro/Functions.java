@@ -83,13 +83,13 @@ public final class Functions implements Lock {
         return items.get(idx - 1);
     }
 
-    public <T extends Item> T randchoice(String ID, @NotNull List<T> items) {
-        T item = items.get(randint(ID, items.size() - 1));
+    public <T extends Item> T randchoice(String id, @NotNull List<T> items) {
+        T item = items.get(randint(id, items.size() - 1));
 
         if (!params.isShowman() && isLocked(item) || "RETRY".equals(item.getName())) {
             int resample = 2;
             while (true) {
-                item = items.get(randint(ID + "_resample" + resample, items.size() - 1));
+                item = items.get(randint(id + "_resample" + resample, items.size() - 1));
                 resample++;
                 if ((!isLocked(item) && !"RETRY".equals(item.getName())) || resample > 1000) {
                     return item;
@@ -104,20 +104,20 @@ public final class Functions implements Lock {
         if (soulable && (params.isShowman() || !isLocked(Specials.THE_SOUL)) && random(soul_TarotArr[ante]) > 0.997) {
             return Specials.THE_SOUL;
         }
-        return randchoice("Tarot" + source + ante, TAROTS);
+        return randchoice(source, TAROTS);
     }
 
     public Item nextPlanet(String source, int ante, boolean soulable) {
         if (soulable && (params.isShowman() || !isLocked(Specials.BLACKHOLE)) && random(soul_PlanetArr[ante]) > 0.997) {
             return Specials.BLACKHOLE;
         }
-        return randchoice("Planet" + source + ante, PLANETS);
+        return randchoice(source, PLANETS);
     }
 
     public Item nextSpectral(String source, int ante, boolean soulable) {
         if (soulable) {
             if (random(soul_SpectralArr[ante]) < 0.997) {
-                return randchoice("Spectral" + source + ante, SPECTRALS);
+                return randchoice(source, SPECTRALS);
             }
 
             if (params.isShowman() || !isLocked(Specials.BLACKHOLE)) {
@@ -129,14 +129,17 @@ public final class Functions implements Lock {
             }
         }
 
-        return randchoice("Spectral" + source + ante, SPECTRALS);
+        return randchoice(source, SPECTRALS);
     }
 
 
     static Set<String> setA = Set.of("Gros Michel", "Ice Cream", "Cavendish", "Luchador", "Turtle Bean", "Diet Cola", "Popcorn", "Ramen", "Seltzer", "Mr. Bones", "Invisible Joker");
     static Set<String> setB = Set.of("Ceremonial Dagger", "Ride the Bus", "Runner", "Constellation", "Green Joker", "Red Card", "Madness", "Square Joker", "Vampire", "Rocket", "Obelisk", "Lucky Cat", "Flash Card", "Spare Trousers", "Castle", "Wee Joker");
 
-    public JokerData nextJoker(@NotNull String source, int ante, boolean hasStickers) {
+    public JokerData nextJoker(@NotNull String source,
+                               String[] joker1Arr, String[] joker2Arr, String[] joker3Arr, String[] joker4Arr,
+                               String[] rarityArr, String[] editionArr,
+                               int ante, boolean hasStickers) {
         // Get rarity
         int rarity = 1;
 
@@ -145,7 +148,7 @@ public final class Functions implements Lock {
             case "wra", "rta" -> rarity = 3;
             case "uta" -> rarity = 2;
             default -> {
-                double rarityPoll = random(rarityArr[ante] + source);
+                double rarityPoll = random(rarityArr[ante]);
                 if (rarityPoll > 0.95) {
                     rarity = 3;
                 } else if (rarityPoll > 0.7) {
@@ -164,7 +167,7 @@ public final class Functions implements Lock {
         }
 
         var edition = Edition.NoEdition;
-        var editionPoll = random("edi" + source + ante);
+        var editionPoll = random(editionArr[ante]);
 
         if (editionPoll > 0.997) {
             edition = Edition.Negative;
@@ -184,36 +187,36 @@ public final class Functions implements Lock {
                 if (params.version > 10099) {
                     joker = randchoice("Joker4", LEGENDARY_JOKERS);
                 } else {
-                    joker = randchoice("Joker4" + source + ante, LEGENDARY_JOKERS);
+                    joker = randchoice(joker4Arr[ante], LEGENDARY_JOKERS);
                 }
             }
             case 3 -> {
                 if (params.version > 10103) {
-                    joker = randchoice("Joker3" + source + ante, RARE_JOKERS);
+                    joker = randchoice(joker3Arr[ante], RARE_JOKERS);
                 } else {
                     if (params.version > 10099) {
-                        joker = randchoice("Joker3" + source + ante, RARE_JOKERS_101C);
+                        joker = randchoice(joker3Arr[ante], RARE_JOKERS_101C);
                     } else {
-                        joker = randchoice("Joker3" + source + ante, RARE_JOKERS_100);
+                        joker = randchoice(joker3Arr[ante], RARE_JOKERS_100);
                     }
                 }
             }
             case 2 -> {
                 if (params.version > 10103) {
-                    joker = randchoice("Joker2" + source + ante, UNCOMMON_JOKERS);
+                    joker = randchoice(joker2Arr[ante], UNCOMMON_JOKERS);
                 } else {
                     if (params.version > 10099) {
-                        joker = randchoice("Joker2" + source + ante, UNCOMMON_JOKERS_101C);
+                        joker = randchoice(joker2Arr[ante], UNCOMMON_JOKERS_101C);
                     } else {
-                        joker = randchoice("Joker2" + source + ante, UNCOMMON_JOKERS_100);
+                        joker = randchoice(joker2Arr[ante], UNCOMMON_JOKERS_100);
                     }
                 }
             }
             default -> {
                 if (params.version > 10099) {
-                    joker = randchoice("Joker1" + source + ante, COMMON_JOKERS);
+                    joker = randchoice(joker1Arr[ante], COMMON_JOKERS);
                 } else {
-                    joker = randchoice("Joker1" + source + ante, COMMON_JOKERS_100);
+                    joker = randchoice(joker1Arr[ante], COMMON_JOKERS_100);
                 }
             }
         }
@@ -339,17 +342,18 @@ public final class Functions implements Lock {
 
         switch (type) {
             case Type.Joker -> {
-                var jkr = nextJoker("sho", ante, true);
+                var jkr = nextJoker("sho", joker1ShoArr, joker2ShoArr, joker3ShoArr, joker4ShoArr,
+                        rarityShoArr, editionShoArr, ante, true);
                 return new ShopItem(type, jkr.joker, jkr);
             }
             case Type.Tarot -> {
-                return new ShopItem(type, nextTarot("sho", ante, false));
+                return new ShopItem(type, nextTarot(tarotShoArr[ante], ante, false));
             }
             case Type.Planet -> {
-                return new ShopItem(type, nextPlanet("sho", ante, false));
+                return new ShopItem(type, nextPlanet(planetShoArr[ante], ante, false));
             }
             case Type.Spectral -> {
-                return new ShopItem(type, nextSpectral("sho", ante, false));
+                return new ShopItem(type, nextSpectral(spectralShoArr[ante], ante, false));
             }
             case Type.PlayingCard -> {
                 return new ShopItem(type, nextStandardCard(ante));
@@ -381,7 +385,34 @@ public final class Functions implements Lock {
         }
     }
 
-    static String[] rarityArr;
+    static String[] planetShoArr;
+    static String[] planetpl1lArr;
+    static String[] tarotShoArr;
+    static String[] tarotAr1Arr;
+    static String[] tarotarArr;
+    static String[] spectralShoArr;
+    static String[] spectralAr2Arr;
+    static String[] spectralSpeArr;
+    static String[] joker4ShoArr;
+    static String[] joker4BufArr;
+    static String[] joker4SouArr;
+    static String[] joker3ShoArr;
+    static String[] joker3BufArr;
+    static String[] joker3SouArr;
+    static String[] joker2ShoArr;
+    static String[] joker2BufArr;
+    static String[] joker2SouArr;
+    static String[] joker1ShoArr;
+    static String[] joker1BufArr;
+    static String[] joker1SouArr;
+
+    static String[] rarityShoArr;
+    static String[] rarityBufArr;
+    static String[] raritySouArr;
+    static String[] editionShoArr;
+    static String[] editionBufArr;
+    static String[] editionSouArr;
+
     static String[] packssjrArr;
     static String[] etperpollArr;
     static String[] packetperArr;
@@ -406,14 +437,17 @@ public final class Functions implements Lock {
         heat(8);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void heat(int max) {
         max = max + 1;
 
-        if (rarityArr != null && rarityArr.length == max) return;
+        if (rarityShoArr != null && rarityShoArr.length == max) return;
 
         System.out.println("Heating to: " + max);
 
-        rarityArr = new String[max];
+        rarityShoArr = new String[max];
+        rarityBufArr = new String[max];
+        raritySouArr = new String[max];
         packssjrArr = new String[max];
         etperpollArr = new String[max];
         packetperArr = new String[max];
@@ -433,6 +467,41 @@ public final class Functions implements Lock {
         frontstaArr = new String[max];
         soul_SpectralArr = new String[max];
         soul_TarotArr = new String[max];
+
+        planetShoArr = new String[max];
+        planetpl1lArr = new String[max];
+
+        tarotShoArr = new String[max];
+        tarotarArr = new String[max];
+        tarotAr1Arr = new String[max];
+
+        spectralShoArr = new String[max];
+        spectralAr2Arr = new String[max];
+        spectralSpeArr = new String[max];
+
+        joker4ShoArr = new String[max];
+        joker4BufArr = new String[max];
+        joker4SouArr = new String[max];
+
+        joker3ShoArr = new String[max];
+        joker3BufArr = new String[max];
+        joker3SouArr = new String[max];
+
+        joker2ShoArr = new String[max];
+        joker2BufArr = new String[max];
+        joker2SouArr = new String[max];
+
+        joker1ShoArr = new String[max];
+        joker1BufArr = new String[max];
+        joker1SouArr = new String[max];
+
+        editionShoArr = new String[max];
+        editionBufArr = new String[max];
+        editionSouArr = new String[max];
+
+        rarityShoArr = new String[max];
+        rarityBufArr = new String[max];
+        raritySouArr = new String[max];
 
         for (int ante = 0; ante < max; ante++) {
             stdsetArr[ante] = "stdset" + ante;
@@ -454,7 +523,41 @@ public final class Functions implements Lock {
             packetperArr[ante] = "packetper" + ante;
             etperpollArr[ante] = "etperpoll" + ante;
             packssjrArr[ante] = "packssjr" + ante;
-            rarityArr[ante] = "rarity" + ante;
+
+            planetShoArr[ante] = "Planetsho" + ante;
+            planetpl1lArr[ante] = "Planetpl1" + ante;
+
+            tarotShoArr[ante] = "Tarotsho" + ante;
+            tarotarArr[ante] = "Tarotar" + ante;
+            tarotAr1Arr[ante] = "Tarotar1" + ante;
+
+            spectralShoArr[ante] = "Spectralsho" + ante;
+            spectralAr2Arr[ante] = "Spectralar2" + ante;
+            spectralSpeArr[ante] = "Spectralspe" + ante;
+
+            rarityShoArr[ante] = "rarity" + ante + "sho";
+            rarityBufArr[ante] = "rarity" + ante + "buf";
+            raritySouArr[ante] = "rarity" + ante + "sou";
+
+            editionShoArr[ante] = "edisho" + ante;
+            editionBufArr[ante] = "edibuf" + ante;
+            editionSouArr[ante] = "edisou" + ante;
+
+            joker4ShoArr[ante] = "Joker4sho" + ante;
+            joker4BufArr[ante] = "Joker4buf" + ante;
+            joker4SouArr[ante] = "Joker4sou" + ante;
+
+            joker3ShoArr[ante] = "Joker3sho" + ante;
+            joker3BufArr[ante] = "Joker3buf" + ante;
+            joker3SouArr[ante] = "Joker3sou" + ante;
+
+            joker2ShoArr[ante] = "Joker2sho" + ante;
+            joker2BufArr[ante] = "Joker2buf" + ante;
+            joker2SouArr[ante] = "Joker2sou" + ante;
+
+            joker1ShoArr[ante] = "Joker1sho" + ante;
+            joker1BufArr[ante] = "Joker1buf" + ante;
+            joker1SouArr[ante] = "Joker1sou" + ante;
         }
     }
 
@@ -516,9 +619,9 @@ public final class Functions implements Lock {
 
         for (int i = 0; i < size; i++) {
             if (isVoucherActive(Voucher.Omen_Globe) && random("omen_globe") > 0.8) {
-                pack.add(nextSpectral("ar2", ante, true));
+                pack.add(nextSpectral(spectralAr2Arr[ante], ante, true));
             } else {
-                pack.add(nextTarot("ar1", ante, true));
+                pack.add(nextTarot(tarotAr1Arr[ante], ante, true));
             }
             if (!params.isShowman()) {
                 lock(pack.get(i));
@@ -538,7 +641,7 @@ public final class Functions implements Lock {
         List<Item> pack = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
-            pack.add(nextPlanet("pl1", ante, true));
+            pack.add(nextPlanet(planetpl1lArr[ante], ante, true));
             if (!params.isShowman()) {
                 lock(pack.get(i));
             }
@@ -557,7 +660,7 @@ public final class Functions implements Lock {
         List<Item> pack = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
-            pack.add(nextSpectral("spe", ante, true));
+            pack.add(nextSpectral(spectralSpeArr[ante], ante, true));
 
             if (!params.isShowman()) {
                 lock(pack.get(i));
@@ -589,7 +692,7 @@ public final class Functions implements Lock {
         JokerData joker;
 
         for (int i = 0; i < size; i++) {
-            joker = nextJoker("buf", ante, true);
+            joker = nextJoker("buf", joker1BufArr, joker2BufArr, joker3BufArr, joker4BufArr, rarityBufArr, editionBufArr, ante, true);
             pack.add(joker);
 
             if (!params.isShowman()) {

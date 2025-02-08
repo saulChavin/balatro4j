@@ -20,9 +20,10 @@ public class Main {
             System.out.println("-------------------------------------------------");
         }
 
-        var seeds = Balatro.search(1, 100_000)
-                .configuration(config -> config.maxAnte(1))
-                .filter(RareJoker.Blueprint.inShop())
+        var seeds = Balatro.search(1, 10_000_000)
+                .configuration(config -> config.maxAnte(1).disableShopQueue()
+                        .disablePack(PackKind.Buffoon))
+                .filter(Perkeo.inPack().and(Triboulet.inPack()))
                 .find();
 
         System.out.println("Seeds found: " + seeds.size());
