@@ -244,21 +244,21 @@ public final class Functions implements Lock {
 
                 if (stickerPoll > 0.7) {
                     if (!setA.contains(joker.getName())) {
-                        stickers.eternal = true;
+                        stickers.setRental(true);
                     }
                 }
 
                 if ((stickerPoll > 0.4 && stickerPoll <= 0.7) && (params.getStake() == Stake.Orange_Stake || params.getStake() == Stake.Gold_Stake)) {
                     if (!setB.contains(joker.getName())) {
-                        stickers.perishable = true;
+                        stickers.setPerishable(true);
                     }
                 }
 
                 if (params.getStake() == Stake.Gold_Stake) {
                     if (source.equals("buf")) {
-                        stickers.rental = random(packssjrArr[ante]) > 0.7;
+                        stickers.setRental(random(packssjrArr[ante]) > 0.7);
                     } else {
-                        stickers.rental = random(ssjrArr[ante]) > 0.7;
+                        stickers.setRental(random(ssjrArr[ante]) > 0.7);
                     }
                 }
 
@@ -266,15 +266,15 @@ public final class Functions implements Lock {
                 if (params.getStake() == Stake.Black_Stake || params.getStake() == Stake.Blue_Stake ||
                     params.getStake() == Stake.Purple_Stake || params.getStake() == Stake.Orange_Stake || params.getStake() == Stake.Gold_Stake) {
                     if (!setA.contains(joker.getName())) {
-                        stickers.eternal = random(stake_shop_joker_eternalArr[ante]) > 0.7;
+                        stickers.setEternal(random(stake_shop_joker_eternalArr[ante]) > 0.7);
                     }
                 }
                 if (params.version > 10099) {
-                    if ((params.getStake() == Stake.Orange_Stake || params.getStake() == Stake.Gold_Stake) && !stickers.eternal) {
-                        stickers.perishable = random(ssjpArr[ante]) > 0.49;
+                    if ((params.getStake() == Stake.Orange_Stake || params.getStake() == Stake.Gold_Stake) && !stickers.isEternal()) {
+                        stickers.setPerishable(random(ssjpArr[ante]) > 0.49);
                     }
                     if (params.getStake() == Stake.Gold_Stake) {
-                        stickers.rental = random(ssjrArr[ante]) > 0.7;
+                        stickers.setRental(random(ssjrArr[ante]) > 0.7);
                     }
                 }
             }
@@ -596,7 +596,7 @@ public final class Functions implements Lock {
             }
         }
 
-        return new com.balatro.structs.Card(randchoice(frontstaArr[ante], CARDS).getName(), enhancement, edition, seal);
+        return new com.balatro.structs.Card(randchoice(frontstaArr[ante], CARDS), enhancement, edition, seal);
     }
 
     public @NotNull List<Item> nextArcanaPack(int size, int ante) {

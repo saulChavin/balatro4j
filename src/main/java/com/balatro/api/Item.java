@@ -4,6 +4,7 @@ import com.balatro.api.filter.InPackFilter;
 import com.balatro.api.filter.InShopFilter;
 import com.balatro.api.filter.SpectralFilter;
 import com.balatro.enums.Edition;
+import com.balatro.structs.Option;
 
 public interface Item {
 
@@ -49,4 +50,7 @@ public interface Item {
         return new EditionItem(this, edition);
     }
 
+    default Option asOption() {
+        return new Option(this);
+    }
 }

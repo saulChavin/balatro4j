@@ -1,8 +1,6 @@
 package com.balatro.structs;
 
-import com.balatro.api.Item;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +15,4 @@ public final class ShopQueue extends ArrayList<SearchableItem> {
         super(20);
     }
 
-    public boolean contains(Item named) {
-        return this.stream().anyMatch(item -> item.equals(named));
-    }
 }

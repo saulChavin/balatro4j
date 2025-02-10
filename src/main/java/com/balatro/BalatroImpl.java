@@ -7,7 +7,6 @@ import com.balatro.api.Run;
 import com.balatro.enums.*;
 import com.balatro.structs.*;
 import com.balatro.structs.Card;
-import com.balatro.structs.PackInfo;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -93,19 +92,19 @@ public final class BalatroImpl implements Balatro {
     }
 
     private final String seed;
-    private final int ante;
-    private final List<Integer> cardsPerAnte;
-    private final Deck deck;
-    private final Stake stake;
-    private final Version version;
-    private final boolean analyzeStandardPacks;
-    private final boolean analyzeCelestialPacks;
-    private final boolean analyzeTags;
-    private final boolean analyzeBoss;
-    private final boolean analyzeShopQueue;
-    private final boolean analyzeJokers;
-    private final boolean analyzeArcana;
-    private final boolean analyzeSpectral;
+    private int ante;
+    private List<Integer> cardsPerAnte;
+    private Deck deck;
+    private Stake stake;
+    private Version version;
+    private boolean analyzeStandardPacks;
+    private boolean analyzeCelestialPacks;
+    private boolean analyzeTags;
+    private boolean analyzeBoss;
+    private boolean analyzeShopQueue;
+    private boolean analyzeJokers;
+    private boolean analyzeArcana;
+    private boolean analyzeSpectral;
 
     public BalatroImpl(String seed, int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version,
                        @NotNull Set<PackKind> enabledPacks, boolean analyzeTags, boolean analyzeBoss, boolean analyzeShopQueue) {
@@ -202,100 +201,62 @@ public final class BalatroImpl implements Balatro {
 
             for (int p = 1; p <= numPacks; p++) {
                 var pack = functions.nextPack(a);
-                PackInfo packInfo = functions.packInfo(pack);
+                var packInfo = functions.packInfo(pack);
                 Set<Option> options = new HashSet<>();
 
                 switch (packInfo.getKind()) {
                     case PackKind.Celestial -> {
                         if (!analyzeCelestialPacks) continue;
-
-                        List<Item> cards = functions.nextCelestialPack(packInfo.getSize(), a);
-                        for (int c = 0; c < packInfo.getSize(); c++) {
-                            options.add(new Option(cards.get(c)));
+                        var cards = functions.nextCelestialPack(packInfo.getSize(), a);
+                        for (Item card : cards) {
+                            options.add(card.asOption());
                         }
                     }
                     case PackKind.Arcana -> {
                         if (!analyzeArcana) continue;
                         var cards = functions.nextArcanaPack(packInfo.getSize(), a);
-                        for (int c = 0; c < packInfo.getSize(); c++) {
-                            options.add(new Option(cards.get(c)));
+                        for (Item card : cards) {
+                            options.add(card.asOption());
                         }
                     }
                     case PackKind.Spectral -> {
                         if (!analyzeSpectral) continue;
-                        List<Item> cards = functions.nextSpectralPack(packInfo.getSize(), a);
-                        for (int c = 0; c < packInfo.getSize(); c++) {
-                            options.add(new Option(cards.get(c)));
+                        var spectral = functions.nextSpectralPack(packInfo.getSize(), a);
+                        for (Item card : spectral) {
+                            options.add(card.asOption());
                         }
                     }
                     case PackKind.Buffoon -> {
                         if (!analyzeJokers) continue;
-                        List<JokerData> cards = functions.nextBuffoonPack(packInfo.getSize(), a);
+                        var cards = functions.nextBuffoonPack(packInfo.getSize(), a);
 
-                        for (int c = 0; c < packInfo.getSize(); c++) {
-                            JokerData joker = cards.get(c);
+                        for (JokerData joker : cards) {
                             var sticker = getSticker(joker);
-
                             options.add(new Option(sticker, joker.getJoker()));
-
                         }
                     }
                     case PackKind.Standard -> {
                         if (!analyzeStandardPacks) continue;
 
-                        List<Card> cards = functions.nextStandardPack(packInfo.getSize(), a);
+                        var cards = functions.nextStandardPack(packInfo.getSize(), a);
 
-                        for (int c = 0; c < packInfo.getSize(); c++) {
-                            Card card = cards.get(c);
+                        for (Card card : cards) {
                             StringBuilder output = new StringBuilder();
-                            if (!card.getSeal().equals("No Seal")) {
-                                output.append(card.getSeal()).append(" ");
+
+                            if (card.seal() != Seal.NoSeal) {
+                                output.append(card.seal()).append(" ");
                             }
-                            if (card.getEdition() != Edition.NoEdition) {
-                                output.append(card.getEdition()).append(" ");
+                            if (card.edition() != Edition.NoEdition) {
+                                output.append(card.edition()).append(" ");
                             }
-                            if (card.getEnhancement() != null) {
-                                output.append(card.getEnhancement().getName()).append(" ");
+                            if (card.enhancement() != null) {
+                                output.append(card.enhancement().getName()).append(" ");
                             }
 
-                            char rank = card.getBase().charAt(2);
-
-                            switch (rank) {
-                                case 'T':
-                                    output.append("10");
-                                    break;
-                                case 'J':
-                                    output.append("Jack");
-                                    break;
-                                case 'Q':
-                                    output.append("Queen");
-                                    break;
-                                case 'K':
-                                    output.append("King");
-                                    break;
-                                case 'A':
-                                    output.append("Ace");
-                                    break;
-                                default:
-                                    output.append(rank);
-                                    break;
-                            }
-                            output.append(" of ");
-                            char suit = card.getBase().charAt(0);
-                            switch (suit) {
-                                case 'C':
-                                    output.append("Clubs");
-                                    break;
-                                case 'S':
-                                    output.append("Spades");
-                                    break;
-                                case 'D':
-                                    output.append("Diamonds");
-                                    break;
-                                case 'H':
-                                    output.append("Hearts");
-                                    break;
-                            }
+                            var rank = card.base().getRank();
+                            output.append(rank.getName());
+                            output.append(" of ")
+                                    .append(card.base().getSuit().getName());
                             options.add(new Option(new AbstractCard(output.toString())));
                         }
                     }
@@ -326,5 +287,61 @@ public final class BalatroImpl implements Balatro {
         }
 
         return sticker;
+    }
+
+    @Override
+    public Balatro analyzeAll() {
+        analyzeStandardPacks = true;
+        analyzeCelestialPacks = true;
+        analyzeArcana = true;
+        analyzeSpectral = true;
+        analyzeJokers = true;
+        analyzeTags = true;
+        analyzeBoss = true;
+        analyzeShopQueue = true;
+        return this;
+    }
+
+    @Override
+    public Balatro maxAnte(int ante) {
+        this.ante = ante;
+        return this;
+    }
+
+    @Override
+    public Balatro disableShopQueue() {
+        this.analyzeShopQueue = false;
+        return this;
+    }
+
+    @Override
+    public Balatro version(Version version) {
+        this.version = version;
+        return this;
+    }
+
+    @Override
+    public Balatro deck(Deck deck) {
+        this.deck = deck;
+        return this;
+    }
+
+    @Override
+    public Balatro stake(Stake stake) {
+        this.stake = stake;
+        return this;
+    }
+
+    @Contract(value = "_ -> this", mutates = "this")
+    @Override
+    public Balatro disablePack(@NotNull PackKind packKind) {
+        switch (packKind) {
+            case Standard -> analyzeStandardPacks = false;
+            case Celestial -> analyzeCelestialPacks = false;
+            case Arcana -> analyzeArcana = false;
+            case Spectral -> analyzeSpectral = false;
+            case Buffoon -> analyzeJokers = false;
+        }
+        return this;
     }
 }

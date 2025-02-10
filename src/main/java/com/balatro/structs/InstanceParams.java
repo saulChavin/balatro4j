@@ -18,21 +18,12 @@ public class InstanceParams {
     public long version;
     public Set<Voucher> vouchers;
 
-    public InstanceParams() {
-        deck = Deck.RED_DECK;
-        stake = Stake.White_Stake;
-        showman = false;
+    public InstanceParams(Deck deck, Stake stake, boolean showman, long version) {
+        this.deck = deck;
+        this.stake = stake;
+        this.showman = showman;
         sixesFactor = 1;
-        version = Version.v_101c.getVersion();
-        vouchers = new HashSet<>();
-    }
-
-    public InstanceParams(Deck d, Stake s, boolean show, long v) {
-        deck = d;
-        stake = s;
-        showman = show;
-        sixesFactor = 1;
-        version = v;
+        this.version = version;
         vouchers = new HashSet<>();
     }
 

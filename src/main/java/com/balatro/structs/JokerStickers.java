@@ -1,20 +1,14 @@
 package com.balatro.structs;
 
 public class JokerStickers {
-    public boolean eternal;
-    public boolean perishable;
-    public boolean rental;
+    private boolean eternal;
+    private boolean perishable;
+    private boolean rental;
 
     public JokerStickers() {
         this.eternal = false;
         this.perishable = false;
         this.rental = false;
-    }
-
-    public JokerStickers(boolean eternal, boolean perishable, boolean rental) {
-        this.eternal = eternal;
-        this.perishable = perishable;
-        this.rental = rental;
     }
 
     public boolean isEternal() {

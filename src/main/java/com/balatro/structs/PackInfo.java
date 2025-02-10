@@ -6,9 +6,9 @@ import com.balatro.enums.PackType;
 import java.util.Set;
 
 public class PackInfo {
-    private PackType type;
-    private int size;
-    private int choices;
+    private final PackType type;
+    private final int size;
+    private final int choices;
     private Set<Option> options;
 
     public PackInfo(PackType type, int size, int choices) {
@@ -43,23 +43,11 @@ public class PackInfo {
         return false;
     }
 
-    public void setType(PackType type) {
-        this.type = type;
-    }
-
     public int getSize() {
         return size;
     }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public int getChoices() {
         return choices;
-    }
-
-    public void setChoices(int choices) {
-        this.choices = choices;
     }
 }

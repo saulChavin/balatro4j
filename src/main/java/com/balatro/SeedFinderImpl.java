@@ -22,7 +22,7 @@ public final class SeedFinderImpl implements SeedFinder {
     private final AtomicBoolean lock = new AtomicBoolean(false);
     private Filter filter;
     private final List<Run> foundSeeds = new ArrayList<>();
-    private Consumer<BalatroBuilder> configuration;
+    private Consumer<Balatro> configuration;
 
     public SeedFinderImpl() {
         this(Runtime.getRuntime().availableProcessors(), 1_000_000);
@@ -42,7 +42,7 @@ public final class SeedFinderImpl implements SeedFinder {
     }
 
     @Override
-    public SeedFinder configuration(Consumer<BalatroBuilder> configuration) {
+    public SeedFinder configuration(Consumer<Balatro> configuration) {
         this.configuration = configuration;
         return this;
     }
@@ -136,7 +136,7 @@ public final class SeedFinderImpl implements SeedFinder {
                 }
 
                 var run = builder
-                        .build();
+                        .analyze();
 
                 if (checkFilters(run)) {
                     foundSeeds.add(run);

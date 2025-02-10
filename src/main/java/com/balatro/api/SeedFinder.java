@@ -7,7 +7,7 @@ public interface SeedFinder {
 
     SeedFinder filter(Filter filter);
 
-    SeedFinder configuration(Consumer<BalatroBuilder> configuration);
+    SeedFinder configuration(Consumer<Balatro> configuration);
 
     List<Run> find();
 }
