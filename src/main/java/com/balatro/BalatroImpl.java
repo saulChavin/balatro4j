@@ -269,8 +269,8 @@ public final class BalatroImpl implements Balatro {
         return new RunImpl(seed, Collections.unmodifiableList(antes));
     }
 
-    private static @Nullable Item getSticker(@NotNull JokerData joker) {
-        Item sticker = null;
+    private static @Nullable Edition getSticker(@NotNull JokerData joker) {
+        Edition sticker = null;
 
         if (joker.getStickers().isEternal()) {
             sticker = Edition.Eternal;

@@ -1,11 +1,13 @@
 package com.balatro.api;
 
 import com.balatro.enums.*;
+import com.balatro.structs.JokerData;
 import com.balatro.structs.PackInfo;
 import com.balatro.structs.ShopQueue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface Ante extends CommonQueries {
@@ -23,7 +25,7 @@ public interface Ante extends CommonQueries {
     List<PackInfo> getPacks();
 
     @JsonIgnore
-    Set<String> getLegendaryJokers();
+    Map<String, JokerData> getLegendaryJokers();
 
     @JsonIgnore
     Double getScore();

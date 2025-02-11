@@ -124,7 +124,7 @@ public interface Run extends Queryable {
     @JsonIgnore
     default Set<String> getLegendaryJokers() {
         return antes().stream()
-                .flatMap(a -> a.getLegendaryJokers().stream())
+                .flatMap(a -> a.getLegendaryJokers().keySet().stream())
                 .collect(Collectors.toSet());
     }
 

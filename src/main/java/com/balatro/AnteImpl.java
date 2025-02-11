@@ -9,10 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 final class AnteImpl implements Ante {
@@ -29,7 +26,7 @@ final class AnteImpl implements Ante {
     private final List<PackInfo> packInfos;
 
     //Cache
-    private Set<String> legendaryJokers;
+    private Map<String, JokerData> legendaryJokers;
 
     AnteImpl(int ante, Functions functions) {
         this.ante = ante;
@@ -95,9 +92,9 @@ final class AnteImpl implements Ante {
 
     @Contract(" -> new")
     @Override
-    public @NotNull Set<String> getLegendaryJokers() {
+    public @NotNull HashMap<String, JokerData> getLegendaryJokers() {
         hasLegendary(LegendaryJoker.Perkeo);//pre-compute
-        return new HashSet<>(legendaryJokers);
+        return new HashMap<>(legendaryJokers);
     }
 
     @Override
@@ -117,12 +114,39 @@ final class AnteImpl implements Ante {
             score -= 5;
         }
 
-        if (hasInShop(RareJoker.Blueprint)) {
-            score += 1.5;
+        for (JokerData value : legendaryJokers.values()) {
+            if (value.getEdition() == Edition.Negative) {
+                score += 5;
+            }
+
+            if (value.getEdition() == Edition.Holographic) {
+                score += 2;
+            }
+
+            if (value.getEdition() == Edition.Polychrome) {
+                score += 1;
+            }
+
+            if (value.getEdition() == Edition.Foil) {
+                score += 1;
+            }
         }
 
         if (hasInShop(RareJoker.Brainstorm)) {
-            score += 1.5;
+            if (hasInShop(RareJoker.Brainstorm, 6)) {
+                score += 2.5;
+            } else {
+                score += 1.5;
+            }
+        }
+
+
+        if (hasInShop(RareJoker.Blueprint)) {
+            if (hasInShop(RareJoker.Blueprint, 6)) {
+                score += 2.5;
+            } else {
+                score += 1.5;
+            }
         }
 
         if (hasInShop(UnCommonJoker.Showman)) {
@@ -132,9 +156,12 @@ final class AnteImpl implements Ante {
         if (hasInShop(UnCommonJoker.Constellation)) {
             score += 1.0;
         }
-
         if (hasInShop(RareJoker.Invisible_Joker)) {
-            score += 1;
+            if (hasInShop(RareJoker.Invisible_Joker, 6)) {
+                score += 2;
+            } else {
+                score += 1;
+            }
         }
 
         if (hasInShop(UnCommonJoker.Sock_and_Buskin)) {
@@ -176,7 +203,7 @@ final class AnteImpl implements Ante {
 
         for (Tag tag : tags) {
             if (tag == Tag.Negative_Tag) {
-                score += 1.5;
+                score += 5;
             }
 
             if (tag == Tag.Charm_Tag) {
@@ -189,11 +216,11 @@ final class AnteImpl implements Ante {
         }
 
         if (hasInPack(Specials.BLACKHOLE)) {
-            score += 2.0;
+            score += 5.0;
         }
 
         if (voucher == Voucher.Blank) {
-            score -= 1.0;
+            score += 1.0;
         }
 
         if (voucher == Voucher.Clearance_Sale) {
@@ -228,6 +255,20 @@ final class AnteImpl implements Ante {
             score += 0.2;
         }
 
+        for (PackInfo pack : packInfos) {
+            if (pack.getKind() == PackKind.Standard) {
+                score -= 1;
+            }
+
+            if (pack.getKind() == PackKind.Buffoon) {
+                for (Option option : pack.getOptions()) {
+                    if (option.edition() == Edition.Negative) {
+                        score += 2.5;
+                    }
+                }
+            }
+        }
+
         return score;
     }
 
@@ -235,7 +276,7 @@ final class AnteImpl implements Ante {
     public boolean hasLegendary(LegendaryJoker... jokers) {
         if (legendaryJokers != null) {
             for (LegendaryJoker joker : jokers) {
-                if (!legendaryJokers.contains(joker.getName())) {
+                if (!legendaryJokers.containsKey(joker.getName())) {
                     return false;
                 }
             }
@@ -243,19 +284,20 @@ final class AnteImpl implements Ante {
             return true;
         }
 
-        legendaryJokers = new HashSet<>();
+        legendaryJokers = new HashMap<>();
 
         int souls = countInPack(Specials.THE_SOUL);
 
         if (souls < jokers.length) return false;
 
         for (int i = 0; i < souls; i++) {
-            legendaryJokers.add(functions.nextJoker("sou", Functions.joker1SouArr, Functions.joker2SouArr, Functions.joker3SouArr,
-                    Functions.joker4SouArr, Functions.raritySouArr, Functions.editionSouArr, ante, false).joker.getName());
+            var data = functions.nextJoker("sou", Functions.joker1SouArr, Functions.joker2SouArr, Functions.joker3SouArr,
+                    Functions.joker4SouArr, Functions.raritySouArr, Functions.editionSouArr, ante, false);
+            legendaryJokers.put(data.joker.getName(), data);
         }
 
         for (LegendaryJoker joker : jokers) {
-            if (!legendaryJokers.contains(joker.getName())) {
+            if (!legendaryJokers.containsKey(joker.getName())) {
                 return false;
             }
         }

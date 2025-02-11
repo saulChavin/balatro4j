@@ -439,11 +439,10 @@ public final class Functions implements Lock {
 
     @SuppressWarnings("SameParameterValue")
     private static void heat(int max) {
+        System.out.println("Heating to: " + max);
         max = max + 1;
 
         if (rarityShoArr != null && rarityShoArr.length == max) return;
-
-        System.out.println("Heating to: " + max);
 
         rarityShoArr = new String[max];
         rarityBufArr = new String[max];
@@ -499,7 +498,7 @@ public final class Functions implements Lock {
         editionBufArr = new String[max];
         editionSouArr = new String[max];
 
-        for (int ante = 0; ante < max; ante++) {
+        for (int ante = 1; ante < max; ante++) {
             stdsetArr[ante] = "stdset" + ante;
             standard_editionArr[ante] = "standard_edition" + ante;
             enhancedstaArr[ante] = "Enhancedsta" + ante;

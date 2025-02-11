@@ -20,13 +20,13 @@ public final class LuaRandom {
         seed = seed * 3.14159265358979323846;
         seed = seed + 2.7182818284590452354;
 
-        var u = new DoubleLong(seed);
+        long bits = Double.doubleToLongBits(seed);
 
-        if (u.getUlong() < m) {
-            u.setUlong(u.getUlong() + m);
+        if (bits < m) {
+            bits += m;
         }
 
-        state = u.getUlong();
+        state = bits;
 
         for (int i = 0; i < 5; i++) {
             state = (((state << 31) ^ state) >>> 45) ^ ((state & (MAX_UINT64 << 1)) << 18);
@@ -43,13 +43,13 @@ public final class LuaRandom {
         seed = seed * 3.14159265358979323846;
         seed = seed + 2.7182818284590452354;
 
-        u = new DoubleLong(seed);
+        bits = Double.doubleToLongBits(seed);
 
-        if (u.getUlong() < m) {
-            u.setUlong(u.getUlong() + m);
+        if (bits < m) {
+            bits += m;
         }
 
-        state = u.getUlong();
+        state = bits;
 
         for (int i = 0; i < 5; i++) {
             state = (((state << 19) ^ state) >>> 30) ^ ((state & (MAX_UINT64 << 6)) << 28);
@@ -66,13 +66,13 @@ public final class LuaRandom {
         seed = seed * 3.14159265358979323846;
         seed = seed + 2.7182818284590452354;
 
-        u = new DoubleLong(seed);
+        bits = Double.doubleToLongBits(seed);
 
-        if (u.getUlong() < m) {
-            u.setUlong(u.getUlong() + m);
+        if (bits < m) {
+            bits += m;
         }
 
-        state = u.getUlong();
+        state = bits;
 
 
         for (int i = 0; i < 5; i++) {
@@ -90,13 +90,13 @@ public final class LuaRandom {
         seed = seed * 3.14159265358979323846;
         seed = seed + 2.7182818284590452354;
 
-        u = new DoubleLong(seed);
+        bits = Double.doubleToLongBits(seed);
 
-        if (u.getUlong() < m) {
-            u.setUlong(u.getUlong() + m);
+        if (bits < m) {
+            bits += m;
         }
 
-        state = u.getUlong();
+        state = bits;
 
         for (int i = 0; i < 5; i++) {
             state = (((state << 21) ^ state) >>> 39) ^ ((state & (MAX_UINT64 << 17)) << 8);
