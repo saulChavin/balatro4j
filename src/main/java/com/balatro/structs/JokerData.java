@@ -4,7 +4,7 @@ import com.balatro.api.Item;
 import com.balatro.enums.CommonJoker;
 import com.balatro.enums.Edition;
 
-public class JokerData {
+public class JokerData implements Item {
     public Item joker;
     public int rarity;
     public Edition edition;
@@ -29,4 +29,18 @@ public class JokerData {
         return stickers;
     }
 
+    @Override
+    public int getYIndex() {
+        return joker.getYIndex();
+    }
+
+    @Override
+    public int ordinal() {
+        return joker.ordinal();
+    }
+
+    @Override
+    public String getName() {
+        return joker.getName();
+    }
 }

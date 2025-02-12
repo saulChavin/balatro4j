@@ -7,7 +7,9 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.LongAdder;
@@ -21,7 +23,7 @@ public final class SeedFinderImpl implements SeedFinder {
     private final int seedsPerThread;
     private final AtomicBoolean lock = new AtomicBoolean(false);
     private Filter filter;
-    private final List<Run> foundSeeds = new ArrayList<>();
+    private final Set<String> foundSeeds = new HashSet<>();
     private Consumer<Balatro> configuration;
 
     public SeedFinderImpl() {
@@ -54,7 +56,7 @@ public final class SeedFinderImpl implements SeedFinder {
     }
 
     @Override
-    public List<Run> find() {
+    public Set<String> find() {
         search();
         return foundSeeds;
     }
@@ -139,7 +141,7 @@ public final class SeedFinderImpl implements SeedFinder {
                         .analyze();
 
                 if (checkFilters(run)) {
-                    foundSeeds.add(run);
+                    foundSeeds.add(seed);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(SeedFinderImpl.class.getName()).log(Level.SEVERE, null, ex);

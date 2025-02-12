@@ -46,7 +46,7 @@ public final class Functions implements Lock {
         hashedSeed = pseudohash(s);
         this.params = params;
         cache = new Cache();
-        this.lock = new BooleanArrayLock();
+        this.lock = new LongArrayLock();
     }
 
     private double getNode(String id) {

@@ -35,7 +35,7 @@ public class PackInfo {
 
     public boolean containsOption(String name) {
         for (Option option : options) {
-            if (option.name().equals(name)) {
+            if (option.item().equals(name)) {
                 return true;
             }
         }

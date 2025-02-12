@@ -22,8 +22,8 @@ public class Main {
             System.out.println("-------------------------------------------------");
         }
 
-        var seeds = Balatro.search(10, 1_000_000)
-                .configuration(config -> config.maxAnte(1).disableShopQueue()
+        var seeds = Balatro.search(1, 1_000_000)
+                .configuration(config -> config.maxAnte(8).disableShopQueue()
                         .disablePack(PackKind.Buffoon))
                 .filter(Perkeo.inPack().and(Triboulet.inPack()))
                 .find();
@@ -34,8 +34,8 @@ public class Main {
 
         List<Run> runs = new ArrayList<>();
 
-        for (Run seed : seeds) {
-            var play = Balatro.builder(seed.toString(), 8)
+        for (String seed : seeds) {
+            var play = Balatro.builder(seed, 8)
                     .analyzeAll()
                     .analyze();
 

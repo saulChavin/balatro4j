@@ -51,6 +51,8 @@ public interface Ante extends CommonQueries {
     @JsonIgnore
     Set<Planet> getPlanets();
 
+    Set<Spectral> getSpectrals();
+
     @JsonIgnore
     int getStandardPackCount();
 

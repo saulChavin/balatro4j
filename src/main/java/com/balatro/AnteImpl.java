@@ -474,6 +474,17 @@ final class AnteImpl implements Ante {
     }
 
     @Override
+    public Set<Spectral> getSpectrals() {
+        return packInfos.stream()
+                .filter(a -> a.getKind() == PackKind.Spectral)
+                .flatMap(a -> a.getOptions().stream()
+                        .map(Option::item))
+                .filter(a -> a instanceof Spectral)
+                .map(a -> (Spectral) a)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     public int getStandardPackCount() {
         return (int) packInfos.stream()
                 .filter(a -> a.getKind() == PackKind.Standard)
