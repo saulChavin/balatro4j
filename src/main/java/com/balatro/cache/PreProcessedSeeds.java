@@ -6,9 +6,7 @@ import com.balatro.api.Item;
 import com.balatro.enums.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
@@ -18,6 +16,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.balatro.enums.LegendaryJoker.*;
@@ -25,6 +25,13 @@ import static com.balatro.enums.LegendaryJoker.*;
 public class PreProcessedSeeds {
 
     private List<Data> dataList;
+
+    public static void main(String[] args) {
+        var p = new PreProcessedSeeds();
+        p.start();
+
+        p.search(Set.of("perkeo", "triboulet", "brainstorm", "blueprint"));
+    }
 
     public void start() {
         var decimalFormat = new DecimalFormat("#,##0");
@@ -35,8 +42,7 @@ public class PreProcessedSeeds {
             dataList = readFile(file);
             System.out.println("Loaded " + decimalFormat.format(dataList.size()) + " seeds from cache in " + (System.currentTimeMillis() - init) + " ms");
         } else {
-
-            var seeds = Balatro.search(10, 25_000_000)
+            var seeds = Balatro.search(Runtime.getRuntime().availableProcessors(), 5_000_000)
                     .configuration(config -> config.maxAnte(1).disableShopQueue()
                             .disablePack(PackKind.Buffoon))
                     .filter(Perkeo.inPack().or(Triboulet.inPack()).or(Yorick.inPack()).or(Chicot.inPack()).or(Canio.inPack()))
@@ -174,26 +180,21 @@ public class PreProcessedSeeds {
     }
 
     private static @NotNull List<Data> readFile(@NotNull File file) {
-        try {
-            var bytes = Files.readAllBytes(file.toPath());
-            int cursor = 0;
+        List<Data> dataList = new ArrayList<>();
 
-            List<Data> dataList = new ArrayList<>();
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
+            byte[] seedBytes = new byte[7];
+            byte[] longBytes = new byte[Long.BYTES];
+            ByteBuffer byteBuffer = ByteBuffer.allocate(Long.BYTES);
 
-            while (cursor < bytes.length) {
-                byte[] seedBytes = new byte[7];
-                System.arraycopy(bytes, cursor, seedBytes, 0, 7);
-                cursor += 7;
+            while (bis.read(seedBytes) != -1) {
                 String seed = new String(seedBytes);
-
                 long[] data = new long[13];
 
-                ByteBuffer byteBuffer = ByteBuffer.allocate(Long.BYTES);
-
                 for (int i = 0; i < 13; i++) {
-                    byte[] longBytes = new byte[Long.BYTES];
-                    System.arraycopy(bytes, cursor, longBytes, 0, Long.BYTES);
-                    cursor += Long.BYTES;
+                    if (bis.read(longBytes) == -1) {
+                        throw new IOException("Unexpected end of file");
+                    }
                     byteBuffer.clear();
                     byteBuffer.put(longBytes);
                     data[i] = byteBuffer.getLong(0);
@@ -201,10 +202,11 @@ public class PreProcessedSeeds {
 
                 dataList.add(new Data(seed, data));
             }
-
-            return dataList;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Logger.getLogger(PreProcessedSeeds.class.getName())
+                    .log(Level.SEVERE, null, e);
         }
+
+        return dataList;
     }
 }
