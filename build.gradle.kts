@@ -1,16 +1,15 @@
-import io.ktor.plugin.features.*
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.gradle.internal.declarativedsl.parsing.main
 
 plugins {
     id("java")
     id("application")
     id("org.graalvm.buildtools.native") version "0.10.4"
     id("io.ktor.plugin") version "2.3.12"
+    id("maven-publish")
 }
 
-group = "com.alex"
+group = "com.balatro"
 version = "1.0-SNAPSHOT"
 
 java.sourceCompatibility = JavaVersion.VERSION_23
@@ -72,6 +71,26 @@ graalvmNative {
     }
 }
 
+publishing {
+    publications.create<MavenPublication>("maven") {
+        groupId = "com.balatro"
+        artifactId = "balatro4j"
+        version = "1.0.0-SNAPSHOT"
+
+        from(components["java"])
+    }
+
+    repositories {
+        maven {
+            name = "Github"
+            url = uri("https://maven.pkg.github.com/alex-cova/balatro4j")
+            credentials {
+                username = System.getenv("MAVEN_USER")
+                password = System.getenv("MAVEN_SECRET")
+            }
+        }
+    }
+}
 
 ktor {
     fatJar {

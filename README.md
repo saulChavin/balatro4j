@@ -19,11 +19,11 @@ I've seen more speed running the JVM version than the native one, so I recommend
 
 ```java
 void find() {
-    var seeds = Balatro.search(1, 1)
-            .configuration(config -> config.maxAnte(2))
+    var seeds = Balatro.search(10, 1_000_000)
+            .configuration(config -> config.maxAnte(1)
+                    .disablePack(PackKind.Buffoon))
             .filter(Perkeo.inPack().and(Triboulet.inPack())
-                    .and(UnCommonJoker.Sock_and_Buskin.inShop())
-                    .and(Blueprint.inShop().or(Blueprint.inBuffonPack())))
+                    .and(RareJoker.Blueprint.inShop()).and(RareJoker.Brainstorm.inShop()))
             .find();
 
     System.out.println("Seeds found: " + seeds.size());
@@ -47,9 +47,9 @@ KNIGXTT
 
 ```java
 void runToJson() {
-    var run = Balatro.builder("2K9H9HN")
-            .maxAnte(8)
-            .build();
+    var run = Balatro.builder("2K9H9HN", 8)
+            .analyzeAll()
+            .analyze();
 
     System.out.println(run.toJson());
 }
@@ -369,4 +369,4 @@ WHOQQZD
 3WBK1NK
 ```
 
-average speed: 200K seeds per second, max depth 1
+> average speed: 2,246,263 seeds/sec, max depth 1

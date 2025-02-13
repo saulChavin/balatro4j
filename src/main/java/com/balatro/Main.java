@@ -22,10 +22,11 @@ public class Main {
             System.out.println("-------------------------------------------------");
         }
 
-        var seeds = Balatro.search(1, 1_000_000)
-                .configuration(config -> config.maxAnte(8).disableShopQueue()
+        var seeds = Balatro.search(10, 1_000_000)
+                .configuration(config -> config.maxAnte(1)
                         .disablePack(PackKind.Buffoon))
-                .filter(Perkeo.inPack().and(Triboulet.inPack()))
+                .filter(Perkeo.inPack().and(Triboulet.inPack())
+                        .and(RareJoker.Blueprint.inShop()).and(RareJoker.Brainstorm.inShop()))
                 .find();
 
         System.out.println("Seeds found: " + seeds.size());
