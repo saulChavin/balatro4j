@@ -6,12 +6,14 @@ import com.balatro.api.Joker;
 import com.balatro.enums.*;
 import com.balatro.structs.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 final class AnteImpl implements Ante {
 
     private final int ante;
@@ -24,8 +26,8 @@ final class AnteImpl implements Ante {
     private Voucher voucher;
     private Boss boss;
     private final List<PackInfo> packInfos;
-
     //Cache
+    @JsonIgnore
     private Map<String, JokerData> legendaryJokers;
 
     AnteImpl(int ante, Functions functions) {

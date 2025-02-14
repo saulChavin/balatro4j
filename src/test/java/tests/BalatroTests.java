@@ -67,8 +67,8 @@ public class BalatroTests {
 
         System.out.println("Seeds found: " + seeds.size());
 
-        for (Run seed : seeds) {
-            var play = Balatro.builder(seed.toString(), 8)
+        for (String seed : seeds) {
+            var play = Balatro.builder(seed, 8)
                     .analyze();
 
             System.out.println(play.seed() + " " + play.getScore());

@@ -5,11 +5,13 @@ import com.balatro.api.filter.InShopFilter;
 import com.balatro.api.filter.SpectralFilter;
 import com.balatro.enums.Edition;
 import com.balatro.structs.Option;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public interface Item {
 
     String getName();
 
+    @JsonIgnore
     int getYIndex();
 
     int ordinal();
@@ -26,10 +28,12 @@ public interface Item {
         return new InPackFilter(ante, this);
     }
 
+    @JsonIgnore
     default Filter inPack() {
         return new InPackFilter(this);
     }
 
+    @JsonIgnore
     default Filter inShop() {
         return new InShopFilter(this);
     }
@@ -38,6 +42,7 @@ public interface Item {
         return new InShopFilter(ante, this);
     }
 
+    @JsonIgnore
     default Filter inSpectral() {
         return new SpectralFilter(this);
     }
@@ -50,6 +55,7 @@ public interface Item {
         return new EditionItem(this, edition);
     }
 
+    @JsonIgnore
     default Option asOption() {
         return new Option(this);
     }

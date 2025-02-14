@@ -5,5 +5,4 @@ public enum JokerType {
     RARE,
     UNCOMMON,
     COMMON
-
 }

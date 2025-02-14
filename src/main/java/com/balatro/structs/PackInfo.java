@@ -2,9 +2,11 @@ package com.balatro.structs;
 
 import com.balatro.enums.PackKind;
 import com.balatro.enums.PackType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Set;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PackInfo {
     private final PackType type;
     private final int size;

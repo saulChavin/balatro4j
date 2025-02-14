@@ -3,8 +3,10 @@ package com.balatro.structs;
 import com.balatro.api.EditionItem;
 import com.balatro.api.Item;
 import com.balatro.enums.Edition;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jetbrains.annotations.Nullable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record SearchableItem(Item item, @Nullable Item edition) {
 
     public SearchableItem(Item item, Item edition) {
