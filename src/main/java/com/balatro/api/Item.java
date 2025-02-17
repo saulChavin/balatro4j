@@ -4,7 +4,7 @@ import com.balatro.api.filter.InPackFilter;
 import com.balatro.api.filter.InShopFilter;
 import com.balatro.api.filter.SpectralFilter;
 import com.balatro.enums.Edition;
-import com.balatro.structs.Option;
+import com.balatro.structs.EditionItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public interface Item {
@@ -51,12 +51,12 @@ public interface Item {
         return new SpectralFilter(ante, this);
     }
 
-    default EditionItem edition(Edition edition) {
-        return new EditionItem(this, edition);
+    default com.balatro.api.EditionItem edition(Edition edition) {
+        return new com.balatro.api.EditionItem(this, edition);
     }
 
     @JsonIgnore
-    default Option asOption() {
-        return new Option(this);
+    default EditionItem asOption() {
+        return new EditionItem(this);
     }
 }

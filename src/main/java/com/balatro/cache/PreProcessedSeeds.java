@@ -30,7 +30,7 @@ public class PreProcessedSeeds {
         var p = new PreProcessedSeeds();
         p.start();
 
-        p.search(Set.of("perkeo", "triboulet", "brainstorm", "blueprint"));
+        p.search(Set.of("perkeo", "triboulet", "brainstorm", "blueprint", "cryptid"));
     }
 
     public void start() {
@@ -42,7 +42,7 @@ public class PreProcessedSeeds {
             dataList = readFile(file);
             System.out.println("Loaded " + decimalFormat.format(dataList.size()) + " seeds from cache in " + (System.currentTimeMillis() - init) + " ms");
         } else {
-            var seeds = Balatro.search(Runtime.getRuntime().availableProcessors(), 5_000_000)
+            var seeds = Balatro.search(Runtime.getRuntime().availableProcessors(), 100)
                     .configuration(config -> config.maxAnte(1).disableShopQueue()
                             .disablePack(PackKind.Buffoon))
                     .filter(Perkeo.inPack().or(Triboulet.inPack()).or(Yorick.inPack()).or(Chicot.inPack()).or(Canio.inPack()))
@@ -170,10 +170,10 @@ public class PreProcessedSeeds {
                     .collect(Collectors.toSet());
 
             var missing = tokens.stream()
-                    .filter(itemNames::contains)
+                    .filter(a -> !itemNames.contains(a.toLowerCase()))
                     .collect(Collectors.joining(","));
 
-            throw new IllegalStateException("Failed to parse search, missing: " + missing);
+            throw new IllegalStateException("Failed to parse search, missing: " + missing + ", tokens %s items %s".formatted(tokens.size(), items.size()));
         }
 
         return items;
@@ -185,22 +185,69 @@ public class PreProcessedSeeds {
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
             byte[] seedBytes = new byte[7];
             byte[] longBytes = new byte[Long.BYTES];
-            ByteBuffer byteBuffer = ByteBuffer.allocate(Long.BYTES);
+            byte[] intBytes = new byte[Integer.BYTES];
+            ByteBuffer longBuffer = ByteBuffer.allocate(Long.BYTES);
+            ByteBuffer intBuffer = ByteBuffer.allocate(Integer.BYTES);
 
             while (bis.read(seedBytes) != -1) {
                 String seed = new String(seedBytes);
-                long[] data = new long[13];
+                long[] data = new long[Data.DATA_SIZE];
 
-                for (int i = 0; i < 13; i++) {
+                for (int i = 0; i < Data.DATA_SIZE; i++) {
                     if (bis.read(longBytes) == -1) {
                         throw new IOException("Unexpected end of file");
                     }
-                    byteBuffer.clear();
-                    byteBuffer.put(longBytes);
-                    data[i] = byteBuffer.getLong(0);
+                    longBuffer.clear();
+                    longBuffer.put(longBytes);
+                    data[i] = longBuffer.getLong(0);
                 }
 
-                dataList.add(new Data(seed, data));
+                if (bis.read(intBytes) == -1) {
+                    throw new IOException("Unexpected end of file");
+                }
+                intBuffer.clear();
+                intBuffer.put(intBytes);
+                int score = intBuffer.getInt(0);
+
+                if (bis.read(intBytes) == -1) {
+                    throw new IOException("Unexpected end of file");
+                }
+                intBuffer.clear();
+                intBuffer.put(intBytes);
+                int editionSize = intBuffer.getInt(0);
+
+                if (editionSize == 0) {
+                    dataList.add(new Data(seed, score, data, null));
+                    continue;
+                }
+
+                long[] editionData = new long[editionSize * 3];
+
+                for (int i = 0; i < editionSize; i += 3) {
+                    if (bis.read(longBytes) == -1) {
+                        throw new IOException("Unexpected end of file");
+                    }
+                    longBuffer.clear();
+                    longBuffer.put(longBytes);
+                    editionData[i * 3] = longBuffer.getLong(0);
+
+                    if (bis.read(longBytes) == -1) {
+                        throw new IOException("Unexpected end of file");
+                    }
+                    longBuffer.clear();
+                    longBuffer.put(longBytes);
+                    editionData[i * 3 + 1] = longBuffer.getLong(0);
+
+                    if (bis.read(longBytes) == -1) {
+                        throw new IOException("Unexpected end of file");
+                    }
+                    longBuffer.clear();
+                    longBuffer.put(longBytes);
+                    editionData[i * 3 + 2] = longBuffer.getLong(0);
+                }
+
+                dataList.add(new Data(seed, score, data, editionData));
+
             }
         } catch (IOException e) {
             Logger.getLogger(PreProcessedSeeds.class.getName())

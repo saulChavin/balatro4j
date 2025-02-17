@@ -21,6 +21,6 @@ public enum LegendaryJoker implements Item {
 
     @Override
     public int getYIndex() {
-        return 12;
+        return 10;
     }
 }

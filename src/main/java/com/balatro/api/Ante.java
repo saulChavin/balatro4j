@@ -3,6 +3,7 @@ package com.balatro.api;
 import com.balatro.enums.*;
 import com.balatro.structs.JokerData;
 import com.balatro.structs.PackInfo;
+import com.balatro.structs.EditionItem;
 import com.balatro.structs.ShopQueue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,7 +35,7 @@ public interface Ante extends CommonQueries {
     int getBufferedJokerCount();
 
     @JsonIgnore
-    Set<Joker> getJokers();
+    Set<EditionItem> getJokers();
 
     @JsonIgnore
     Set<Joker> getRareJokers();

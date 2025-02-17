@@ -68,7 +68,7 @@ public enum Card implements Item {
 
     @Override
     public int getYIndex() {
-        return 10;
+        return 12;
     }
 
     public Rank getRank(){

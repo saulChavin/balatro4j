@@ -76,7 +76,7 @@ final class AnteImpl implements Ante {
 
     void addToQueue(@NotNull ShopItem value, Edition sticker) {
         shop.add(value.getItem().getName());
-        shopQueue.add(new SearchableItem(value.getItem(), sticker));
+        shopQueue.add(new EditionItem(value.getItem(), sticker));
     }
 
     void setBoss(Boss boss) {
@@ -87,7 +87,7 @@ final class AnteImpl implements Ante {
         this.voucher = voucher;
     }
 
-    void addPack(@NotNull PackInfo packInfo, Set<Option> options) {
+    void addPack(@NotNull PackInfo packInfo, Set<EditionItem> options) {
         packInfo.setOptions(options);
         packInfos.add(packInfo);
     }
@@ -102,7 +102,7 @@ final class AnteImpl implements Ante {
     @Override
     public int getBufferedJokerCount() {
         return (int) shopQueue.stream()
-                .filter(SearchableItem::hasSticker)
+                .filter(EditionItem::hasSticker)
                 .filter(a -> a.item() instanceof Joker)
                 .count();
     }
@@ -191,7 +191,7 @@ final class AnteImpl implements Ante {
         }
 
         score += getShopQueue().stream()
-                         .filter(SearchableItem::hasSticker)
+                         .filter(EditionItem::hasSticker)
                          .count() * 0.5;
 
         score += getShopQueue().stream()
@@ -263,7 +263,7 @@ final class AnteImpl implements Ante {
             }
 
             if (pack.getKind() == PackKind.Buffoon) {
-                for (Option option : pack.getOptions()) {
+                for (EditionItem option : pack.getOptions()) {
                     if (option.edition() == Edition.Negative) {
                         score += 2.5;
                     }
@@ -419,18 +419,25 @@ final class AnteImpl implements Ante {
     }
 
     @Override
-    public Set<Joker> getJokers() {
-        return shopQueue.stream()
-                .map(SearchableItem::item)
-                .filter(a -> a instanceof Joker)
-                .map(a -> (Joker) a)
+    public Set<EditionItem> getJokers() {
+        var a = shopQueue.stream()
+                .filter(EditionItem::isJoker)
                 .collect(Collectors.toSet());
+
+        var b = packInfos.stream()
+                .filter(p -> p.getKind() == PackKind.Buffoon)
+                .flatMap(pack -> pack.getOptions().stream())
+                .collect(Collectors.toSet());
+
+        a.addAll(b);
+
+        return a;
     }
 
     @Override
     public Set<Joker> getRareJokers() {
         return shopQueue.stream()
-                .map(SearchableItem::item)
+                .map(EditionItem::item)
                 .filter(a -> a instanceof Joker)
                 .map(a -> (Joker) a)
                 .filter(Joker::isRare)
@@ -440,7 +447,7 @@ final class AnteImpl implements Ante {
     @Override
     public Set<Joker> getUncommonJokers() {
         return shopQueue.stream()
-                .map(SearchableItem::item)
+                .map(EditionItem::item)
                 .filter(a -> a instanceof Joker)
                 .map(a -> (Joker) a)
                 .filter(Joker::isUncommon)
@@ -451,7 +458,7 @@ final class AnteImpl implements Ante {
     public int getNegativeJokerCount() {
         return (int) shopQueue.stream()
                 .filter(a -> a.hasEdition(Edition.Negative))
-                .map(SearchableItem::item)
+                .map(EditionItem::item)
                 .filter(a -> a instanceof Joker)
                 .map(a -> (Joker) a)
                 .count();
@@ -460,7 +467,7 @@ final class AnteImpl implements Ante {
     @Override
     public Set<Tarot> getTarots() {
         return shopQueue.stream()
-                .map(SearchableItem::item)
+                .map(EditionItem::item)
                 .filter(a -> a instanceof Tarot)
                 .map(a -> (Tarot) a)
                 .collect(Collectors.toSet());
@@ -469,7 +476,7 @@ final class AnteImpl implements Ante {
     @Override
     public Set<Planet> getPlanets() {
         return shopQueue.stream()
-                .map(SearchableItem::item)
+                .map(EditionItem::item)
                 .filter(a -> a instanceof Planet)
                 .map(a -> (Planet) a)
                 .collect(Collectors.toSet());
@@ -480,7 +487,7 @@ final class AnteImpl implements Ante {
         return packInfos.stream()
                 .filter(a -> a.getKind() == PackKind.Spectral)
                 .flatMap(a -> a.getOptions().stream()
-                        .map(Option::item))
+                        .map(EditionItem::item))
                 .filter(a -> a instanceof Spectral)
                 .map(a -> (Spectral) a)
                 .collect(Collectors.toSet());

@@ -202,7 +202,7 @@ public final class BalatroImpl implements Balatro {
             for (int p = 1; p <= numPacks; p++) {
                 var pack = functions.nextPack(a);
                 var packInfo = functions.packInfo(pack);
-                Set<Option> options = new HashSet<>();
+                Set<EditionItem> options = new HashSet<>();
 
                 switch (packInfo.getKind()) {
                     case PackKind.Celestial -> {
@@ -232,7 +232,7 @@ public final class BalatroImpl implements Balatro {
 
                         for (JokerData joker : cards) {
                             var sticker = getSticker(joker);
-                            options.add(new Option(sticker, joker.getJoker()));
+                            options.add(new EditionItem(joker.getJoker(), sticker));
                         }
                     }
                     case PackKind.Standard -> {
@@ -257,7 +257,7 @@ public final class BalatroImpl implements Balatro {
                             output.append(rank.getName());
                             output.append(" of ")
                                     .append(card.base().getSuit().getName());
-                            options.add(new Option(new AbstractCard(output.toString())));
+                            options.add(new EditionItem(new AbstractCard(output.toString())));
                         }
                     }
                 }

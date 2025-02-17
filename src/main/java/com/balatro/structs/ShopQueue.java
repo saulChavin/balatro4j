@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class ShopQueue extends ArrayList<SearchableItem> {
+public final class ShopQueue extends ArrayList<EditionItem> {
 
-    public ShopQueue(@NotNull Collection<? extends SearchableItem> c) {
+    public ShopQueue(@NotNull Collection<? extends EditionItem> c) {
         super(c);
     }
 

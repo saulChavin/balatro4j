@@ -11,7 +11,7 @@ public class PackInfo {
     private final PackType type;
     private final int size;
     private final int choices;
-    private Set<Option> options;
+    private Set<EditionItem> options;
 
     public PackInfo(PackType type, int size, int choices) {
         this.type = type;
@@ -19,11 +19,11 @@ public class PackInfo {
         this.choices = choices;
     }
 
-    public Set<Option> getOptions() {
+    public Set<EditionItem> getOptions() {
         return options;
     }
 
-    public void setOptions(Set<Option> options) {
+    public void setOptions(Set<EditionItem> options) {
         this.options = options;
     }
 
@@ -36,7 +36,7 @@ public class PackInfo {
     }
 
     public boolean containsOption(String name) {
-        for (Option option : options) {
+        for (EditionItem option : options) {
             if (option.item().equals(name)) {
                 return true;
             }
