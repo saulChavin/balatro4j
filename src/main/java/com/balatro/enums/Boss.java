@@ -3,7 +3,10 @@ package com.balatro.enums;
 import com.balatro.api.filter.BossFilter;
 import com.balatro.api.Filter;
 import com.balatro.api.Item;
+import com.balatro.jackson.ItemSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+@JsonSerialize(using = ItemSerializer.class)
 public enum Boss implements Item {
 
     The_Arm("The Arm"),

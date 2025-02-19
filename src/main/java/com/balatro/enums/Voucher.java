@@ -3,7 +3,10 @@ package com.balatro.enums;
 import com.balatro.api.Filter;
 import com.balatro.api.Item;
 import com.balatro.api.filter.VoucherFilter;
+import com.balatro.jackson.ItemSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+@JsonSerialize(using = ItemSerializer.class)
 public enum Voucher implements Item {
     Overstock("Overstock"),
     Overstock_Plus("Overstock Plus"),

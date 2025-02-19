@@ -2,6 +2,7 @@ package com.balatro.enums;
 
 import com.balatro.api.Joker;
 
+
 public enum RareJoker implements Joker {
     DNA("DNA"),
     Vagabond("Vagabond"),

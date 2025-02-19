@@ -3,12 +3,14 @@ package com.balatro.api;
 import com.balatro.api.filter.InPackFilter;
 import com.balatro.api.filter.InShopFilter;
 import com.balatro.api.filter.SpectralFilter;
-import com.balatro.enums.Edition;
 import com.balatro.structs.EditionItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jetbrains.annotations.NotNull;
 
 public interface Item {
 
+    @JsonProperty("name")
     String getName();
 
     @JsonIgnore
@@ -16,7 +18,7 @@ public interface Item {
 
     int ordinal();
 
-    default boolean eq(Item item) {
+    default boolean eq(@NotNull Item item) {
         return getName().equalsIgnoreCase(item.getName());
     }
 
@@ -49,10 +51,6 @@ public interface Item {
 
     default Filter inSpectral(int ante) {
         return new SpectralFilter(ante, this);
-    }
-
-    default com.balatro.api.EditionItem edition(Edition edition) {
-        return new com.balatro.api.EditionItem(this, edition);
     }
 
     @JsonIgnore

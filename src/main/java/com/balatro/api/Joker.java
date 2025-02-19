@@ -2,7 +2,10 @@ package com.balatro.api;
 
 import com.balatro.api.filter.InBuffonPackFilter;
 import com.balatro.enums.JokerType;
+import com.balatro.jackson.ItemSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+@JsonSerialize(using = ItemSerializer.class)
 public interface Joker extends Item {
 
     default Filter inBuffonPack() {

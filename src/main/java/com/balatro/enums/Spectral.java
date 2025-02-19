@@ -1,7 +1,10 @@
 package com.balatro.enums;
 
 import com.balatro.api.Item;
+import com.balatro.jackson.ItemSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+@JsonSerialize(using = ItemSerializer.class)
 public enum Spectral implements Item {
 
     Familiar("Familiar"),

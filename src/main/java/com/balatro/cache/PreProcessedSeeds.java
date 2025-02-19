@@ -4,6 +4,7 @@ import com.balatro.SeedFinderImpl;
 import com.balatro.api.Balatro;
 import com.balatro.api.Item;
 import com.balatro.enums.*;
+import com.balatro.structs.EditionItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -13,7 +14,6 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -28,21 +28,26 @@ public class PreProcessedSeeds {
 
     public static void main(String[] args) {
         var p = new PreProcessedSeeds();
-        p.start();
+        p.start(1, 200_000);
 
-        p.search(Set.of("perkeo", "triboulet", "brainstorm", "blueprint", "cryptid"));
+        p.search(Set.of("perkeo", "triboulet", "brainstorm", "blueprint"));
     }
 
     public void start() {
+        start(Runtime.getRuntime().availableProcessors(), 1_000_000);
+    }
+
+    public void start(int parallelism, int seedsPerThread) {
         var decimalFormat = new DecimalFormat("#,##0");
-        var file = new File("cache.jkr");
+        var file = new File("perkeo.jkr");
+        System.out.println("Loading seeds from cache: " + file.getAbsolutePath());
 
         if (file.exists()) {
             long init = System.currentTimeMillis();
             dataList = readFile(file);
             System.out.println("Loaded " + decimalFormat.format(dataList.size()) + " seeds from cache in " + (System.currentTimeMillis() - init) + " ms");
         } else {
-            var seeds = Balatro.search(Runtime.getRuntime().availableProcessors(), 100)
+            var seeds = Balatro.search(parallelism, seedsPerThread)
                     .configuration(config -> config.maxAnte(1).disableShopQueue()
                             .disablePack(PackKind.Buffoon))
                     .filter(Perkeo.inPack().or(Triboulet.inPack()).or(Yorick.inPack()).or(Chicot.inPack()).or(Canio.inPack()))
@@ -85,95 +90,115 @@ public class PreProcessedSeeds {
 
     }
 
-    public Set<String> search(Set<String> tokens) {
-        Set<String> found = new HashSet<>();
+    public Set<String> search(@NotNull Set<String> tokens) {
+        return find(tokens.stream()
+                .map(Query::new)
+                .toList())
+                .stream()
+                .map(QueryResult::seed)
+                .collect(Collectors.toSet());
+    }
+
+    public List<QueryResult> find(List<Query> tokens) {
+        List<QueryResult> found = new ArrayList<>();
 
         var items = parseSearch(tokens);
 
         for (Data data : dataList) {
             if (data.contains(items)) {
-                found.add(data.getSeed());
+                found.add(new QueryResult(data.getSeed(), data.getScore()));
             }
         }
 
         return found;
     }
 
-    private @NotNull List<Item> parseSearch(Set<String> tokens) {
+    private @NotNull List<EditionItem> parseSearch(@NotNull List<Query> queries) {
+        List<EditionItem> items = new ArrayList<>(queries.size());
 
-        List<Item> items = new ArrayList<>();
+        for (Query query : queries) {
+            for (Spectral value : Spectral.values()) {
+                if (query.getItem().equalsIgnoreCase(value.name())) {
+                    items.add(new EditionItem(value, query.getEdition()));
+                    break;
+                }
+            }
 
-        for (Spectral value : Spectral.values()) {
-            if (tokens.contains(value.name().toLowerCase())) {
-                items.add(value);
+            for (CommonJoker value : CommonJoker.values()) {
+                if (query.getItem().equalsIgnoreCase(value.name())) {
+                    items.add(new EditionItem(value, query.getEdition()));
+                    break;
+                }
+            }
+
+            for (RareJoker value : RareJoker.values()) {
+                if (query.getItem().equalsIgnoreCase(value.name())) {
+                    items.add(new EditionItem(value, query.getEdition()));
+                    break;
+                }
+            }
+
+            for (LegendaryJoker value : values()) {
+                if (query.getItem().equalsIgnoreCase(value.name())) {
+                    items.add(new EditionItem(value, query.getEdition()));
+                    break;
+                }
+            }
+
+            for (UnCommonJoker value : UnCommonJoker.values()) {
+                if (query.getItem().equalsIgnoreCase(value.name())) {
+                    items.add(new EditionItem(value, query.getEdition()));
+                    break;
+                }
+            }
+            for (Tag value : Tag.values()) {
+                if (query.getItem().equalsIgnoreCase(value.name())) {
+                    items.add(new EditionItem(value, query.getEdition()));
+                    break;
+                }
+            }
+
+            for (Boss value : Boss.values()) {
+                if (query.getItem().equalsIgnoreCase(value.name())) {
+                    items.add(new EditionItem(value, query.getEdition()));
+                    break;
+                }
+            }
+
+            for (Planet value : Planet.values()) {
+                if (query.getItem().equalsIgnoreCase(value.name())) {
+                    items.add(new EditionItem(value, query.getEdition()));
+                    break;
+                }
+            }
+
+            for (Tarot value : Tarot.values()) {
+                if (query.getItem().equalsIgnoreCase(value.name())) {
+                    items.add(new EditionItem(value, query.getEdition()));
+                    break;
+                }
+            }
+
+            for (Voucher value : Voucher.values()) {
+                if (query.getItem().equalsIgnoreCase(value.name())) {
+                    items.add(new EditionItem(value, query.getEdition()));
+                    break;
+                }
             }
         }
 
-        for (CommonJoker value : CommonJoker.values()) {
-            if (tokens.contains(value.name().toLowerCase())) {
-                items.add(value);
-            }
-        }
-
-        for (RareJoker value : RareJoker.values()) {
-            if (tokens.contains(value.name().toLowerCase())) {
-                items.add(value);
-            }
-        }
-
-        for (LegendaryJoker value : values()) {
-            if (tokens.contains(value.name().toLowerCase())) {
-                items.add(value);
-            }
-        }
-
-        for (UnCommonJoker value : UnCommonJoker.values()) {
-            if (tokens.contains(value.name().toLowerCase())) {
-                items.add(value);
-            }
-        }
-
-        for (Tag value : Tag.values()) {
-            if (tokens.contains(value.name().toLowerCase())) {
-                items.add(value);
-            }
-        }
-
-        for (Boss value : Boss.values()) {
-            if (tokens.contains(value.name().toLowerCase())) {
-                items.add(value);
-            }
-        }
-
-        for (Planet value : Planet.values()) {
-            if (tokens.contains(value.name().toLowerCase())) {
-                items.add(value);
-            }
-        }
-
-        for (Tarot value : Tarot.values()) {
-            if (tokens.contains(value.name().toLowerCase())) {
-                items.add(value);
-            }
-        }
-
-        for (Voucher value : Voucher.values()) {
-            if (tokens.contains(value.name().toLowerCase())) {
-                items.add(value);
-            }
-        }
-
-        if (items.size() < tokens.size()) {
+        if (items.size() < queries.size()) {
             var itemNames = items.stream()
                     .map(Item::getName)
                     .map(String::toLowerCase)
                     .collect(Collectors.toSet());
 
-            var missing = tokens.stream()
-                    .filter(a -> !itemNames.contains(a.toLowerCase()))
+            var missing = queries.stream()
+                    .map(Query::getItem)
+                    .filter(item -> !itemNames.contains(item.toLowerCase()))
                     .collect(Collectors.joining(","));
 
-            throw new IllegalStateException("Failed to parse search, missing: " + missing + ", tokens %s items %s".formatted(tokens.size(), items.size()));
+            throw new IllegalStateException("Failed to parse search, missing: " + missing + ", tokens %s items %s".formatted(queries.size(), items.size()));
         }
 
         return items;

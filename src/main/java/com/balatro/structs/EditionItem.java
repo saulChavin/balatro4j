@@ -2,7 +2,8 @@ package com.balatro.structs;
 
 import com.balatro.api.Item;
 import com.balatro.api.Joker;
-import com.balatro.enums.Edition;
+import com.balatro.enums.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,7 @@ public record EditionItem(Item item, @Nullable Edition edition) implements Item 
         this(item, null);
     }
 
+    @JsonIgnore
     public boolean isJoker() {
         return item instanceof Joker;
     }
@@ -28,7 +30,7 @@ public record EditionItem(Item item, @Nullable Edition edition) implements Item 
     }
 
     public boolean equals(Item item) {
-        if (item instanceof com.balatro.api.EditionItem editionItem) {
+        if (item instanceof EditionItem editionItem) {
             if (editionItem.edition() != null && edition != null) {
                 return editionItem.eq(this.item) && edition.eq(editionItem.edition());
             }
@@ -60,6 +62,7 @@ public record EditionItem(Item item, @Nullable Edition edition) implements Item 
         return item.ordinal();
     }
 
+    @JsonIgnore
     @Override
     public String getName() {
         return item.getName();
@@ -68,5 +71,10 @@ public record EditionItem(Item item, @Nullable Edition edition) implements Item 
     @Override
     public int getYIndex() {
         return item.getYIndex();
+    }
+
+    @Override
+    public String toString() {
+        return item.getName();
     }
 }

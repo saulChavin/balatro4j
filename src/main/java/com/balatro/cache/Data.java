@@ -84,8 +84,12 @@ public final class Data {
         return seed;
     }
 
-    public boolean contains(@NotNull List<Item> items) {
-        for (Item item : items) {
+    public int getScore() {
+        return score;
+    }
+
+    public boolean contains(@NotNull List<EditionItem> items) {
+        for (EditionItem item : items) {
             if (!isOn(item)) {
                 return false;
             }
@@ -127,8 +131,24 @@ public final class Data {
         data[item.getYIndex()] = data[item.getYIndex()] | (1L << item.ordinal());
     }
 
-    private boolean isOn(@NotNull Item item) {
-        return (data[item.getYIndex()] & (1L << item.ordinal())) != 0;
+    private boolean isOn(@NotNull EditionItem item) {
+        var on = (data[item.getYIndex()] & (1L << item.ordinal())) != 0;
+
+        if (item.edition() == null || item.edition() == Edition.NoEdition) {
+            return on;
+        }
+
+        if (!on) {
+            return false;
+        }
+
+        for (int i = 0; i < editions.length; i += 3) {
+            if (editions[i] == item.ordinal() && editions[i + 1] == item.getYIndex() && editions[i + 2] == item.edition().ordinal()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

@@ -82,7 +82,7 @@ public final class BalatroImpl implements Balatro {
 
     static final String CHARACTERS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public static String generateRandomSeed() {
+    public static @NotNull String generateRandomSeed() {
         StringBuilder result = new StringBuilder(7);
         for (int i = 0; i < 7; i++) {
             int index = ThreadLocalRandom.current().nextInt(CHARACTERS.length());
@@ -93,7 +93,7 @@ public final class BalatroImpl implements Balatro {
 
     private final String seed;
     private int ante;
-    private List<Integer> cardsPerAnte;
+    private final List<Integer> cardsPerAnte;
     private Deck deck;
     private Stake stake;
     private Version version;
