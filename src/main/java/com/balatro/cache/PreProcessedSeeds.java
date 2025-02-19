@@ -28,7 +28,7 @@ public class PreProcessedSeeds {
 
     public static void main(String[] args) {
         var p = new PreProcessedSeeds();
-        p.start(1, 200_000);
+        p.start(10, 1_000_000);
 
         p.search(Set.of("perkeo", "triboulet", "brainstorm", "blueprint"));
     }

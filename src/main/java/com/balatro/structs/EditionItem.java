@@ -21,6 +21,34 @@ public record EditionItem(Item item, @Nullable Edition edition) implements Item 
         return item instanceof Joker;
     }
 
+    public @Nullable JokerType getJokerType() {
+        if (item instanceof Joker joker) {
+            return joker.getType();
+        }
+
+        return null;
+    }
+
+    public PackKind getKind() {
+        if (item instanceof Joker joker) {
+            return PackKind.Buffoon;
+        }
+
+        if (item instanceof Tarot) {
+            return PackKind.Arcana;
+        }
+
+        if (item instanceof Spectral) {
+            return PackKind.Spectral;
+        }
+
+        if (item instanceof Planet) {
+            return PackKind.Celestial;
+        }
+
+        return PackKind.Standard;
+    }
+
     public boolean hasSticker() {
         return edition != null;
     }

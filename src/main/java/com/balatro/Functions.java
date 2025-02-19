@@ -434,7 +434,7 @@ public final class Functions implements Lock {
     static String[] TagArr;
 
     static {
-        heat(8);
+        heat(30);
     }
 
     @SuppressWarnings("SameParameterValue")
