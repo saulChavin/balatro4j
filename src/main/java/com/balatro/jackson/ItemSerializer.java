@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class ItemSerializer extends JsonSerializer<Item> {
     @Override
-    public void serialize(@NotNull Item value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(@NotNull Item value, @NotNull JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeString(value.getName());
     }
 }

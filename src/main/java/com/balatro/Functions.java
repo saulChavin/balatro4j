@@ -86,7 +86,9 @@ public final class Functions implements Lock {
     public <T extends Item> T randchoice(String id, @NotNull List<T> items) {
         T item = items.get(randint(id, items.size() - 1));
 
-        if (!params.isShowman() && isLocked(item) || "RETRY".equals(item.getName())) {
+        if (params.isShowman()) return item;
+
+        if ("RETRY".equals(item.getName()) || isLocked(item)) {
             int resample = 2;
             while (true) {
                 item = items.get(randint(id + "_resample" + resample, items.size() - 1));

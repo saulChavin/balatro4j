@@ -1,6 +1,10 @@
 package com.balatro.api;
 
-public class AbstractCard implements Item{
+import com.balatro.jackson.ItemSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize(using = ItemSerializer.class)
+public class AbstractCard implements Item {
 
     private final String name;
 
