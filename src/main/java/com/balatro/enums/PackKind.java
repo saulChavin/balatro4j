@@ -5,6 +5,7 @@ public enum PackKind {
     Arcana("Arcana"),
     Standard("Standard"),
     Buffoon("Buffoon"),
+    Legendary("Legendary"),
     Spectral("Spectral");
 
     private final String name;

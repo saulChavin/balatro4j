@@ -46,6 +46,14 @@ public record EditionItem(Item item, @Nullable Edition edition) implements Item 
             return PackKind.Celestial;
         }
 
+        if (item instanceof LegendaryJoker) {
+            return PackKind.Legendary;
+        }
+
+        if (item instanceof Specials) {
+            return PackKind.Legendary;
+        }
+
         return PackKind.Standard;
     }
 
