@@ -15,7 +15,6 @@ import java.util.Set;
 
 public interface Balatro {
 
-    Set<PackKind> allPacks = Set.of(PackKind.values());
     Set<PackKind> defaultPacks = Set.of(PackKind.Arcana, PackKind.Buffoon, PackKind.Spectral);
     List<Integer> firstAnte = List.of(15);
 
@@ -63,4 +62,10 @@ public interface Balatro {
     Balatro deck(Deck deck);
 
     Balatro stake(Stake stake);
+
+    Balatro freshProfile(boolean freshProfile);
+
+    Balatro freshRun(boolean freshRun);
+
+    Balatro showman(boolean showman);
 }

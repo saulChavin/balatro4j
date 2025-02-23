@@ -105,6 +105,10 @@ public final class BalatroImpl implements Balatro {
     private boolean analyzeJokers;
     private boolean analyzeArcana;
     private boolean analyzeSpectral;
+    private boolean freshProfile;
+    private boolean freshRun = true;
+    private boolean showman;
+
 
     public BalatroImpl(String seed, int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version,
                        @NotNull Set<PackKind> enabledPacks, boolean analyzeTags, boolean analyzeBoss, boolean analyzeShopQueue) {
@@ -133,8 +137,8 @@ public final class BalatroImpl implements Balatro {
         boolean[] selectedOptions = new boolean[61];
         Arrays.fill(selectedOptions, true);
 
-        Functions functions = new Functions(seed, new InstanceParams(deck, stake, false, version.getVersion()));
-        functions.initLocks(1, false, false);
+        Functions functions = new Functions(seed, new InstanceParams(deck, stake, showman, version.getVersion()));
+        functions.initLocks(1, freshProfile, freshRun);
         functions.firstLock();
 
         for (int i = 0; i < options.size(); i++) {
@@ -145,7 +149,7 @@ public final class BalatroImpl implements Balatro {
         var antes = new ArrayList<AnteImpl>(options.size());
 
         for (int a = 1; a <= ante; a++) {
-            functions.initUnlocks(a, false);
+            functions.initUnlocks(a, freshProfile);
             var play = new AnteImpl(a, functions);
             antes.add(play);
 
@@ -329,6 +333,24 @@ public final class BalatroImpl implements Balatro {
     @Override
     public Balatro stake(Stake stake) {
         this.stake = stake;
+        return this;
+    }
+
+    @Override
+    public Balatro freshProfile(boolean freshProfile) {
+        this.freshProfile = freshProfile;
+        return this;
+    }
+
+    @Override
+    public Balatro freshRun(boolean freshRun) {
+        this.freshRun = freshRun;
+        return this;
+    }
+
+    @Override
+    public Balatro showman(boolean showman) {
+        this.showman = showman;
         return this;
     }
 
