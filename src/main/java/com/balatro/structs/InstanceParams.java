@@ -22,9 +22,9 @@ public class InstanceParams {
         this.deck = deck;
         this.stake = stake;
         this.showman = showman;
-        sixesFactor = 1;
+        this.sixesFactor = 1;
         this.version = version;
-        vouchers = new HashSet<>();
+        this.vouchers = new HashSet<>();
     }
 
     public Deck getDeck() {

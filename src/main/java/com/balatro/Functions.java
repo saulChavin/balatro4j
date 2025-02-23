@@ -104,7 +104,10 @@ public final class Functions implements Lock {
     // Card Generators
     public Item nextTarot(String source, int ante, boolean soulable) {
         if (soulable && (params.isShowman() || !isLocked(Specials.THE_SOUL)) && random(soul_TarotArr[ante]) > 0.997) {
-            return Specials.THE_SOUL;
+            var data = nextJoker("sou", joker1SouArr, joker2SouArr, joker3SouArr, joker4SouArr, raritySouArr, editionSouArr, ante, true);
+            lock(data.joker);
+            System.out.println("Locking Tarot: " + data.joker.getName());
+            return new EditionItem(data.joker, data.edition);
         }
         return randchoice(source, TAROTS);
     }
@@ -119,9 +122,14 @@ public final class Functions implements Lock {
     public Item nextSpectral(String source, int ante, boolean soulable) {
         if (soulable) {
             Item forcedKey = null;
+            Edition edition = null;
 
             if ((params.isShowman() || !isLocked(Specials.THE_SOUL)) && random(soul_SpectralArr[ante]) > 0.997) {
-                forcedKey = Specials.THE_SOUL;
+                var data = nextJoker("sou", joker1SouArr, joker2SouArr, joker3SouArr, joker4SouArr, raritySouArr, editionSouArr, ante, true);
+                forcedKey = data.joker;
+                edition = data.edition;
+
+                lock(data.joker);
             }
 
             if ((params.isShowman() || !isLocked(Specials.BLACKHOLE)) && random(soul_SpectralArr[ante]) > 0.997) {
@@ -129,6 +137,9 @@ public final class Functions implements Lock {
             }
 
             if (forcedKey != null) {
+                if (edition != null) {
+                    return new EditionItem(forcedKey, edition);
+                }
                 return forcedKey;
             }
         }
@@ -136,6 +147,31 @@ public final class Functions implements Lock {
         return randchoice("Spectral" + source + ante, SPECTRALS);
     }
 
+    private Edition getEdition(int ante, String[] editionArr) {
+        // Get edition
+        int editionRate = 1;
+
+        if (isVoucherActive(Voucher.Glow_Up)) {
+            editionRate = 4;
+        } else if (isVoucherActive(Voucher.Hone)) {
+            editionRate = 2;
+        }
+
+        var edition = Edition.NoEdition;
+        var editionPoll = random(editionArr[ante]);
+
+        if (editionPoll > 0.997) {
+            edition = Edition.Negative;
+        } else if (editionPoll > 1 - 0.006 * editionRate) {
+            edition = Edition.Polychrome;
+        } else if (editionPoll > 1 - 0.02 * editionRate) {
+            edition = Edition.Holographic;
+        } else if (editionPoll > 1 - 0.04 * editionRate) {
+            edition = Edition.Foil;
+        }
+
+        return edition;
+    }
 
     static Set<String> setA = Set.of("Gros Michel", "Ice Cream", "Cavendish", "Luchador", "Turtle Bean", "Diet Cola", "Popcorn", "Ramen", "Seltzer", "Mr. Bones", "Invisible Joker");
     static Set<String> setB = Set.of("Ceremonial Dagger", "Ride the Bus", "Runner", "Constellation", "Green Joker", "Red Card", "Madness", "Square Joker", "Vampire", "Rocket", "Obelisk", "Lucky Cat", "Flash Card", "Spare Trousers", "Castle", "Wee Joker");
@@ -161,27 +197,7 @@ public final class Functions implements Lock {
             }
         }
 
-        // Get edition
-        int editionRate = 1;
-
-        if (isVoucherActive(Voucher.Glow_Up)) {
-            editionRate = 4;
-        } else if (isVoucherActive(Voucher.Hone)) {
-            editionRate = 2;
-        }
-
-        var edition = Edition.NoEdition;
-        var editionPoll = random(editionArr[ante]);
-
-        if (editionPoll > 0.997) {
-            edition = Edition.Negative;
-        } else if (editionPoll > 1 - 0.006 * editionRate) {
-            edition = Edition.Polychrome;
-        } else if (editionPoll > 1 - 0.02 * editionRate) {
-            edition = Edition.Holographic;
-        } else if (editionPoll > 1 - 0.04 * editionRate) {
-            edition = Edition.Foil;
-        }
+        final var edition = getEdition(ante, editionArr);
 
         // Get next joker
         Item joker;
@@ -389,53 +405,53 @@ public final class Functions implements Lock {
         }
     }
 
-    static String[] planetShoArr;
-    static String[] planetpl1lArr;
-    static String[] tarotShoArr;
-    static String[] tarotAr1Arr;
-    static String[] tarotarArr;
-    static String[] spectralShoArr;
-    static String[] spectralAr2Arr;
-    static String[] spectralSpeArr;
-    static String[] joker4ShoArr;
-    static String[] joker4BufArr;
-    static String[] joker4SouArr;
-    static String[] joker3ShoArr;
-    static String[] joker3BufArr;
-    static String[] joker3SouArr;
-    static String[] joker2ShoArr;
-    static String[] joker2BufArr;
-    static String[] joker2SouArr;
-    static String[] joker1ShoArr;
-    static String[] joker1BufArr;
-    static String[] joker1SouArr;
+    public static String[] planetShoArr;
+    public static String[] planetpl1lArr;
+    public static String[] tarotShoArr;
+    public static String[] tarotAr1Arr;
+    public static String[] tarotarArr;
+    public static String[] spectralShoArr;
+    public static String[] spectralAr2Arr;
+    public static String[] spectralSpeArr;
+    public static String[] joker4ShoArr;
+    public static String[] joker4BufArr;
+    public static String[] joker4SouArr;
+    public static String[] joker3ShoArr;
+    public static String[] joker3BufArr;
+    public static String[] joker3SouArr;
+    public static String[] joker2ShoArr;
+    public static String[] joker2BufArr;
+    public static String[] joker2SouArr;
+    public static String[] joker1ShoArr;
+    public static String[] joker1BufArr;
+    public static String[] joker1SouArr;
 
-    static String[] rarityShoArr;
-    static String[] rarityBufArr;
-    static String[] raritySouArr;
-    static String[] editionShoArr;
-    static String[] editionBufArr;
-    static String[] editionSouArr;
+    public static String[] rarityShoArr;
+    public static String[] rarityBufArr;
+    public static String[] raritySouArr;
+    public static String[] editionShoArr;
+    public static String[] editionBufArr;
+    public static String[] editionSouArr;
 
-    static String[] packssjrArr;
-    static String[] etperpollArr;
-    static String[] packetperArr;
-    static String[] stake_shop_joker_eternalArr;
-    static String[] ssjpArr;
-    static String[] ssjrArr;
-    static String[] shop_packArr;
-    static String[] stdsetArr;
-    static String[] standard_editionArr;
-    static String[] enhancedstaArr;
-    static String[] stdsealArr;
-    static String[] stdsealtypeArr;
-    static String[] frontstaArr;
-    static String[] soul_SpectralArr;
-    static String[] soul_PlanetArr;
-    static String[] soul_TarotArr;
-    static String[] cdtArr;
-    static String[] VoucherArr;
-    static String[] TagArr;
+    public static String[] packssjrArr;
+    public static String[] etperpollArr;
+    public static String[] packetperArr;
+    public static String[] stake_shop_joker_eternalArr;
+    public static String[] ssjpArr;
+    public static String[] ssjrArr;
+    public static String[] shop_packArr;
+    public static String[] stdsetArr;
+    public static String[] standard_editionArr;
+    public static String[] enhancedstaArr;
+    public static String[] stdsealArr;
+    public static String[] stdsealtypeArr;
+    public static String[] frontstaArr;
+    public static String[] soul_SpectralArr;
+    public static String[] soul_PlanetArr;
+    public static String[] soul_TarotArr;
+    public static String[] cdtArr;
+    public static String[] VoucherArr;
+    public static String[] TagArr;
 
     static {
         heat(30);
@@ -618,8 +634,11 @@ public final class Functions implements Lock {
 
         if (params.isShowman()) return pack;
 
-        for (int i = 0; i < size; i++) {
-            unlock(pack.get(i));
+        for (Item item : pack) {
+            if (item instanceof EditionItem) {
+                continue;
+            }
+            unlock(item);
         }
 
         return pack;
@@ -657,8 +676,12 @@ public final class Functions implements Lock {
 
         if (params.isShowman()) return pack;
 
-        for (int i = 0; i < size; i++) {
-            unlock(pack.get(i));
+        for (Item item : pack) {
+            if (item instanceof EditionItem) {
+                continue;
+            }
+
+            unlock(item);
         }
 
         return pack;
