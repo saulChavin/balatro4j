@@ -22,6 +22,17 @@ public class BalatroTests {
         System.out.println(run.toJson());
     }
 
+
+    @Test
+    void testIGSPUNF() {
+        var run = Balatro.builder("IGSPUNF", 1)
+                .analyzeAll()
+                .disableShopQueue()
+                .analyze();
+
+        System.out.println(run.toJson());
+    }
+
     @Test
     void test1234() {
         var json = Balatro.builder("1234", 8)

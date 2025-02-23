@@ -118,20 +118,22 @@ public final class Functions implements Lock {
 
     public Item nextSpectral(String source, int ante, boolean soulable) {
         if (soulable) {
-            if (random(soul_SpectralArr[ante]) < 0.997) {
-                return randchoice(source, SPECTRALS);
+            Item forcedKey = null;
+
+            if ((params.isShowman() || !isLocked(Specials.THE_SOUL)) && random(soul_SpectralArr[ante]) > 0.997) {
+                forcedKey = Specials.THE_SOUL;
             }
 
-            if (params.isShowman() || !isLocked(Specials.BLACKHOLE)) {
-                return Specials.BLACKHOLE;
+            if ((params.isShowman() || !isLocked(Specials.BLACKHOLE)) && random(soul_SpectralArr[ante]) > 0.997) {
+                forcedKey = Specials.BLACKHOLE;
             }
 
-            if (params.isShowman() || !isLocked(Specials.THE_SOUL)) {
-                return Specials.THE_SOUL;
+            if (forcedKey != null) {
+                return forcedKey;
             }
         }
 
-        return randchoice(source, SPECTRALS);
+        return randchoice("Spectral" + source + ante, SPECTRALS);
     }
 
 
