@@ -16,9 +16,20 @@ public record EditionItem(Item item, @Nullable Edition edition) implements Item 
         this(item, null);
     }
 
+    public EditionItem {
+        if (item instanceof EditionItem) {
+            throw new RuntimeException("EditionItem cannot be created from another EditionItem");
+        }
+    }
+
     @JsonIgnore
     public boolean isJoker() {
         return item instanceof Joker;
+    }
+
+    @JsonIgnore
+    public boolean isLegendary() {
+        return item instanceof LegendaryJoker;
     }
 
     public @Nullable JokerType getJokerType() {

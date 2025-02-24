@@ -54,7 +54,7 @@ public interface Item {
     }
 
     @JsonIgnore
-    default EditionItem asOption() {
+    default EditionItem asEditionItem() {
         return new EditionItem(this);
     }
 }

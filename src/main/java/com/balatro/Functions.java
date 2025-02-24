@@ -106,7 +106,6 @@ public final class Functions implements Lock {
         if (soulable && (params.isShowman() || !isLocked(Specials.THE_SOUL)) && random(soul_TarotArr[ante]) > 0.997) {
             var data = nextJoker("sou", joker1SouArr, joker2SouArr, joker3SouArr, joker4SouArr, raritySouArr, editionSouArr, ante, true);
             lock(data.joker);
-            System.out.println("Locking Tarot: " + data.joker.getName());
             return new EditionItem(data.joker, data.edition);
         }
         return randchoice(source, TAROTS);

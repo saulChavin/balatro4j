@@ -288,14 +288,24 @@ final class AnteImpl implements Ante {
 
         legendaryJokers = new HashMap<>();
 
-        int souls = countInPack(Specials.THE_SOUL);
+        for (PackInfo packInfo : packInfos) {
+            if (packInfo.getKind() == PackKind.Buffoon) {
+                continue;
+            }
 
-        if (souls < jokers.length) return false;
+            if (packInfo.getKind() == PackKind.Standard) {
+                continue;
+            }
 
-        for (int i = 0; i < souls; i++) {
-            var data = functions.nextJoker("sou", Functions.joker1SouArr, Functions.joker2SouArr, Functions.joker3SouArr,
-                    Functions.joker4SouArr, Functions.raritySouArr, Functions.editionSouArr, ante, false);
-            legendaryJokers.put(data.joker.getName(), data);
+            if (packInfo.getKind() == PackKind.Celestial) {
+                continue;
+            }
+
+            for (EditionItem option : packInfo.getOptions()) {
+                if (option.isLegendary()) {
+                    legendaryJokers.put(option.item().getName(), option.jokerData());
+                }
+            }
         }
 
         for (LegendaryJoker joker : jokers) {
@@ -311,6 +321,12 @@ final class AnteImpl implements Ante {
     public boolean hasInPack(@NotNull Item item) {
         if (item instanceof LegendaryJoker joker) {
             return hasLegendary(joker);
+        }
+
+        if (item instanceof EditionItem editionItem) {
+            if (editionItem.isLegendary()) {
+                return hasLegendary((LegendaryJoker) editionItem.item());
+            }
         }
 
         for (PackInfo packInfo : packInfos) {
@@ -335,6 +351,12 @@ final class AnteImpl implements Ante {
     public boolean hasInSpectral(@NotNull Item item) {
         if (item instanceof LegendaryJoker joker) {
             return hasLegendary(joker);
+        }
+
+        if (item instanceof EditionItem editionItem) {
+            if (editionItem.isLegendary()) {
+                return hasLegendary((LegendaryJoker) editionItem.item());
+            }
         }
 
         for (PackInfo packInfo : packInfos) {

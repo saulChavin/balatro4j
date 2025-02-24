@@ -213,21 +213,29 @@ public final class BalatroImpl implements Balatro {
                         if (!analyzeCelestialPacks) continue;
                         var cards = functions.nextCelestialPack(packInfo.getSize(), a);
                         for (Item card : cards) {
-                            options.add(card.asOption());
+                            options.add(card.asEditionItem());
                         }
                     }
                     case PackKind.Arcana -> {
                         if (!analyzeArcana) continue;
                         var cards = functions.nextArcanaPack(packInfo.getSize(), a);
                         for (Item card : cards) {
-                            options.add(card.asOption());
+                            if (card instanceof EditionItem ei) {
+                                options.add(ei);
+                                continue;
+                            }
+                            options.add(card.asEditionItem());
                         }
                     }
                     case PackKind.Spectral -> {
                         if (!analyzeSpectral) continue;
                         var spectral = functions.nextSpectralPack(packInfo.getSize(), a);
                         for (Item card : spectral) {
-                            options.add(card.asOption());
+                            if (card instanceof EditionItem ei) {
+                                options.add(ei);
+                                continue;
+                            }
+                            options.add(card.asEditionItem());
                         }
                     }
                     case PackKind.Buffoon -> {
