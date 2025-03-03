@@ -4,6 +4,7 @@ import com.balatro.Util;
 import com.balatro.api.*;
 import com.balatro.enums.Edition;
 import com.balatro.enums.RareJoker;
+import com.balatro.enums.Tag;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,16 @@ public class BalatroTests {
                 .analyzeAll();
 
         System.out.println(run.toJson());
+    }
+
+    @Test
+    void test33JCJSA() {
+        var ante = Balatro.builder("33JCJSA", 1)
+                .analyzeAll()
+                .getFirstAnte();
+
+        Assertions.assertTrue(ante.getTags().contains(Tag.D6_Tag));
+        Assertions.assertTrue(ante.getTags().contains(Tag.Charm_Tag));
     }
 
 

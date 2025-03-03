@@ -66,6 +66,28 @@ public class LongArrayLock implements Lock {
 
     @Override
     public void initLocks(int ante, boolean freshProfile, boolean freshRun) {
+        if (ante < 2) {
+            lock(Boss.The_Mouth);
+            lock(Boss.The_Fish);
+            lock(Boss.The_Wall);
+            lock(Boss.The_House);
+            lock(Boss.The_Mark);
+            lock(Boss.The_Wheel);
+            lock(Boss.The_Arm);
+            lock(Boss.The_Water);
+            lock(Boss.The_Needle);
+            lock(Boss.The_Flint);
+            lock(Tag.Negative_Tag);
+            lock(Tag.Standard_Tag);
+            lock(Tag.Meteor_Tag);
+            lock(Tag.Buffoon_Tag);
+            lock(Tag.Handy_Tag);
+            lock(Tag.Garbage_Tag);
+            lock(Tag.Ethereal_Tag);
+            lock(Tag.Top_up_Tag);
+            lock(Tag.Orbital_Tag);
+        }
+
         if (ante < 3) {
             lock(Boss.The_Tooth);
             lock(Boss.The_Eye);

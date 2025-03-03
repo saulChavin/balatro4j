@@ -4,27 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="web page">
+    <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="edition filters">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/AnteImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/AnteImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/RunImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/RunImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/Balatro.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/Balatro.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/CommonQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/CommonQueries.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/Filter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/Filter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/Item.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/Joker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/Joker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/Queryable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/Queryable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/filter/InBuffonPackFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/filter/InBuffonPackFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/filter/InPackFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/filter/InPackFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/filter/InShopFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/filter/InShopFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/filter/SpectralFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/filter/SpectralFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/Data.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/Data.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/PreProcessedSeeds.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/PreProcessedSeeds.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/Query.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/structs/EditionItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/structs/EditionItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/structs/PackInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/structs/PackInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/LongArrayLock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/LongArrayLock.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -110,6 +92,7 @@
     "Gradle.Balatro4j [:com.balatro.Main.main()].executor": "Debug",
     "Gradle.Balatro4j [publishToMavenLocal].executor": "Run",
     "Gradle.BalatroTests.apiTest.executor": "Run",
+    "Gradle.BalatroTests.test33JCJSA.executor": "Run",
     "Gradle.BalatroTests.testFilters.executor": "Run",
     "Gradle.BalatroTests.testIGSPUNF.executor": "Run",
     "Gradle.LockTests.executor": "Run",
@@ -128,7 +111,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.PreProcessedSeeds">
+  <component name="RunManager" selected="Gradle.BalatroTests.test33JCJSA">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.balatro.Main" />
       <module name="Balatro4j.main" />
@@ -179,6 +162,30 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="BalatroTests.test33JCJSA" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;tests.BalatroTests.test33JCJSA&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="BalatroTests.testFilters" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -203,37 +210,13 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="BalatroTests.testIGSPUNF" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;tests.BalatroTests.testIGSPUNF&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.BalatroTests.test33JCJSA" />
         <item itemvalue="Application.PreProcessedSeeds" />
         <item itemvalue="Gradle.BalatroTests.testFilters" />
         <item itemvalue="Gradle.BalatroTests.apiTest" />
         <item itemvalue="Application.Main" />
-        <item itemvalue="Gradle.BalatroTests.testIGSPUNF" />
       </list>
     </recent_temporary>
   </component>
@@ -263,7 +246,8 @@
       <workItem from="1740499564501" duration="55000" />
       <workItem from="1740723858649" duration="1934000" />
       <workItem from="1740769399571" duration="54000" />
-      <workItem from="1740897147485" duration="7485000" />
+      <workItem from="1740897147485" duration="8601000" />
+      <workItem from="1740968870920" duration="902000" />
     </task>
     <task id="LOCAL-00001" summary="fixed serialization problems">
       <option name="closed" value="true" />
@@ -321,7 +305,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740499593434</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="edition filters">
+      <option name="closed" value="true" />
+      <created>1740960044855</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1740960044855</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -337,7 +329,8 @@
     <MESSAGE value="process legendary jokers" />
     <MESSAGE value="bug fixes" />
     <MESSAGE value="web page" />
-    <option name="LAST_COMMIT_MESSAGE" value="web page" />
+    <MESSAGE value="edition filters" />
+    <option name="LAST_COMMIT_MESSAGE" value="edition filters" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
