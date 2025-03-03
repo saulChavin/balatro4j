@@ -3,15 +3,14 @@ package tests;
 import com.balatro.Util;
 import com.balatro.api.*;
 import com.balatro.enums.Edition;
-import com.balatro.enums.RareJoker;
 import com.balatro.enums.Tag;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static com.balatro.enums.CommonJoker.*;
 import static com.balatro.enums.LegendaryJoker.*;
-import static com.balatro.enums.LegendaryJoker.Triboulet;
-import static com.balatro.enums.RareJoker.Blueprint;
-import static com.balatro.enums.RareJoker.Brainstorm;
+import static com.balatro.enums.RareJoker.*;
+import static com.balatro.enums.UnCommonJoker.*;
 
 public class BalatroTests {
 
@@ -33,6 +32,19 @@ public class BalatroTests {
         Assertions.assertTrue(ante.getTags().contains(Tag.Charm_Tag));
     }
 
+    @Test
+    void testComplexQuery(){
+        var seeds = Balatro.search(10, 100_000)
+                .configuration(config -> config.maxAnte(4))
+                .filter(Square_Joker.inShop(1,Edition.Negative).and(Burglar.inBuffonPack(1))
+                        .and(Blueprint.inBuffonPack(2).or(Blueprint.inShop(2)))
+                        .and(Brainstorm.inBuffonPack(2).or(Brainstorm.inShop(2)))
+                        .and(Invisible_Joker.inBuffonPack(3).or(Invisible_Joker.inShop(3)))
+                        .and(Certificate.inShop(4).or(Certificate.inBuffonPack(4))))
+                .find();
+
+        seeds.forEach(System.out::println);
+    }
 
     @Test
     void testIGSPUNF() {

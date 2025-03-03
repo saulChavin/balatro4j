@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="edition filters">
+    <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="tag bug  fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/LongArrayLock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/LongArrayLock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,6 +93,7 @@
     "Gradle.Balatro4j [publishToMavenLocal].executor": "Run",
     "Gradle.BalatroTests.apiTest.executor": "Run",
     "Gradle.BalatroTests.test33JCJSA.executor": "Run",
+    "Gradle.BalatroTests.testComplexQuery.executor": "Run",
     "Gradle.BalatroTests.testFilters.executor": "Run",
     "Gradle.BalatroTests.testIGSPUNF.executor": "Run",
     "Gradle.LockTests.executor": "Run",
@@ -111,20 +112,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Gradle.BalatroTests.test33JCJSA">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.balatro.Main" />
-      <module name="Balatro4j.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.balatro.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Gradle.BalatroTests.testComplexQuery">
     <configuration name="PreProcessedSeeds" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.balatro.cache.PreProcessedSeeds" />
       <module name="Balatro4j.main" />
@@ -186,6 +174,30 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="BalatroTests.testComplexQuery" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;tests.BalatroTests.testComplexQuery&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="BalatroTests.testFilters" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -212,19 +224,19 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.BalatroTests.testComplexQuery" />
         <item itemvalue="Gradle.BalatroTests.test33JCJSA" />
         <item itemvalue="Application.PreProcessedSeeds" />
         <item itemvalue="Gradle.BalatroTests.testFilters" />
         <item itemvalue="Gradle.BalatroTests.apiTest" />
-        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.24978.46" />
-        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-IU-243.24978.46" />
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.39" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.39" />
       </set>
     </attachedChunks>
   </component>
@@ -247,7 +259,9 @@
       <workItem from="1740723858649" duration="1934000" />
       <workItem from="1740769399571" duration="54000" />
       <workItem from="1740897147485" duration="8601000" />
-      <workItem from="1740968870920" duration="902000" />
+      <workItem from="1740968870920" duration="1517000" />
+      <workItem from="1741014996472" duration="4000" />
+      <workItem from="1741015499330" duration="556000" />
     </task>
     <task id="LOCAL-00001" summary="fixed serialization problems">
       <option name="closed" value="true" />
@@ -313,7 +327,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740960044855</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="tag bug  fixes">
+      <option name="closed" value="true" />
+      <created>1740969782388</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1740969782388</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -330,7 +352,8 @@
     <MESSAGE value="bug fixes" />
     <MESSAGE value="web page" />
     <MESSAGE value="edition filters" />
-    <option name="LAST_COMMIT_MESSAGE" value="edition filters" />
+    <MESSAGE value="tag bug  fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="tag bug  fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

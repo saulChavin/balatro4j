@@ -9,7 +9,6 @@ import com.balatro.structs.*;
 import com.balatro.structs.Card;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
@@ -93,8 +92,8 @@ public final class BalatroImpl implements Balatro {
     }
 
     private final String seed;
-    private int ante;
-    private final List<Integer> cardsPerAnte;
+    private int maxAnte;
+    private List<Integer> cardsPerAnte;
     private Deck deck;
     private Stake stake;
     private Version version;
@@ -111,10 +110,10 @@ public final class BalatroImpl implements Balatro {
     private boolean showman;
 
 
-    public BalatroImpl(String seed, int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version,
+    public BalatroImpl(String seed, int maxAnte, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version,
                        @NotNull Set<PackKind> enabledPacks, boolean analyzeTags, boolean analyzeBoss, boolean analyzeShopQueue) {
         this.seed = seed;
-        this.ante = ante;
+        this.maxAnte = maxAnte;
         this.cardsPerAnte = cardsPerAnte;
         this.deck = deck;
         this.stake = stake;
@@ -131,12 +130,16 @@ public final class BalatroImpl implements Balatro {
 
     @Override
     public Run analyze() {
-        return performAnalysis(ante, cardsPerAnte, deck, stake, version, seed);
+        return performAnalysis(maxAnte, cardsPerAnte, deck, stake, version, seed);
     }
 
-    private @NotNull RunImpl performAnalysis(int ante, List<Integer> cardsPerAnte, Deck deck, Stake stake, @NotNull Version version, String seed) {
+    private @NotNull RunImpl performAnalysis(int maxAnte, List<Integer> cardsPerAnte, Deck deck, Stake stake, @NotNull Version version, String seed) {
         boolean[] selectedOptions = new boolean[61];
         Arrays.fill(selectedOptions, true);
+
+        if (cardsPerAnte.size() != maxAnte) {
+            throw new IllegalArgumentException("cardsPerAnte must have the same size as maxAnte (%s-%s)".formatted(maxAnte, cardsPerAnte.size()));
+        }
 
         Functions functions = new Functions(seed, new InstanceParams(deck, stake, showman, version.getVersion()));
         functions.initLocks(1, freshProfile, freshRun);
@@ -149,7 +152,7 @@ public final class BalatroImpl implements Balatro {
         functions.setDeck(deck);
         var antes = new ArrayList<AnteImpl>(options.size());
 
-        for (int a = 1; a <= ante; a++) {
+        for (int a = 1; a <= maxAnte; a++) {
             functions.initUnlocks(a, freshProfile);
             var play = new AnteImpl(a, functions);
             antes.add(play);
@@ -322,8 +325,20 @@ public final class BalatroImpl implements Balatro {
     }
 
     @Override
-    public Balatro maxAnte(int ante) {
-        this.ante = ante;
+    public Balatro maxAnte(int maxAnte) {
+        this.maxAnte = maxAnte;
+
+        if (maxAnte > 1) {
+            cardsPerAnte = new ArrayList<>();
+            for (int i = 0; i < this.maxAnte; i++) {
+                if (i == 0) {
+                    cardsPerAnte.add(15);
+                    continue;
+                }
+                cardsPerAnte.add(50);
+            }
+        }
+
         return this;
     }
 
