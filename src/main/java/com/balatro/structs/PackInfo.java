@@ -1,5 +1,6 @@
 package com.balatro.structs;
 
+import com.balatro.enums.Edition;
 import com.balatro.enums.PackKind;
 import com.balatro.enums.PackType;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -39,6 +40,19 @@ public class PackInfo {
         for (EditionItem option : options) {
             if (option.item().equals(name)) {
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean containsOption(String name, Edition edition) {
+        for (EditionItem option : options) {
+            if (option.item().equals(name)) {
+                if (edition == Edition.NoEdition) {
+                    return true;
+                }
+                return option.edition() == edition;
             }
         }
 

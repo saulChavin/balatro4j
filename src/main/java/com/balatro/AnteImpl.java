@@ -21,7 +21,7 @@ final class AnteImpl implements Ante {
     private final Functions functions;
     private final ShopQueue shopQueue;
     @JsonIgnore
-    private final Set<String> shop;
+    private final Map<String, Edition> shop;
     private final Set<Tag> tags;
     private Voucher voucher;
     private Boss boss;
@@ -35,8 +35,13 @@ final class AnteImpl implements Ante {
         this.functions = functions;
         this.tags = new HashSet<>(2);
         this.shopQueue = new ShopQueue();
-        this.shop = new HashSet<>(20);
+        this.shop = new HashMap<>(20);
         this.packInfos = new ArrayList<>(10);
+    }
+
+    @Override
+    public boolean hasTag(Tag tag) {
+        return tags.contains(tag);
     }
 
     @Override
@@ -45,12 +50,18 @@ final class AnteImpl implements Ante {
     }
 
     @Override
-    public boolean hasInShop(@NotNull Item item) {
-        return shop.contains(item.getName());
+    public boolean hasInShop(@NotNull Item item, Edition edition) {
+        var i = shop.get(item.getName());
+
+        if (i != null) {
+            return i == edition;
+        }
+
+        return false;
     }
 
     @Override
-    public boolean hasInShop(@NotNull Item item, int index) {
+    public boolean hasInShop(@NotNull Item item, int index, Edition edition) {
         if (index > shopQueue.size()) {
             return false;
         }
@@ -66,7 +77,7 @@ final class AnteImpl implements Ante {
 
     @Override
     public long countLegendary() {
-        hasLegendary(LegendaryJoker.Perkeo);
+        hasLegendary(LegendaryJoker.Perkeo, Edition.NoEdition);
         return legendaryJokers.size();
     }
 
@@ -74,9 +85,9 @@ final class AnteImpl implements Ante {
         tags.add(tag);
     }
 
-    void addToQueue(@NotNull ShopItem value, Edition sticker) {
-        shop.add(value.getItem().getName());
-        shopQueue.add(new EditionItem(value.getItem(), sticker));
+    void addToQueue(@NotNull ShopItem value, Edition edition) {
+        shop.put(value.getItem().getName(), edition);
+        shopQueue.add(new EditionItem(value.getItem(), edition));
     }
 
     void setBoss(Boss boss) {
@@ -95,7 +106,7 @@ final class AnteImpl implements Ante {
     @Contract(" -> new")
     @Override
     public @NotNull HashMap<String, JokerData> getLegendaryJokers() {
-        hasLegendary(LegendaryJoker.Perkeo);//pre-compute
+        hasLegendary(LegendaryJoker.Perkeo, Edition.NoEdition);//pre-compute
         return new HashMap<>(legendaryJokers);
     }
 
@@ -112,7 +123,7 @@ final class AnteImpl implements Ante {
         var score = 0.0;
         score += countLegendary() * 5;
 
-        if (hasLegendary(LegendaryJoker.Yorick) || hasLegendary(LegendaryJoker.Canio)) {
+        if (hasLegendary(LegendaryJoker.Yorick, Edition.NoEdition) || hasLegendary(LegendaryJoker.Canio, Edition.NoEdition)) {
             score -= 5;
         }
 
@@ -134,8 +145,8 @@ final class AnteImpl implements Ante {
             }
         }
 
-        if (hasInShop(RareJoker.Brainstorm)) {
-            if (hasInShop(RareJoker.Brainstorm, 6)) {
+        if (hasInShop(RareJoker.Brainstorm, Edition.NoEdition)) {
+            if (hasInShop(RareJoker.Brainstorm, 6, Edition.NoEdition)) {
                 score += 2.5;
             } else {
                 score += 1.5;
@@ -143,23 +154,23 @@ final class AnteImpl implements Ante {
         }
 
 
-        if (hasInShop(RareJoker.Blueprint)) {
-            if (hasInShop(RareJoker.Blueprint, 6)) {
+        if (hasInShop(RareJoker.Blueprint, Edition.NoEdition)) {
+            if (hasInShop(RareJoker.Blueprint, 6, Edition.NoEdition)) {
                 score += 2.5;
             } else {
                 score += 1.5;
             }
         }
 
-        if (hasInShop(UnCommonJoker.Showman)) {
+        if (hasInShop(UnCommonJoker.Showman, Edition.NoEdition)) {
             score += 0.5;
         }
 
-        if (hasInShop(UnCommonJoker.Constellation)) {
+        if (hasInShop(UnCommonJoker.Constellation, Edition.NoEdition)) {
             score += 1.0;
         }
-        if (hasInShop(RareJoker.Invisible_Joker)) {
-            if (hasInShop(RareJoker.Invisible_Joker, 6)) {
+        if (hasInShop(RareJoker.Invisible_Joker, Edition.NoEdition)) {
+            if (hasInShop(RareJoker.Invisible_Joker, 6, Edition.NoEdition)) {
                 score += 2;
             } else {
                 score += 1;
@@ -167,7 +178,7 @@ final class AnteImpl implements Ante {
         }
 
         if (hasInShop(UnCommonJoker.Sock_and_Buskin)) {
-            if (hasLegendary(LegendaryJoker.Triboulet)) {
+            if (hasLegendary(LegendaryJoker.Triboulet, Edition.NoEdition)) {
                 score += 2.0;
             } else {
                 score += 0.5;
@@ -175,7 +186,7 @@ final class AnteImpl implements Ante {
         }
 
         if (hasInShop(CommonJoker.Hanging_Chad)) {
-            if (hasLegendary(LegendaryJoker.Triboulet)) {
+            if (hasLegendary(LegendaryJoker.Triboulet, Edition.NoEdition)) {
                 score += 1.0;
             } else {
                 score += 0.5;
@@ -275,15 +286,15 @@ final class AnteImpl implements Ante {
     }
 
     @Override
-    public boolean hasLegendary(LegendaryJoker... jokers) {
+    public boolean hasLegendary(LegendaryJoker joker, Edition edition) {
         if (legendaryJokers != null) {
-            for (LegendaryJoker joker : jokers) {
-                if (!legendaryJokers.containsKey(joker.getName())) {
-                    return false;
+            if (legendaryJokers.containsKey(joker.getName())) {
+                if (edition == Edition.NoEdition) {
+                    return true;
                 }
+                return legendaryJokers.get(joker.getName()).getEdition() == edition;
             }
-
-            return true;
+            return false;
         }
 
         legendaryJokers = new HashMap<>();
@@ -308,29 +319,29 @@ final class AnteImpl implements Ante {
             }
         }
 
-        for (LegendaryJoker joker : jokers) {
-            if (!legendaryJokers.containsKey(joker.getName())) {
-                return false;
+        if (legendaryJokers.containsKey(joker.getName())) {
+            if (edition == Edition.NoEdition) {
+                return true;
             }
+            return legendaryJokers.get(joker.getName()).getEdition() == edition;
         }
-
-        return true;
+        return false;
     }
 
     @Override
-    public boolean hasInPack(@NotNull Item item) {
+    public boolean hasInPack(@NotNull Item item, Edition edition) {
         if (item instanceof LegendaryJoker joker) {
-            return hasLegendary(joker);
+            return hasLegendary(joker, edition);
         }
 
         if (item instanceof EditionItem editionItem) {
             if (editionItem.isLegendary()) {
-                return hasLegendary((LegendaryJoker) editionItem.item());
+                return hasLegendary((LegendaryJoker) editionItem.item(), edition);
             }
         }
 
         for (PackInfo packInfo : packInfos) {
-            if (packInfo.containsOption(item.getName())) {
+            if (packInfo.containsOption(item.getName(), edition)) {
                 return true;
             }
         }
@@ -348,14 +359,14 @@ final class AnteImpl implements Ante {
     }
 
     @Override
-    public boolean hasInSpectral(@NotNull Item item) {
+    public boolean hasInSpectral(@NotNull Item item, Edition edition) {
         if (item instanceof LegendaryJoker joker) {
-            return hasLegendary(joker);
+            return hasLegendary(joker, edition);
         }
 
         if (item instanceof EditionItem editionItem) {
             if (editionItem.isLegendary()) {
-                return hasLegendary((LegendaryJoker) editionItem.item());
+                return hasLegendary((LegendaryJoker) editionItem.item(), edition);
             }
         }
 
@@ -392,13 +403,13 @@ final class AnteImpl implements Ante {
     }
 
     @Override
-    public boolean hasInBuffonPack(@NotNull Item item) {
+    public boolean hasInBuffonPack(@NotNull Item item, Edition edition) {
         for (PackInfo packInfo : packInfos) {
             if (packInfo.getKind() != PackKind.Buffoon) {
                 continue;
             }
 
-            if (packInfo.containsOption(item.getName())) {
+            if (packInfo.containsOption(item.getName(), edition)) {
                 return true;
             }
         }
@@ -412,7 +423,7 @@ final class AnteImpl implements Ante {
 
     @JsonIgnore
     public Set<String> getShop() {
-        return new HashSet<>(shop);
+        return shop.keySet();
     }
 
     @Override

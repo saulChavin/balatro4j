@@ -11,7 +11,6 @@ import java.util.List;
 
 record RunImpl(String seed, List<Ante> antes) implements Run {
 
-
     @Override
     public String toJson() {
         try {
@@ -23,38 +22,48 @@ record RunImpl(String seed, List<Ante> antes) implements Run {
     }
 
     @Override
+    public boolean hasTag(int ante, Tag tag) {
+        return antes.get(ante - 1).hasTag(tag);
+    }
+
+    @Override
+    public boolean hasTag(Tag tag) {
+        return antes.stream().anyMatch(a -> a.hasTag(tag));
+    }
+
+    @Override
     public Ante getAnte(int ante) {
         return antes.get(ante - 1);
     }
 
     @Override
-    public boolean hasLegendary(int ante, LegendaryJoker... jokers) {
-        return antes.get(ante - 1).hasLegendary(jokers);
+    public boolean hasLegendary(int ante, LegendaryJoker joker, Edition edition) {
+        return antes.get(ante - 1).hasLegendary(joker, edition);
     }
 
     @Override
-    public boolean hasInPack(int ante, Item item) {
-        return antes.get(ante - 1).hasInPack(item);
+    public boolean hasInPack(int ante, Item item, Edition edition) {
+        return antes.get(ante - 1).hasInPack(item, edition);
     }
 
     @Override
-    public boolean hasInPack(Item item) {
-        return antes.stream().anyMatch(a -> a.hasInPack(item));
+    public boolean hasInPack(Item item, Edition edition) {
+        return antes.stream().anyMatch(a -> a.hasInPack(item, edition));
     }
 
     @Override
-    public boolean hasInShop(int ante, @NotNull Item item) {
-        return antes.get(ante - 1).hasInShop(item);
+    public boolean hasInShop(int ante, @NotNull Item item, Edition edition) {
+        return antes.get(ante - 1).hasInShop(item, edition);
     }
 
     @Override
-    public boolean hasInShop(Item item) {
-        return antes.stream().anyMatch(a -> a.hasInShop(item));
+    public boolean hasInShop(Item item, Edition edition) {
+        return antes.stream().anyMatch(a -> a.hasInShop(item, edition));
     }
 
     @Override
-    public boolean hasInShop(int ante, @NotNull Item item, int index) {
-        return antes.get(ante - 1).hasInShop(item, index);
+    public boolean hasInShop(int ante, @NotNull Item item, int index, Edition edition) {
+        return antes.get(ante - 1).hasInShop(item, index, edition);
     }
 
     @Override
@@ -75,9 +84,9 @@ record RunImpl(String seed, List<Ante> antes) implements Run {
     }
 
     @Override
-    public boolean hasInSpectral(@NotNull Item item) {
+    public boolean hasInSpectral(@NotNull Item item, Edition edition) {
         for (Ante ante : antes) {
-            if (ante.hasInSpectral(item)) {
+            if (ante.hasInSpectral(item, edition)) {
                 return true;
             }
         }
@@ -97,8 +106,8 @@ record RunImpl(String seed, List<Ante> antes) implements Run {
     }
 
     @Override
-    public boolean hasInSpectral(int ante, @NotNull Item item) {
-        return antes.get(ante - 1).hasInSpectral(item);
+    public boolean hasInSpectral(int ante, @NotNull Item item, Edition edition) {
+        return antes.get(ante - 1).hasInSpectral(item, edition);
     }
 
     @Override
@@ -107,9 +116,9 @@ record RunImpl(String seed, List<Ante> antes) implements Run {
     }
 
     @Override
-    public boolean hasInBuffonPack(@NotNull Item item) {
+    public boolean hasInBuffonPack(@NotNull Item item, Edition edition) {
         for (Ante ante : antes) {
-            if (ante.hasInBuffonPack(item)) {
+            if (ante.hasInBuffonPack(item, edition)) {
                 return true;
             }
         }
@@ -118,8 +127,8 @@ record RunImpl(String seed, List<Ante> antes) implements Run {
     }
 
     @Override
-    public boolean hasInBuffonPack(int ante, @NotNull Item item) {
-        return antes.get(ante - 1).hasInBuffonPack(item);
+    public boolean hasInBuffonPack(int ante, @NotNull Item item, Edition edition) {
+        return antes.get(ante - 1).hasInBuffonPack(item, edition);
     }
 
     @Override
@@ -154,9 +163,9 @@ record RunImpl(String seed, List<Ante> antes) implements Run {
     }
 
     @Override
-    public boolean hasInShop(@NotNull Item item, int index) {
+    public boolean hasInShop(@NotNull Item item, int index, Edition edition) {
         for (Ante ante : antes) {
-            if (ante.hasInShop(item, index)) {
+            if (ante.hasInShop(item, index, edition)) {
                 return true;
             }
         }
@@ -171,9 +180,9 @@ record RunImpl(String seed, List<Ante> antes) implements Run {
     }
 
     @Override
-    public boolean hasLegendary(LegendaryJoker... jokers) {
+    public boolean hasLegendary(LegendaryJoker joker, Edition edition) {
         for (Ante ante : antes) {
-            if (ante.hasLegendary(jokers)) {
+            if (ante.hasLegendary(joker, edition)) {
                 return true;
             }
         }

@@ -134,7 +134,7 @@ public final class Data {
     private boolean isOn(@NotNull EditionItem item) {
         var on = (data[item.getYIndex()] & (1L << item.ordinal())) != 0;
 
-        if (item.edition() == null || item.edition() == Edition.NoEdition) {
+        if (item.edition() == Edition.NoEdition) {
             return on;
         }
 

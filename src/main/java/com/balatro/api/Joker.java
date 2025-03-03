@@ -1,6 +1,7 @@
 package com.balatro.api;
 
 import com.balatro.api.filter.InBuffonPackFilter;
+import com.balatro.enums.Edition;
 import com.balatro.enums.JokerType;
 import com.balatro.jackson.ItemSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -13,7 +14,11 @@ public interface Joker extends Item {
     }
 
     default Filter inBuffonPack(int ante) {
-        return new InBuffonPackFilter(ante, this);
+        return new InBuffonPackFilter(ante, this, Edition.NoEdition);
+    }
+
+    default Filter inBuffonPack(int ante, Edition edition) {
+        return new InBuffonPackFilter(ante, this, edition);
     }
 
     JokerType getType();

@@ -3,6 +3,7 @@ package com.balatro.api;
 import com.balatro.api.filter.InPackFilter;
 import com.balatro.api.filter.InShopFilter;
 import com.balatro.api.filter.SpectralFilter;
+import com.balatro.enums.Edition;
 import com.balatro.structs.EditionItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,7 +28,11 @@ public interface Item {
     }
 
     default Filter inPack(int ante) {
-        return new InPackFilter(ante, this);
+        return new InPackFilter(ante, this, Edition.NoEdition);
+    }
+
+    default Filter inPack(int ante, Edition edition) {
+        return new InPackFilter(ante, this, edition);
     }
 
     @JsonIgnore
@@ -36,12 +41,21 @@ public interface Item {
     }
 
     @JsonIgnore
+    default Filter inPack(Edition edition) {
+        return new InPackFilter(-1, this, edition);
+    }
+
+    @JsonIgnore
     default Filter inShop() {
         return new InShopFilter(this);
     }
 
     default Filter inShop(int ante) {
-        return new InShopFilter(ante, this);
+        return new InShopFilter(ante, this, Edition.NoEdition);
+    }
+
+    default Filter inShop(int ante, Edition edition) {
+        return new InShopFilter(ante, this, edition);
     }
 
     @JsonIgnore
@@ -50,7 +64,11 @@ public interface Item {
     }
 
     default Filter inSpectral(int ante) {
-        return new SpectralFilter(ante, this);
+        return new SpectralFilter(ante, this, Edition.NoEdition);
+    }
+
+    default Filter inSpectral(int ante, Edition edition) {
+        return new SpectralFilter(ante, this, edition);
     }
 
     @JsonIgnore

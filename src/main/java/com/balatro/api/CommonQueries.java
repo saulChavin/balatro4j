@@ -1,34 +1,48 @@
 package com.balatro.api;
 
-import com.balatro.enums.Boss;
-import com.balatro.enums.LegendaryJoker;
-import com.balatro.enums.PackType;
-import com.balatro.enums.Voucher;
+import com.balatro.enums.*;
 import org.jetbrains.annotations.NotNull;
 
 public interface CommonQueries {
 
     boolean hasBoss(Boss boss);
 
-    boolean hasInPack(Item item);
+    default boolean hasInPack(Item item) {
+        return hasInPack(item, Edition.NoEdition);
+    }
 
-    boolean hasInShop(Item item);
+    boolean hasInPack(Item item, Edition edition);
 
-    boolean hasInShop(@NotNull Item item, int index);
+    default boolean hasInShop(Item item) {
+        return hasInShop(item, Edition.NoEdition);
+    }
+
+    boolean hasInShop(Item item, Edition edition);
+
+    boolean hasInShop(@NotNull Item item, int index, Edition edition);
 
     long countLegendary();
 
     int countInPack(@NotNull Item item);
 
-    boolean hasLegendary(LegendaryJoker... jokers);
+    boolean hasLegendary(LegendaryJoker joker, Edition edition);
 
     boolean hasPack(PackType packType);
 
-    boolean hasInBuffonPack(@NotNull Item item);
+    default boolean hasInBuffonPack(@NotNull Item item) {
+        return hasInBuffonPack(item, Edition.NoEdition);
+    }
 
-    boolean hasInSpectral(@NotNull Item item);
+    boolean hasInBuffonPack(@NotNull Item item, Edition edition);
+
+    default boolean hasInSpectral(@NotNull Item item) {
+        return hasInSpectral(item, Edition.NoEdition);
+    }
+
+    boolean hasInSpectral(@NotNull Item item, Edition edition);
 
     boolean hasVoucher(Voucher voucher);
 
+    boolean hasTag(Tag tag);
 
 }

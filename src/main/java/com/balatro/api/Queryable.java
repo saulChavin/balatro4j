@@ -1,26 +1,27 @@
 package com.balatro.api;
 
-import com.balatro.enums.Boss;
-import com.balatro.enums.LegendaryJoker;
-import com.balatro.enums.PackType;
-import com.balatro.enums.Voucher;
+import com.balatro.enums.*;
 import org.jetbrains.annotations.NotNull;
 
 public interface Queryable extends CommonQueries {
 
-    boolean hasInPack(int ante, Item item);
+    default boolean hasInPack(int ante, Item item) {
+        return hasInPack(ante, item, Edition.NoEdition);
+    }
 
-    boolean hasInShop(int ante, Item item);
+    boolean hasInPack(int ante, Item item, Edition edition);
+
+    boolean hasInShop(int ante, Item item, Edition edition);
 
     long countLegendary(int ante);
 
-    boolean hasInShop(int ante, Item item, int index);
+    boolean hasInShop(int ante, Item item, int index, Edition edition);
 
-    boolean hasLegendary(int ante, LegendaryJoker... jokers);
+    boolean hasLegendary(int ante, LegendaryJoker joker, Edition edition);
 
-    boolean hasInSpectral(int ante, @NotNull Item item);
+    boolean hasInSpectral(int ante, @NotNull Item item, Edition edition);
 
-    boolean hasInBuffonPack(int ante, @NotNull Item item);
+    boolean hasInBuffonPack(int ante, @NotNull Item item, Edition edition);
 
     boolean hasPack(int ante, PackType packType);
 
@@ -28,4 +29,5 @@ public interface Queryable extends CommonQueries {
 
     boolean hasBoss(int ante, Boss boss);
 
+    boolean hasTag(int ante, Tag tag);
 }

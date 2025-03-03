@@ -49,7 +49,9 @@ public interface Balatro {
 
     Run analyze();
 
-    Balatro analyzeAll();
+    Run analyzeAll();
+
+    Balatro enableAll();
 
     Balatro maxAnte(int ante);
 

@@ -18,7 +18,6 @@ public interface Filter {
         return new AndFilter(this, filter);
     }
 
-
     @Contract(pure = true)
     static @NotNull Filter findAll() {
         return run -> true;

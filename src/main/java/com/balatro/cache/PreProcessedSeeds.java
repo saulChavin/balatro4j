@@ -13,9 +13,7 @@ import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -28,9 +26,15 @@ public class PreProcessedSeeds {
 
     public static void main(String[] args) {
         var p = new PreProcessedSeeds();
-        p.start(10, 1_000_000);
+        p.start(10, 100_000_000);
 
-        p.search(Set.of("perkeo", "triboulet", "brainstorm", "blueprint"));
+
+        var result = p.search(List.of(Perkeo, Triboulet, RareJoker.Blueprint, RareJoker.Brainstorm,
+                UnCommonJoker.Sock_and_Buskin, CommonJoker.Hanging_Chad, RareJoker.Invisible_Joker));
+
+        for (QueryResult queryResult : result) {
+            System.out.println(queryResult.seed() + " " + queryResult.score());
+        }
     }
 
     public void start() {
@@ -50,7 +54,11 @@ public class PreProcessedSeeds {
             var seeds = Balatro.search(parallelism, seedsPerThread)
                     .configuration(config -> config.maxAnte(1).disableShopQueue()
                             .disablePack(PackKind.Buffoon))
-                    .filter(Perkeo.inPack().or(Triboulet.inPack()).or(Yorick.inPack()).or(Chicot.inPack()).or(Canio.inPack()))
+                    .filter(Perkeo.inPack(Edition.Negative)
+                            .or(Triboulet.inPack(Edition.Negative))
+                            .or(Yorick.inPack(Edition.Negative))
+                            .or(Chicot.inPack(Edition.Negative))
+                            .or(Canio.inPack(Edition.Negative)))
                     .find();
 
             System.out.println("Seeds found: " + decimalFormat.format(seeds.size()) + " Analyzing...");
@@ -59,7 +67,7 @@ public class PreProcessedSeeds {
 
             dataList = seeds.parallelStream()
                     .map(seed -> Balatro.builder(seed, 8)
-                            .analyzeAll()
+                            .enableAll()
                             .disablePack(PackKind.Standard)
                             .analyze())
                     .map(Data::new)
@@ -88,6 +96,30 @@ public class PreProcessedSeeds {
             }
         }
 
+    }
+
+
+    public List<QueryResult> search(@NotNull List<Item> items) {
+        List<QueryResult> found = new ArrayList<>();
+
+        var editionItems = items.stream()
+                .map(i -> {
+                    if (i instanceof EditionItem ei) {
+                        return ei;
+                    }
+
+                    return new EditionItem(i, Edition.NoEdition);
+                }).toList();
+
+        for (Data data : dataList) {
+            if (data.contains(editionItems)) {
+                found.add(new QueryResult(data.getSeed(), data.getScore()));
+            }
+        }
+
+        found.sort((a, b) -> Integer.compare(b.score(), a.score()));
+
+        return found;
     }
 
     public Set<String> search(@NotNull Set<String> tokens) {

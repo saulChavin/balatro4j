@@ -4,11 +4,12 @@ package com.balatro.api.filter;
 import com.balatro.api.Filter;
 import com.balatro.api.Item;
 import com.balatro.api.Run;
+import com.balatro.enums.Edition;
 
-public record InBuffonPackFilter(int ante, Item item) implements Filter {
+public record InBuffonPackFilter(int ante, Item item, Edition edition) implements Filter {
 
     public InBuffonPackFilter(Item item) {
-        this(-1, item);
+        this(-1, item, Edition.NoEdition);
     }
 
     @Override
@@ -17,6 +18,6 @@ public record InBuffonPackFilter(int ante, Item item) implements Filter {
             return run.hasInBuffonPack(item);
         }
 
-        return run.hasInBuffonPack(ante, item);
+        return run.hasInBuffonPack(ante, item, edition);
     }
 }

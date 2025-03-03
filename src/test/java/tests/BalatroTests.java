@@ -2,6 +2,7 @@ package tests;
 
 import com.balatro.Util;
 import com.balatro.api.*;
+import com.balatro.enums.Edition;
 import com.balatro.enums.RareJoker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,9 +16,8 @@ public class BalatroTests {
 
     @Test
     void apiTest() {
-        var run = Balatro.builder("alex", 8)
-                .analyzeAll()
-                .analyze();
+        var run = Balatro.builder("ALEX", 8)
+                .analyzeAll();
 
         System.out.println(run.toJson());
     }
@@ -26,7 +26,7 @@ public class BalatroTests {
     @Test
     void testIGSPUNF() {
         var run = Balatro.builder("IGSPUNF", 1)
-                .analyzeAll()
+                .enableAll()
                 .disableShopQueue()
                 .analyze();
 
@@ -64,6 +64,14 @@ public class BalatroTests {
         found = Perkeo.inPack()
                 .or(Triboulet.inPack(1))
                 .and(Blueprint.inShop(1))
+                .filter(run);
+
+        Assertions.assertTrue(found);
+
+        run = Balatro.builder("IGSPUNF", 8)
+                .analyzeAll();
+
+        found = Perkeo.inPack(1, Edition.Negative)
                 .filter(run);
 
         Assertions.assertTrue(found);

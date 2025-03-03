@@ -9,17 +9,22 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record EditionItem(Item item, @Nullable Edition edition) implements Item {
+public record EditionItem(Item item, @NotNull Edition edition) implements Item {
 
     public EditionItem(@NotNull Item item) {
-        this(item, null);
+        this(item, Edition.NoEdition);
     }
 
     public EditionItem {
         if (item instanceof EditionItem) {
             throw new RuntimeException("EditionItem cannot be created from another EditionItem");
         }
+
+        Objects.requireNonNull(item);
+        Objects.requireNonNull(edition);
     }
 
     @JsonIgnore
@@ -69,18 +74,16 @@ public record EditionItem(Item item, @Nullable Edition edition) implements Item 
     }
 
     public boolean hasSticker() {
-        return edition != null;
+        return edition != Edition.NoEdition;
     }
 
     public boolean hasEdition(Edition edition) {
-        return this.edition != null && this.edition.eq(edition);
+        return this.edition != Edition.NoEdition && this.edition.eq(edition);
     }
 
     public boolean equals(Item item) {
         if (item instanceof EditionItem editionItem) {
-            if (editionItem.edition() != null && edition != null) {
-                return editionItem.eq(this.item) && edition.eq(editionItem.edition());
-            }
+            return editionItem.eq(this.item) && edition.eq(editionItem.edition());
         }
 
         return item.eq(this.item);

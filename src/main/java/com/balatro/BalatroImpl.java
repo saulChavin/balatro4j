@@ -10,6 +10,7 @@ import com.balatro.structs.Card;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -178,7 +179,7 @@ public final class BalatroImpl implements Balatro {
 
             if (analyzeShopQueue) {
                 for (int q = 1; q <= cardsPerAnte.get(a - 1); q++) {
-                    Edition sticker = null;
+                    Edition sticker = Edition.NoEdition;
 
                     ShopItem item = functions.nextShopItem(a);
 
@@ -281,8 +282,8 @@ public final class BalatroImpl implements Balatro {
         return new RunImpl(seed, Collections.unmodifiableList(antes));
     }
 
-    private static @Nullable Edition getSticker(@NotNull JokerData joker) {
-        Edition sticker = null;
+    private static @NotNull Edition getSticker(@NotNull JokerData joker) {
+        Edition sticker = Edition.NoEdition;
 
         if (joker.getStickers().isEternal()) {
             sticker = Edition.Eternal;
@@ -302,7 +303,13 @@ public final class BalatroImpl implements Balatro {
     }
 
     @Override
-    public Balatro analyzeAll() {
+    public @NotNull @Unmodifiable Run analyzeAll() {
+        enableAll();
+        return analyze();
+    }
+
+    @Override
+    public Balatro enableAll() {
         analyzeStandardPacks = true;
         analyzeCelestialPacks = true;
         analyzeArcana = true;

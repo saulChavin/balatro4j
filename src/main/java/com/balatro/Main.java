@@ -35,8 +35,7 @@ public class Main {
 
         for (String seed : seeds) {
             var play = Balatro.builder(seed, 8)
-                    .analyzeAll()
-                    .analyze();
+                    .analyzeAll();
 
             runs.add(play);
         }

@@ -1,20 +1,21 @@
 package com.balatro.cache;
 
 import com.balatro.enums.Edition;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class Query {
     private String item;
-    private @Nullable Edition edition;
+    private Edition edition;
 
     public Query() {
     }
 
     public Query(String item) {
         this.item = item;
+        this.edition = Edition.NoEdition;
     }
 
-    public Query(String item, @Nullable Edition edition) {
+    public Query(String item, @NotNull Edition edition) {
         this.item = item;
         this.edition = edition;
     }
@@ -28,7 +29,7 @@ public class Query {
         return this;
     }
 
-    public @Nullable Edition getEdition() {
+    public Edition getEdition() {
         return edition;
     }
 
