@@ -154,7 +154,7 @@ public final class BalatroImpl implements Balatro {
 
         for (int a = 1; a <= maxAnte; a++) {
             functions.initUnlocks(a, freshProfile);
-            var play = new AnteImpl(a, functions);
+            var play = new AnteImpl(a);
             antes.add(play);
 
             if (analyzeBoss) {

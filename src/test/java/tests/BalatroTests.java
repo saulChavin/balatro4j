@@ -2,10 +2,22 @@ package tests;
 
 import com.balatro.Util;
 import com.balatro.api.*;
+import com.balatro.cache.Data;
+import com.balatro.cache.JokerFile;
 import com.balatro.enums.Edition;
 import com.balatro.enums.Tag;
+import com.balatro.structs.EditionItem;
+import com.balatro.structs.ItemPosition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.balatro.enums.CommonJoker.*;
 import static com.balatro.enums.LegendaryJoker.*;
@@ -33,10 +45,10 @@ public class BalatroTests {
     }
 
     @Test
-    void testComplexQuery(){
+    void testComplexQuery() {
         var seeds = Balatro.search(10, 100_000)
                 .configuration(config -> config.maxAnte(4))
-                .filter(Square_Joker.inShop(1,Edition.Negative).and(Burglar.inBuffonPack(1))
+                .filter(Square_Joker.inShop(1, Edition.Negative).and(Burglar.inBuffonPack(1))
                         .and(Blueprint.inBuffonPack(2).or(Blueprint.inShop(2)))
                         .and(Brainstorm.inBuffonPack(2).or(Brainstorm.inShop(2)))
                         .and(Invisible_Joker.inBuffonPack(3).or(Invisible_Joker.inShop(3)))
@@ -44,6 +56,66 @@ public class BalatroTests {
                 .find();
 
         seeds.forEach(System.out::println);
+    }
+
+
+    @Test
+    void testJokerFile() throws IOException {
+        List<Run> runs = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            runs.add(Balatro.builder("123456" + i, 8)
+                    .analyzeAll());
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        var items = new HashMap<String, List<EditionItem>>();
+
+        for (Run run : runs) {
+            JokerFile.write(baos, new Data(run));
+            items.put(run.seed(), run.antes().stream()
+                    .flatMap(a -> a.getJokers().stream())
+                    .toList());
+        }
+
+        var bis = new ByteArrayInputStream(baos.toByteArray());
+
+        var data = JokerFile.read(bis);
+
+        if (data.isEmpty()) {
+            Assertions.fail("No data found");
+        }
+
+        var seeds = runs.stream()
+                .map(Run::seed)
+                .collect(Collectors.toSet());
+
+        for (Data d : data) {
+            if (!seeds.contains(d.getSeed())) {
+                Assertions.fail("Seed not found: " + d.getSeed());
+            }
+
+            if (d.getData().length == 0) {
+                Assertions.fail("Positions not found");
+            }
+        }
+
+        if (data.size() != runs.size()) {
+            Assertions.fail("Data size mismatch");
+        }
+
+        for (Data seed : data) {
+            var itemList = items.get(seed.getSeed());
+
+            Assertions.assertNotNull(itemList);
+            Assertions.assertFalse(itemList.isEmpty());
+
+            for (EditionItem editionItem : itemList) {
+                Assertions.assertTrue(seed.isOn(new ItemPosition(editionItem, 8)));
+            }
+        }
+
     }
 
     @Test

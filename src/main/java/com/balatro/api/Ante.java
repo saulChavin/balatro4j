@@ -1,11 +1,9 @@
 package com.balatro.api;
 
 import com.balatro.enums.*;
-import com.balatro.structs.JokerData;
-import com.balatro.structs.PackInfo;
-import com.balatro.structs.EditionItem;
-import com.balatro.structs.ShopQueue;
+import com.balatro.structs.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;

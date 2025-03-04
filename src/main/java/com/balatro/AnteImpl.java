@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 final class AnteImpl implements Ante {
 
     private final int ante;
-    @JsonIgnore
-    private final Functions functions;
     private final ShopQueue shopQueue;
     @JsonIgnore
     private final Map<String, Edition> shop;
@@ -30,9 +28,8 @@ final class AnteImpl implements Ante {
     @JsonIgnore
     private Map<String, JokerData> legendaryJokers;
 
-    AnteImpl(int ante, Functions functions) {
+    AnteImpl(int ante) {
         this.ante = ante;
-        this.functions = functions;
         this.tags = new HashSet<>(2);
         this.shopQueue = new ShopQueue();
         this.shop = new HashMap<>(20);
@@ -493,7 +490,6 @@ final class AnteImpl implements Ante {
                 .filter(a -> a.hasEdition(Edition.Negative))
                 .map(EditionItem::item)
                 .filter(a -> a instanceof Joker)
-                .map(a -> (Joker) a)
                 .count();
     }
 

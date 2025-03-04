@@ -2,82 +2,69 @@ package com.balatro.cache;
 
 import com.balatro.api.*;
 import com.balatro.enums.*;
+import com.balatro.structs.ItemPosition;
 import com.balatro.structs.JokerData;
 import com.balatro.structs.EditionItem;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 public final class Data {
 
-    public static final int DATA_SIZE = 12;
     private final String seed;
-    private final long[] data;
-    private final long[] editions;
     private final int score;
+    private final int[] data;
 
-    public Data(String seed, int score, long[] data, long[] editions) {
+    public Data(String seed, int score, int[] data) {
         this.seed = seed;
-        this.data = data;
-        this.editions = editions;
         this.score = score;
+        this.data = data;
     }
 
     public Data(@NotNull Run run) {
         this.seed = run.seed();
-        this.data = new long[DATA_SIZE];
-        List<JokerData> jokerDataList = new ArrayList<>();
         this.score = (int) run.getScore();
+
+        List<ItemPosition> itemPositions = new ArrayList<>();
 
         for (Ante ante : run.antes()) {
             for (EditionItem joker : ante.getJokers()) {
-                turnOn(joker);
-
-                if (joker.edition() != null) {
-                    jokerDataList.add(joker.jokerData());
-                }
+                itemPositions.add(new ItemPosition(joker, ante.getAnte()));
             }
 
-            turnOn(ante.getVoucher());
-            turnOn(ante.getBoss());
+            itemPositions.add(new ItemPosition(ante.getVoucher(), ante.getAnte()));
+            itemPositions.add(new ItemPosition(ante.getBoss(), ante.getAnte()));
 
             for (Tag tag : ante.getTags()) {
-                turnOn(tag);
+                itemPositions.add(new ItemPosition(tag, ante.getAnte()));
             }
 
             for (Tarot tarot : ante.getTarots()) {
-                turnOn(tarot);
+                itemPositions.add(new ItemPosition(tarot, ante.getAnte()));
             }
 
             for (Planet planet : ante.getPlanets()) {
-                turnOn(planet);
+                itemPositions.add(new ItemPosition(planet, ante.getAnte()));
             }
 
             for (JokerData value : ante.getLegendaryJokers().values()) {
-                turnOn(value);
-
-                if (value.getEdition() != null && value.getEdition() != Edition.NoEdition) {
-                    jokerDataList.add(value);
-                }
+                itemPositions.add(new ItemPosition(value.asEditionItem(), ante.getAnte()));
             }
 
             for (Spectral spectral : ante.getSpectrals()) {
-                turnOn(spectral);
+                itemPositions.add(new ItemPosition(spectral, ante.getAnte()));
             }
         }
 
-        editions = new long[jokerDataList.size() * 3];
+        itemPositions.sort(ItemPosition::compareTo);
 
-        for (int i = 0; i < jokerDataList.size(); i += 3) {
-            JokerData jokerData = jokerDataList.get(i);
-            editions[i * 3] = jokerData.getJoker().ordinal();
-            editions[i * 3 + 1] = jokerData.getJoker().getYIndex();
-            editions[i * 3 + 2] = jokerData.getEdition().ordinal();
+        data = new int[itemPositions.size()];
+
+        for (int i = 0; i < itemPositions.size(); i++) {
+            data[i] = itemPositions.get(i).encode();
         }
 
-        jokerDataList.clear();
+        itemPositions.clear();
     }
 
     public String getSeed() {
@@ -88,8 +75,13 @@ public final class Data {
         return score;
     }
 
-    public boolean contains(@NotNull List<EditionItem> items) {
-        for (EditionItem item : items) {
+
+    public int[] getData() {
+        return data;
+    }
+
+    public boolean contains(@NotNull List<ItemPosition> items) {
+        for (ItemPosition item : items) {
             if (!isOn(item)) {
                 return false;
             }
@@ -98,54 +90,26 @@ public final class Data {
         return true;
     }
 
-    public void write(@NotNull ByteArrayOutputStream baos) {
-        baos.writeBytes(seed.getBytes());
-        byte[] longArray = new byte[data.length * Long.BYTES];
-        final var longBuffer = ByteBuffer.allocate(Long.BYTES);
 
-        for (int i = 0; i < data.length; i++) {
-            longBuffer.putLong(0, data[i]);
-            System.arraycopy(longBuffer.array(), 0, longArray, i * Long.BYTES, Long.BYTES);
-        }
+    public boolean isOn(@NotNull ItemPosition item) {
+        for (int value : data) {
+            int yIndex = (value >> 24) & 0xFF;
 
-        baos.writeBytes(longArray);
+            if (yIndex != item.getYIndex()) continue;
 
-        baos.writeBytes(ByteBuffer.allocate(Integer.BYTES).putInt(score).array());
-        baos.writeBytes(ByteBuffer.allocate(Integer.BYTES).putInt(editions.length).array());
+            int ordinal = (value >> 16) & 0xFF;
 
-        if (editions.length == 0) {
-            return;
-        }
+            if (ordinal != item.ordinal()) continue;
 
-        longArray = new byte[editions.length * Long.BYTES];
+            int edition = (value >> 8) & 0xFF;
 
-        for (int i = 0; i < editions.length; i++) {
-            longBuffer.putLong(0, editions[i]);
-            System.arraycopy(longBuffer.array(), 0, longArray, i * Long.BYTES, Long.BYTES);
-        }
+            if (item.edition().ordinal() != edition) continue;
 
-        baos.writeBytes(longArray);
-    }
+            int ante = (value) & 0xFF;
 
-    private void turnOn(@NotNull Item item) {
-        data[item.getYIndex()] = data[item.getYIndex()] | (1L << item.ordinal());
-    }
+            if (ante > item.ante()) continue;
 
-    private boolean isOn(@NotNull EditionItem item) {
-        var on = (data[item.getYIndex()] & (1L << item.ordinal())) != 0;
-
-        if (item.edition() == Edition.NoEdition) {
-            return on;
-        }
-
-        if (!on) {
-            return false;
-        }
-
-        for (int i = 0; i < editions.length; i += 3) {
-            if (editions[i] == item.ordinal() && editions[i + 1] == item.getYIndex() && editions[i + 2] == item.edition().ordinal()) {
-                return true;
-            }
+            return true;
         }
 
         return false;
