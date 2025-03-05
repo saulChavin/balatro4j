@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="bugfixes">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/JokerFile.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/balatro/structs/ItemPosition.java" afterDir="false" />
+    <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="reduced the size of the db by 4x">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/AnteImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/AnteImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/Ante.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/Ante.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/Data.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/Data.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/PreProcessedSeeds.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/PreProcessedSeeds.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/SeedFinderImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/SeedFinderImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,9 +72,10 @@
     &quot;accountId&quot;: &quot;43cd3933-db42-424b-a37e-cdd2bd47c6f1&quot;
   }
 }</component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -138,6 +133,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.balatro.Main" />
+      <module name="Balatro4j.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.balatro.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="PreProcessedSeeds" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.balatro.cache.PreProcessedSeeds" />
       <module name="Balatro4j.main" />
@@ -150,30 +158,6 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="BalatroTests.test33JCJSA" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;tests.BalatroTests.test33JCJSA&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
     </configuration>
     <configuration name="BalatroTests.testComplexQuery" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -226,10 +210,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.PreProcessedSeeds" />
+        <item itemvalue="Application.Main" />
         <item itemvalue="Gradle.BalatroTests.testJokerFile" />
         <item itemvalue="Application.JokerFile" />
         <item itemvalue="Gradle.BalatroTests.testComplexQuery" />
-        <item itemvalue="Gradle.BalatroTests.test33JCJSA" />
       </list>
     </recent_temporary>
   </component>
@@ -265,7 +249,8 @@
       <workItem from="1741015499330" duration="578000" />
       <workItem from="1741016120505" duration="138000" />
       <workItem from="1741044769891" duration="2639000" />
-      <workItem from="1741067448828" duration="3224000" />
+      <workItem from="1741067448828" duration="5843000" />
+      <workItem from="1741132821082" duration="1318000" />
     </task>
     <task id="LOCAL-00001" summary="fixed serialization problems">
       <option name="closed" value="true" />
@@ -347,7 +332,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741016070462</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="reduced the size of the db by 4x">
+      <option name="closed" value="true" />
+      <created>1741071427254</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1741071427254</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -366,7 +359,8 @@
     <MESSAGE value="edition filters" />
     <MESSAGE value="tag bug  fixes" />
     <MESSAGE value="bugfixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="bugfixes" />
+    <MESSAGE value="reduced the size of the db by 4x" />
+    <option name="LAST_COMMIT_MESSAGE" value="reduced the size of the db by 4x" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

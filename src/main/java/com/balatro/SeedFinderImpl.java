@@ -61,6 +61,8 @@ public final class SeedFinderImpl implements SeedFinder {
         return foundSeeds;
     }
 
+    private int time = 0;
+
     private void search() {
         if (filter == null) {
             throw new IllegalStateException("No filters were added");
@@ -72,34 +74,11 @@ public final class SeedFinderImpl implements SeedFinder {
 
         lock.set(true);
         count.reset();
-
-        List<ForkJoinTask<?>> tasks = new ArrayList<>(parallelism);
-
-        for (int i = 0; i < parallelism; i++) {
-            var task = ForkJoinPool.commonPool().submit(this::generate);
-            tasks.add(task);
-        }
-
-        int time = 0;
-        long c;
+        time = 0;
+        var init = LocalDateTime.now();
         var format = new DecimalFormat("#,###");
 
-        var init = LocalDateTime.now();
-        System.out.println("Searching " + format.format((long) parallelism * seedsPerThread) + " seeds with " + parallelism + " tasks");
-
-        while (!tasks.stream().allMatch(ForkJoinTask::isDone)) {
-            try {
-                Thread.sleep(1000);
-
-                time++;
-                c = SeedFinderImpl.count.longValue();
-                if (time % 2 == 0) {
-                    System.out.println(format.format(c / time) + " ops/s seeds analyzed: " + format.format(c) + " " + getMemory());
-                }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        fork(format);
 
         System.out.println("--------------------------------------------------------------------------------------------");
         System.out.println("FINISHED: " + (init.until(LocalDateTime.now(), ChronoUnit.SECONDS)) + " seconds | "
@@ -107,6 +86,50 @@ public final class SeedFinderImpl implements SeedFinder {
         System.out.println(getMemory());
         System.out.println("--------------------------------------------------------------------------------------------");
 
+    }
+
+    private void fork(DecimalFormat format) {
+        int divisor = 20;
+
+        if (parallelism * seedsPerThread < 100_000_000) {
+            divisor = 1;
+        }
+
+        final int amount = seedsPerThread / divisor;
+
+        System.out.println("Searching " + format.format((long) parallelism * seedsPerThread) + " seeds with " + parallelism + " tasks, " + format.format(amount) + " seeds per task");
+
+        long last = 0;
+
+        for (int k = 0; k < divisor; k++) {
+            System.out.println("---------------------------------------------------------------------------------------");
+            List<ForkJoinTask<?>> tasks = new ArrayList<>(parallelism);
+
+            for (int i = 0; i < parallelism; i++) {
+                var task = ForkJoinPool.commonPool().submit(() -> generate(amount));
+                tasks.add(task);
+            }
+
+            long c;
+
+            while (!tasks.stream().allMatch(ForkJoinTask::isDone)) {
+                try {
+                    Thread.sleep(1000);
+
+                    time++;
+                    c = SeedFinderImpl.count.longValue();
+                    if (time % 2 == 0) {
+                        var remainingTasks = tasks.stream()
+                                .filter(a -> !a.isDone())
+                                .count();
+                        System.out.println(format.format(c - last) + " ops/s seeds analyzed: " + format.format(c) + " " + getMemory() + " remaining tasks: " + remainingTasks);
+                        last = c;
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     public static @NotNull String getMemory() {
@@ -125,8 +148,8 @@ public final class SeedFinderImpl implements SeedFinder {
         return filter.filter(run);
     }
 
-    private void generate() {
-        for (int i = 0; i < seedsPerThread; i++) {
+    private void generate(int amount) {
+        for (int i = 0; i < amount; i++) {
             try {
                 count.increment();
                 var seed = BalatroImpl.generateRandomSeed();
