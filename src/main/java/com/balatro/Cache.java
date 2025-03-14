@@ -13,7 +13,7 @@ final class Cache {
     private boolean generatedFirstPack;
 
     public Cache() {
-        nodes = new HashMap<>();
+        nodes = new LinkedHashMap<>();
         generatedFirstPack = false;
     }
 

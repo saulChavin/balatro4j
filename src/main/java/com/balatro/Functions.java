@@ -74,7 +74,7 @@ public final class Functions implements Lock {
 
     public PackType randweightedchoice(String ID, List<PackType> items) {
         double poll = random(ID) * 22.42;
-        int idx = 1;
+        int idx = 0;
         double weight = 0;
         while (weight < poll) {
             weight += items.get(idx).getValue();
@@ -88,12 +88,12 @@ public final class Functions implements Lock {
 
         if (params.isShowman()) return item;
 
-        if ("RETRY".equals(item.getName()) || isLocked(item)) {
+        if (isLocked(item)) {
             int resample = 2;
             while (true) {
                 item = items.get(randint(id + "_resample" + resample, items.size() - 1));
                 resample++;
-                if ((!isLocked(item) && !"RETRY".equals(item.getName())) || resample > 1000) {
+                if (!isLocked(item) || resample > 1000) {
                     return item;
                 }
             }
@@ -143,7 +143,7 @@ public final class Functions implements Lock {
             }
         }
 
-        return randchoice("Spectral" + source + ante, SPECTRALS);
+        return randchoice(source, SPECTRALS);
     }
 
     private Edition getEdition(int ante, String[] editionArr) {
@@ -391,17 +391,6 @@ public final class Functions implements Lock {
         }
 
         return randweightedchoice(shop_packArr[ante], PACKS);
-    }
-
-    @Contract("_ -> new")
-    public @NotNull PackInfo packInfo(@NotNull PackType pack) {
-        if (pack.isMega()) {
-            return new PackInfo(pack, (pack.isBuffon() || pack.isSpectral()) ? 4 : 5, 2);
-        } else if (pack.isJumbo()) {
-            return new PackInfo(pack, (pack.isBuffon() || pack.isSpectral()) ? 4 : 5, 1);
-        } else {
-            return new PackInfo(pack, (pack.isBuffon() || pack.isSpectral()) ? 2 : 3, 1);
-        }
     }
 
     public static String[] planetShoArr;

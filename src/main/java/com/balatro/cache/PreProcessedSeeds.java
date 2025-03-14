@@ -139,74 +139,74 @@ public class PreProcessedSeeds {
         return found;
     }
 
-    private @NotNull List<ItemPosition> parseSearch(@NotNull List<Query> queries) {
+    public static @NotNull List<ItemPosition> parseSearch(@NotNull List<Query> queries) {
         List<ItemPosition> items = new ArrayList<>(queries.size());
 
         for (Query query : queries) {
             for (Spectral value : Spectral.values()) {
-                if (query.getItem().equalsIgnoreCase(value.name())) {
+                if (query.getItem().equalsIgnoreCase(value.getName())) {
                     items.add(new ItemPosition(value, query.getEdition()));
                     break;
                 }
             }
 
             for (CommonJoker value : CommonJoker.values()) {
-                if (query.getItem().equalsIgnoreCase(value.name())) {
+                if (query.getItem().equalsIgnoreCase(value.getName())) {
                     items.add(new ItemPosition(value, query.getEdition()));
                     break;
                 }
             }
 
             for (RareJoker value : RareJoker.values()) {
-                if (query.getItem().equalsIgnoreCase(value.name())) {
+                if (query.getItem().equalsIgnoreCase(value.getName())) {
                     items.add(new ItemPosition(value, query.getEdition()));
                     break;
                 }
             }
 
             for (LegendaryJoker value : values()) {
-                if (query.getItem().equalsIgnoreCase(value.name())) {
+                if (query.getItem().equalsIgnoreCase(value.getName())) {
                     items.add(new ItemPosition(value, query.getEdition()));
                     break;
                 }
             }
 
             for (UnCommonJoker value : UnCommonJoker.values()) {
-                if (query.getItem().equalsIgnoreCase(value.name())) {
+                if (query.getItem().equalsIgnoreCase(value.getName())) {
                     items.add(new ItemPosition(value, query.getEdition()));
                     break;
                 }
             }
             for (Tag value : Tag.values()) {
-                if (query.getItem().equalsIgnoreCase(value.name())) {
+                if (query.getItem().equalsIgnoreCase(value.getName())) {
                     items.add(new ItemPosition(value, query.getEdition()));
                     break;
                 }
             }
 
             for (Boss value : Boss.values()) {
-                if (query.getItem().equalsIgnoreCase(value.name())) {
+                if (query.getItem().equalsIgnoreCase(value.getName())) {
                     items.add(new ItemPosition(value, query.getEdition()));
                     break;
                 }
             }
 
             for (Planet value : Planet.values()) {
-                if (query.getItem().equalsIgnoreCase(value.name())) {
+                if (query.getItem().equalsIgnoreCase(value.getName())) {
                     items.add(new ItemPosition(value, query.getEdition()));
                     break;
                 }
             }
 
             for (Tarot value : Tarot.values()) {
-                if (query.getItem().equalsIgnoreCase(value.name())) {
+                if (query.getItem().equalsIgnoreCase(value.getName())) {
                     items.add(new ItemPosition(value, query.getEdition()));
                     break;
                 }
             }
 
             for (Voucher value : Voucher.values()) {
-                if (query.getItem().equalsIgnoreCase(value.name())) {
+                if (query.getItem().equalsIgnoreCase(value.getName())) {
                     items.add(new ItemPosition(value, query.getEdition()));
                     break;
                 }

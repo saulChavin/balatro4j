@@ -41,6 +41,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 cache.jkr
-perkeo_1b.jkr
+perkeo.jkr
 app.aot
 app.aotconf

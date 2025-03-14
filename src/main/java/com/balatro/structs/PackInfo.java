@@ -4,20 +4,17 @@ import com.balatro.enums.Edition;
 import com.balatro.enums.PackKind;
 import com.balatro.enums.PackType;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PackInfo {
     private final PackType type;
-    private final int size;
-    private final int choices;
     private Set<EditionItem> options;
 
-    public PackInfo(PackType type, int size, int choices) {
+    public PackInfo(@NotNull PackType type) {
         this.type = type;
-        this.size = size;
-        this.choices = choices;
     }
 
     public Set<EditionItem> getOptions() {
@@ -60,10 +57,6 @@ public class PackInfo {
     }
 
     public int getSize() {
-        return size;
-    }
-
-    public int getChoices() {
-        return choices;
+        return type.getSize();
     }
 }

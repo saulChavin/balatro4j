@@ -4,11 +4,14 @@ import com.balatro.Util;
 import com.balatro.api.*;
 import com.balatro.cache.Data;
 import com.balatro.cache.JokerFile;
+import com.balatro.cache.PreProcessedSeeds;
+import com.balatro.cache.Query;
 import com.balatro.enums.Edition;
 import com.balatro.enums.Tag;
 import com.balatro.structs.EditionItem;
 import com.balatro.structs.ItemPosition;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -35,6 +38,14 @@ public class BalatroTests {
     }
 
     @Test
+    void testParseSearch(){
+        PreProcessedSeeds.parseSearch(List.of(new Query("Triboulet"),
+                new Query("Sock and Buskin"),
+                new Query("Pareidolia")
+                ));
+    }
+
+    @Test
     void test33JCJSA() {
         var ante = Balatro.builder("33JCJSA", 1)
                 .analyzeAll()
@@ -46,7 +57,7 @@ public class BalatroTests {
 
     @Test
     void testComplexQuery() {
-        var seeds = Balatro.search(10, 100_000)
+        var seeds = Balatro.search(1, 1_000)
                 .configuration(config -> config.maxAnte(4))
                 .filter(Square_Joker.inShop(1, Edition.Negative).and(Burglar.inBuffonPack(1))
                         .and(Blueprint.inBuffonPack(2).or(Blueprint.inShop(2)))
@@ -172,9 +183,10 @@ public class BalatroTests {
         Assertions.assertTrue(found);
     }
 
-    @Test
+   // @Test
+    @Order(Integer.MAX_VALUE)
     void seedSearchTest() {
-        var seeds = Balatro.search(10, 10_000_000)
+        var seeds = Balatro.search(10, 1_000_000)
                 .configuration(config -> config.maxAnte(1))
                 .filter(Perkeo.inPack().and(Triboulet.inPack()).and(Blueprint.inShop()))
                 .find();

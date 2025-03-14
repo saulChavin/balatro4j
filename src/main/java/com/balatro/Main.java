@@ -21,10 +21,10 @@ public class Main {
             System.out.println("-------------------------------------------------");
         }
 
-        var seeds = Balatro.search(10, 100_000)
+        var seeds = Balatro.search(10, 10_000_000)
                 .configuration(config -> config.maxAnte(1).disableShopQueue()
                         .disablePack(PackKind.Buffoon))
-                .filter(Perkeo.inPack().or(Triboulet.inPack()).or(Yorick.inPack()).or(Chicot.inPack()).or(Canio.inPack()))
+                .filter(Perkeo.inPack(Edition.Negative).and(Triboulet.inPack(Edition.Negative)))
                 .find();
 
         System.out.println("Seeds found: " + seeds.size());

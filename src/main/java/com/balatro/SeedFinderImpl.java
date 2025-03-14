@@ -89,15 +89,20 @@ public final class SeedFinderImpl implements SeedFinder {
     }
 
     private void fork(DecimalFormat format) {
-        int divisor = 20;
+        int divisor = 10;
 
-        if (parallelism * seedsPerThread < 100_000_000) {
+        if (seedsPerThread <= 1_000_000) {
             divisor = 1;
+        }
+
+        if (seedsPerThread <= 100_000_000) {
+            divisor = 4;
         }
 
         final int amount = seedsPerThread / divisor;
 
         System.out.println("Searching " + format.format((long) parallelism * seedsPerThread) + " seeds with " + parallelism + " tasks, " + format.format(amount) + " seeds per task");
+        System.out.println("Divisor: " + divisor);
 
         long last = 0;
 

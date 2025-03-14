@@ -209,7 +209,7 @@ public final class BalatroImpl implements Balatro {
 
             for (int p = 1; p <= numPacks; p++) {
                 var pack = functions.nextPack(a);
-                var packInfo = functions.packInfo(pack);
+                var packInfo = new PackInfo(pack);
                 Set<EditionItem> options = new HashSet<>();
 
                 switch (packInfo.getKind()) {
