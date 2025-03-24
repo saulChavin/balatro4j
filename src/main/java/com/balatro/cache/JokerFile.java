@@ -17,7 +17,7 @@ public class JokerFile {
 
         final int[] positions = data.getData();
 
-        final var intBuffer = ByteBuffer.allocate(Long.BYTES);
+        final var intBuffer = ByteBuffer.allocate(Integer.BYTES);
 
         baos.writeBytes(ByteBuffer.allocate(Integer.BYTES).putInt(data.getScore()).array());
         baos.writeBytes(ByteBuffer.allocate(Integer.BYTES).putInt(positions.length).array());

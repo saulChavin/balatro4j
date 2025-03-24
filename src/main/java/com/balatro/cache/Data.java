@@ -1,13 +1,15 @@
 package com.balatro.cache;
 
-import com.balatro.api.*;
+import com.balatro.api.Ante;
+import com.balatro.api.Run;
 import com.balatro.enums.*;
+import com.balatro.structs.EditionItem;
 import com.balatro.structs.ItemPosition;
 import com.balatro.structs.JokerData;
-import com.balatro.structs.EditionItem;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Data {
 
@@ -100,6 +102,10 @@ public final class Data {
             int ordinal = (value >> 16) & 0xFF;
 
             if (ordinal != item.ordinal()) continue;
+
+            if (item.edition() == Edition.NoEdition && item.ante() == 0) {
+                return true;
+            }
 
             int edition = (value >> 8) & 0xFF;
 

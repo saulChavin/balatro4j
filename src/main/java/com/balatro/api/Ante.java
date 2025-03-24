@@ -1,15 +1,29 @@
 package com.balatro.api;
 
 import com.balatro.enums.*;
-import com.balatro.structs.*;
+import com.balatro.structs.EditionItem;
+import com.balatro.structs.JokerData;
+import com.balatro.structs.PackInfo;
+import com.balatro.structs.ShopQueue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.jetbrains.annotations.NotNull;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public interface Ante extends CommonQueries {
+
+    @JsonIgnore
+    default String toJson() {
+        try {
+            return new ObjectMapper().writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     int getAnte();
 

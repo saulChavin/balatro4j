@@ -27,6 +27,10 @@ public interface CommonQueries {
 
     boolean hasLegendary(LegendaryJoker joker, Edition edition);
 
+    default boolean hasLegendary(LegendaryJoker joker) {
+        return hasLegendary(joker, Edition.NoEdition);
+    }
+
     boolean hasPack(PackType packType);
 
     default boolean hasInBuffonPack(@NotNull Item item) {

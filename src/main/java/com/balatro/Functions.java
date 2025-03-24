@@ -4,12 +4,14 @@ import com.balatro.api.Item;
 import com.balatro.api.Lock;
 import com.balatro.enums.*;
 import com.balatro.enums.Card;
-import com.balatro.enums.PackType;
 import com.balatro.structs.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 import static com.balatro.Util.pseudohash;
 import static com.balatro.Util.round13;
@@ -106,6 +108,7 @@ public final class Functions implements Lock {
         if (soulable && (params.isShowman() || !isLocked(Specials.THE_SOUL)) && random(soul_TarotArr[ante]) > 0.997) {
             var data = nextJoker("sou", joker1SouArr, joker2SouArr, joker3SouArr, joker4SouArr, raritySouArr, editionSouArr, ante, true);
             lock(data.joker);
+            lock(Specials.THE_SOUL);
             return new EditionItem(data.joker, data.edition);
         }
         return randchoice(source, TAROTS);
@@ -623,7 +626,8 @@ public final class Functions implements Lock {
         if (params.isShowman()) return pack;
 
         for (Item item : pack) {
-            if (item instanceof EditionItem) {
+            if (item instanceof EditionItem ) {
+                unlock(Specials.THE_SOUL);
                 continue;
             }
             unlock(item);

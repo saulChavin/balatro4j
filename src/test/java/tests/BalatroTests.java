@@ -1,7 +1,8 @@
 package tests;
 
 import com.balatro.Util;
-import com.balatro.api.*;
+import com.balatro.api.Balatro;
+import com.balatro.api.Run;
 import com.balatro.cache.Data;
 import com.balatro.cache.JokerFile;
 import com.balatro.cache.PreProcessedSeeds;
@@ -22,10 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.balatro.enums.CommonJoker.*;
-import static com.balatro.enums.LegendaryJoker.*;
+import static com.balatro.enums.CommonJoker.Square_Joker;
+import static com.balatro.enums.LegendaryJoker.Perkeo;
+import static com.balatro.enums.LegendaryJoker.Triboulet;
 import static com.balatro.enums.RareJoker.*;
-import static com.balatro.enums.UnCommonJoker.*;
+import static com.balatro.enums.UnCommonJoker.Burglar;
+import static com.balatro.enums.UnCommonJoker.Certificate;
 
 public class BalatroTests {
 
@@ -53,6 +56,21 @@ public class BalatroTests {
 
         Assertions.assertTrue(ante.getTags().contains(Tag.D6_Tag));
         Assertions.assertTrue(ante.getTags().contains(Tag.Charm_Tag));
+    }
+
+    @Test
+    void testJHZ7FPM(){
+        var ante = Balatro.builder("JHZ7FPM", 1)
+                .analyzeAll()
+                .getFirstAnte();
+
+        Assertions.assertTrue(ante.hasLegendary(Perkeo));
+        Assertions.assertTrue(ante.hasLegendary(Triboulet));
+
+        var json = ante
+                .toJson();
+
+        System.out.println(json);
     }
 
     @Test

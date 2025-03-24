@@ -4,18 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="bug fixes &amp; improved parallelized jobs">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="improved performance &amp; bug fixes">
+      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Localization.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Cache.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Functions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Functions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/SeedFinderImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/SeedFinderImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/PreProcessedSeeds.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/PreProcessedSeeds.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/enums/PackType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/enums/PackType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/enums/Spectral.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/enums/Spectral.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/structs/PackInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/structs/PackInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/Ante.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/Ante.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/CommonQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/CommonQueries.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/Data.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/Data.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/JokerFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/JokerFile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,6 +47,12 @@
                 <item name="Balatro4j" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Balatro4j" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="publishing" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -107,6 +109,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.JokerFile.executor": "Run",
+    "Application.Localization.executor": "Run",
     "Application.Main.executor": "Run",
     "Application.PreProcessedSeeds.executor": "Run",
     "Gradle.Balatro4j [:com.balatro.Main.main()].executor": "Debug",
@@ -119,6 +122,7 @@
     "Gradle.BalatroTests.testComplexQuery.executor": "Run",
     "Gradle.BalatroTests.testFilters.executor": "Run",
     "Gradle.BalatroTests.testIGSPUNF.executor": "Run",
+    "Gradle.BalatroTests.testJHZ7FPM.executor": "Run",
     "Gradle.BalatroTests.testJokerFile.executor": "Run",
     "Gradle.BalatroTests.testParseSearch.executor": "Run",
     "Gradle.LockTests.executor": "Run",
@@ -134,17 +138,20 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Gradle.BalatroTests.testJokerFile">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.balatro.Main" />
-      <module name="Balatro4j.main" />
+  <component name="RunManager" selected="Gradle.BalatroTests.testJHZ7FPM">
+    <configuration name="Localization" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="tests.Localization" />
+      <module name="Balatro4j.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.balatro.*" />
+          <option name="PATTERN" value="tests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -152,7 +159,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Balatro4j [nativeRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="PreProcessedSeeds" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.balatro.cache.PreProcessedSeeds" />
+      <module name="Balatro4j.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.balatro.cache.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Balatro4j [publishToMavenLocal]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -163,7 +183,7 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="nativeRun" />
+            <option value="publishToMavenLocal" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -174,7 +194,7 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="BalatroTests.apiTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="BalatroTests.testJHZ7FPM" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -187,7 +207,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;tests.BalatroTests.apiTest&quot;" />
+            <option value="&quot;tests.BalatroTests.testJHZ7FPM&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -222,45 +242,21 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="BalatroTests.testParseSearch" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;tests.BalatroTests.testParseSearch&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.BalatroTests.testJHZ7FPM" />
+        <item itemvalue="Application.Localization" />
+        <item itemvalue="Application.PreProcessedSeeds" />
+        <item itemvalue="Gradle.Balatro4j [publishToMavenLocal]" />
         <item itemvalue="Gradle.BalatroTests.testJokerFile" />
-        <item itemvalue="Gradle.BalatroTests.testParseSearch" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Gradle.Balatro4j [nativeRun]" />
-        <item itemvalue="Gradle.BalatroTests.apiTest" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
       </set>
     </attachedChunks>
   </component>
@@ -299,7 +295,12 @@
       <workItem from="1741806884284" duration="47000" />
       <workItem from="1741807113869" duration="18000" />
       <workItem from="1741817852020" duration="191000" />
-      <workItem from="1741989658626" duration="1755000" />
+      <workItem from="1741989658626" duration="1826000" />
+      <workItem from="1741991498653" duration="692000" />
+      <workItem from="1742189097387" duration="4248000" />
+      <workItem from="1742312654305" duration="26000" />
+      <workItem from="1742346713736" duration="877000" />
+      <workItem from="1742786885552" duration="809000" />
     </task>
     <task id="LOCAL-00001" summary="fixed serialization problems">
       <option name="closed" value="true" />
@@ -397,7 +398,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741134262898</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="improved performance &amp; bug fixes">
+      <option name="closed" value="true" />
+      <created>1741991454144</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1741991454144</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -429,7 +438,8 @@
     <MESSAGE value="bugfixes" />
     <MESSAGE value="reduced the size of the db by 4x" />
     <MESSAGE value="bug fixes &amp; improved parallelized jobs" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug fixes &amp; improved parallelized jobs" />
+    <MESSAGE value="improved performance &amp; bug fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="improved performance &amp; bug fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
