@@ -2,12 +2,8 @@ package com.balatro.structs;
 
 import com.balatro.enums.Deck;
 import com.balatro.enums.Stake;
-import com.balatro.enums.Version;
 import com.balatro.enums.Voucher;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 
 public class InstanceParams {
 
@@ -16,7 +12,7 @@ public class InstanceParams {
     private boolean showman;
     public int sixesFactor;
     public long version;
-    public Set<Voucher> vouchers;
+    public int vouchers;
 
     public InstanceParams(Deck deck, Stake stake, boolean showman, long version) {
         this.deck = deck;
@@ -24,7 +20,7 @@ public class InstanceParams {
         this.showman = showman;
         this.sixesFactor = 1;
         this.version = version;
-        this.vouchers = new HashSet<>();
+        this.vouchers = 0;
     }
 
     public Deck getDeck() {
@@ -67,11 +63,11 @@ public class InstanceParams {
         this.version = version;
     }
 
-    public Set<Voucher> getVouchers() {
-        return vouchers;
+    public void activateVoucher(@NotNull Voucher voucher) {
+        vouchers = vouchers | (1 << voucher.ordinal());
     }
 
-    public void setVouchers(Set<Voucher> vouchers) {
-        this.vouchers = vouchers;
+    public boolean isVoucherActive(@NotNull Voucher voucher) {
+        return (vouchers & (1 << voucher.ordinal())) != 0;
     }
 }

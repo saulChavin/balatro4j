@@ -2,13 +2,15 @@ package com.balatro;
 
 import com.balatro.api.Balatro;
 import com.balatro.api.Run;
-import com.balatro.enums.*;
+import com.balatro.enums.Edition;
+import com.balatro.enums.PackKind;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.balatro.enums.LegendaryJoker.*;
+import static com.balatro.enums.LegendaryJoker.Perkeo;
+import static com.balatro.enums.LegendaryJoker.Triboulet;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,8 +25,11 @@ public class Main {
 
         var seeds = Balatro.search(10, 10_000_000)
                 .configuration(config -> config.maxAnte(1).disableShopQueue()
-                        .disablePack(PackKind.Buffoon))
-                .filter(Perkeo.inPack(Edition.Negative).and(Triboulet.inPack(Edition.Negative)))
+                        .disablePack(PackKind.Buffoon)
+                        .disablePack(PackKind.Standard)
+                        .disablePack(PackKind.Celestial)
+                )
+                .filter(Perkeo.inPack(Edition.Negative).or(Triboulet.inPack(Edition.Negative)))
                 .find();
 
         System.out.println("Seeds found: " + seeds.size());

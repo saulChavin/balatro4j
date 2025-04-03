@@ -101,6 +101,7 @@ public final class BalatroImpl implements Balatro {
     private boolean analyzeCelestialPacks;
     private boolean analyzeTags;
     private boolean analyzeBoss;
+    private boolean analyzeVoucher;
     private boolean analyzeShopQueue;
     private boolean analyzeJokers;
     private boolean analyzeArcana;
@@ -133,10 +134,8 @@ public final class BalatroImpl implements Balatro {
         return performAnalysis(maxAnte, cardsPerAnte, deck, stake, version, seed);
     }
 
-    private @NotNull RunImpl performAnalysis(int maxAnte, List<Integer> cardsPerAnte, Deck deck, Stake stake, @NotNull Version version, String seed) {
-        boolean[] selectedOptions = new boolean[61];
-        Arrays.fill(selectedOptions, true);
-
+    @Contract("_, _, _, _, _, _ -> new")
+    private @NotNull RunImpl performAnalysis(int maxAnte, @NotNull List<Integer> cardsPerAnte, Deck deck, Stake stake, @NotNull Version version, String seed) {
         if (cardsPerAnte.size() != maxAnte) {
             throw new IllegalArgumentException("cardsPerAnte must have the same size as maxAnte (%s-%s)".formatted(maxAnte, cardsPerAnte.size()));
         }
@@ -144,11 +143,6 @@ public final class BalatroImpl implements Balatro {
         Functions functions = new Functions(seed, new InstanceParams(deck, stake, showman, version.getVersion()));
         functions.initLocks(1, freshProfile, freshRun);
         functions.firstLock();
-
-        for (int i = 0; i < options.size(); i++) {
-            if (!selectedOptions[i]) functions.lock(options.get(i));
-        }
-
         functions.setDeck(deck);
         var antes = new ArrayList<AnteImpl>(options.size());
 
@@ -161,16 +155,15 @@ public final class BalatroImpl implements Balatro {
                 play.setBoss(functions.nextBoss(a));
             }
 
-            var voucher = functions.nextVoucher(a);
-            play.setVoucher(voucher);
+            if (analyzeVoucher) {
+                var voucher = functions.nextVoucher(a);
+                play.setVoucher(voucher);
 
-            functions.lock(voucher);
-            // Unlock next level voucher
-            for (int i = 0; i < Functions.VOUCHERS.size(); i += 2) {
-                if (Functions.VOUCHERS.get(i).equals(voucher)) {
-                    // Only unlock it if it's unlockable
-                    if (selectedOptions[options.indexOf(Functions.VOUCHERS.get(i + 1))]) {
-                        functions.unlock(Functions.VOUCHERS.get(i + 1));
+                functions.lock(voucher);
+                // Unlock next level voucher
+                for (int i = 0; i < Functions.VOUCHERS.length; i += 2) {
+                    if (Functions.VOUCHERS[i].equals(voucher)) {
+                        functions.unlock(Functions.VOUCHERS[i + 1]);
                     }
                 }
             }
@@ -247,8 +240,7 @@ public final class BalatroImpl implements Balatro {
                         var cards = functions.nextBuffoonPack(packInfo.getSize(), a);
 
                         for (JokerData joker : cards) {
-                            var sticker = getSticker(joker);
-                            options.add(new EditionItem(joker.getJoker(), sticker));
+                            options.add(new EditionItem(joker.getJoker(), getSticker(joker, stake)));
                         }
                     }
                     case PackKind.Standard -> {
@@ -285,24 +277,22 @@ public final class BalatroImpl implements Balatro {
         return new RunImpl(seed, Collections.unmodifiableList(antes));
     }
 
-    private static @NotNull Edition getSticker(@NotNull JokerData joker) {
-        Edition sticker = Edition.NoEdition;
+    private static @NotNull Edition getSticker(@NotNull JokerData joker, Stake stake) {
+        if (stake == Stake.White_Stake) return joker.getEdition();
 
         if (joker.getStickers().isEternal()) {
-            sticker = Edition.Eternal;
+            return Edition.Eternal;
         }
+
         if (joker.getStickers().isPerishable()) {
-            sticker = Edition.Perishable;
+            return Edition.Perishable;
         }
+
         if (joker.getStickers().isRental()) {
-            sticker = Edition.Rental;
+            return Edition.Rental;
         }
 
-        if (joker.getEdition() != Edition.NoEdition) {
-            sticker = joker.getEdition();
-        }
-
-        return sticker;
+        return joker.getEdition();
     }
 
     @Override
@@ -321,6 +311,7 @@ public final class BalatroImpl implements Balatro {
         analyzeTags = true;
         analyzeBoss = true;
         analyzeShopQueue = true;
+        analyzeVoucher = true;
         return this;
     }
 

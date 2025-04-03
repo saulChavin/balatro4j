@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Legendary seeds</title>
+  <link rel="stylesheet" href="./css/main.css"/>
+  <style>
+    @font-face {
+      font-family: 'CustomFont';
+      src: url('https://balatroseeds.com/_next/static/media/115c09a31c224434-s.p.woff2') format('woff2');
+    }
+
+    body {
+      margin: 0;
+      /* overflow: hidden; */
+      /* display: flex; */
+      /* flex-direction: column; */
+      /* align-items: center; */
+      /* justify-content: center; */
+      /* height: 100vh; */
+      background-color: #000;
+      color: #fff;
+      background-attachment: fixed;
+      height: 100vh;
+      /* max-height: 100vh; */
+      /* overflow: hidden; */
+      font-family: 'CustomFont', sans-serif;
+
+    }
+
+    canvas#glCanvas {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .container {
+      z-index: 1;
+      text-align: center;
+    }
+
+    .title {
+      animation: wiggle 1s infinite;
+    }
+
+    @keyframes wiggle {
+
+      0%,
+      100% {
+        transform: rotate(-3deg);
+      }
+
+      50% {
+        transform: rotate(3deg);
+      }
+    }
+
+    .input-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .input-group input {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-family: 'CustomFont', sans-serif;
+      width: 300px;
+    }
+
+    .input-group button {
+      padding: 10px;
+      font-size: 1em;
+      margin-left: 10px;
+      border-radius: 10px;
+      background-color: lightgray;
+      border: none;
+      cursor: pointer;
+      font-family: 'CustomFont', sans-serif;
+    }
+
+    .example-text {
+      margin-top: 10px;
+      font-size: 0.9em;
+      font-family: 'CustomFont', sans-serif;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .tag {
+      background-color: #444;
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin: 5px;
+      display: flex;
+      align-items: center;
+      font-family: 'CustomFont', sans-serif;
+    }
+
+    .tag .close {
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+    /* .cards-container {
+        margin-top: 20px;
+        min-height: 200px;
+        max-height: 500px;
+        overflow-y: auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    } */
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      background-color: #fff;
+      color: #000;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 10px;
+      font-size: 1.5em;
+      font-family: 'CustomFont', sans-serif;
+      width: 75px;
+      height: 65px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+      transition: transform 0.2s;
+    }
+
+    .copy-button {
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      padding: 5px;
+      font-size: 0.8em;
+      margin-top: 10px;
+      font-family: 'CustomFont', sans-serif;
+    }
+
+    .simpletext {
+      font-family: 'CustomFont', sans-serif;
+      font-size: 0.8em;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .result-item {
+      font-family: 'CustomFont', sans-serif;
+      font-size: 0.8em;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 10px;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<main class="search">
+  <canvas id="glCanvas"></canvas>
+  <section id="search">
+    <h1>Perkeo Privacy Policy</h1>
+    <p>Thank you for choosing Perkeo. Your privacy is of utmost importance to us, and we are committed to protecting your personal information and ensuring your right to privacy.</p>
+
+    <h2>Data Collection</h2>
+    <p>Perkeo does not collect, store, or transmit any user data. All processes and data storage are handled locally on your device, ensuring that your information remains private and secure.</p>
+
+    <h2>Local Storage</h2>
+    <p>All operations performed by Perkeo are executed directly on your device. No data is sent to external servers or shared with third parties.</p>
+
+    <h2>Contact Information</h2>
+    <p>If you have any questions, suggestions, or concerns about this Privacy Policy, please contact us at <b>invokevirtual@icloud.com</b>. We value your feedback and are here to assist you.</p>
+
+    <h2>Policy Updates</h2>
+    <p>We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. Any updates will be communicated through the app or our official channels.</p>
+
+    <p>The Perkeo App and this website (legengaryseeds.app) are fan made and are not affiliated to the Balatro Game.</p>
+    <p>Thank you for trusting Perkeo.</p>
+  </section>
+</main>
+<script src="./js/shader.js"></script>
+</body>
+</html>

@@ -369,4 +369,4 @@ WHOQQZD
 3WBK1NK
 ```
 
-> average speed: 2,246,263 seeds/sec, max depth 1
+> Average speed: 6,114,471 seeds/sec, max depth 1 legendary joker search
