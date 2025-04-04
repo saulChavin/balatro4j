@@ -5,16 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="performance improvements">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Cache2D.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/balatro/CacheMap.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Coordinate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Cache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Cache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Cache2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Cache2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Coordinate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Coordinate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Functions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Functions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/LuaRandom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/LuaRandom.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/tests/LockTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/LockTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,6 +116,7 @@
     "Gradle.Balatro4j [nativeCompile].executor": "Run",
     "Gradle.Balatro4j [nativeRun].executor": "Run",
     "Gradle.Balatro4j [publishToMavenLocal].executor": "Run",
+    "Gradle.Balatro4j [test].executor": "Run",
     "Gradle.BalatroTests.apiTest.executor": "Run",
     "Gradle.BalatroTests.executor": "Run",
     "Gradle.BalatroTests.test33JCJSA.executor": "Run",
@@ -136,7 +131,7 @@
     "Gradle.LockTests.testLegendaryLock.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "cacheOptimization",
     "go.import.settings.migrated": "true",
     "kotlin-language-version-configured": "true",
     "last.edited.regexp": "123450",
@@ -152,7 +147,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Gradle.BalatroTests.testJHZ7FPM">
+  <component name="RunManager" selected="Gradle.Balatro4j [test]">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.balatro.Main" />
       <module name="Balatro4j.main" />
@@ -166,28 +161,48 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BalatroTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="Balatro4j [nativeRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
+        <option name="scriptParameters" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;tests.BalatroTests&quot;" />
+            <option value="nativeRun" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="Balatro4j [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
     <configuration name="BalatroTests.testJHZ7FPM" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -204,30 +219,6 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;tests.BalatroTests.testJHZ7FPM&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="LockTests.testCache2D" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;tests.LockTests.testCache2D&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -264,11 +255,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.LockTests.testLegendaryLock" />
-        <item itemvalue="Gradle.LockTests.testCache2D" />
-        <item itemvalue="Gradle.BalatroTests.testJHZ7FPM" />
-        <item itemvalue="Gradle.BalatroTests" />
+        <item itemvalue="Gradle.Balatro4j [test]" />
+        <item itemvalue="Gradle.Balatro4j [nativeRun]" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Gradle.BalatroTests.testJHZ7FPM" />
+        <item itemvalue="Gradle.LockTests.testLegendaryLock" />
       </list>
     </recent_temporary>
   </component>

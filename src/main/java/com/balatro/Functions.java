@@ -46,12 +46,11 @@ public final class Functions implements Lock {
         seed = s;
         hashedSeed = pseudohash(s);
         this.params = params;
-        cache = new CacheMap();
+        cache = new Cache2D(maxAnte);
         this.lock = new LongArrayLock();
     }
 
     private int randintResample(String id, int max) {
-        System.out.println(id);
         var c = cache.get(id);
 
         if (c == null) {
@@ -69,8 +68,8 @@ public final class Functions implements Lock {
     private double getNode(Coordinate id) {
         var c = cache.get(id);
 
-        if (c == -1.0) {
-            c = pseudohash(id + seed);
+        if (c == 0.0) {
+            c = id.pseudohash(seed);
             cache.put(id, c);
         }
 

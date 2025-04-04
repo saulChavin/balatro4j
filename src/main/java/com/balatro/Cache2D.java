@@ -17,16 +17,6 @@ public final class Cache2D implements Cache {
         generatedFirstPack = false;
         specials = new double[3];
         nodes = new double[maxAnte][44];
-
-        for (int i = 0; i < maxAnte; i++) {
-            for (int j = 0; j < 44; j++) {
-                nodes[i][j] = -1;
-            }
-        }
-
-        for (int i = 0; i < 3; i++) {
-            specials[i] = -1;
-        }
     }
 
     @Override
@@ -53,7 +43,6 @@ public final class Cache2D implements Cache {
         if (resampleCache == null) {
             resampleCache = new LinkedHashMap<>();
         }
-        System.out.println("Resample cache put: " + id + " = " + value);
         resampleCache.put(id, value);
     }
 
