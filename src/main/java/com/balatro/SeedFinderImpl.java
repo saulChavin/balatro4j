@@ -1,6 +1,9 @@
 package com.balatro;
 
-import com.balatro.api.*;
+import com.balatro.api.Balatro;
+import com.balatro.api.Filter;
+import com.balatro.api.Run;
+import com.balatro.api.SeedFinder;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
@@ -10,7 +13,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
@@ -169,7 +173,7 @@ public final class SeedFinderImpl implements SeedFinder {
                         .analyze();
 
                 if (checkFilters(run)) {
-                    foundSeeds.add(seed);
+                    foundSeeds.add(new String(seed));
                 }
             } catch (Exception ex) {
                 Logger.getLogger(SeedFinderImpl.class.getName()).log(Level.SEVERE, null, ex);

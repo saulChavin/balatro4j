@@ -20,6 +20,10 @@ public interface Balatro {
 
     @Contract("_,_ -> new")
     static @NotNull Balatro builder(String seed, int maxAnte) {
+        return builder(seed.getBytes(), maxAnte);
+    }
+
+    static @NotNull Balatro builder(byte[] seed, int maxAnte) {
         List<Integer> cardsPerAnte = firstAnte;
 
         if (maxAnte > 1) {

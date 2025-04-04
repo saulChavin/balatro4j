@@ -1,8 +1,6 @@
 package com.balatro;
 
 
-import org.jetbrains.annotations.NotNull;
-
 public class Util {
 
     static double fract(double n) {
@@ -10,10 +8,19 @@ public class Util {
     }
 
 
-    static double pseudohash(@NotNull String s) {
+    static double pseudohash(byte[] a, byte[] b) {
+        byte[] c = new byte[a.length + b.length];
+
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+
+        return pseudohash(c);
+    }
+
+    static double pseudohash(byte[] s) {
         double num = 1;
-        for (int i = s.length(); i > 0; i--) {
-            num = fract(1.1239285023 / num * s.charAt(i - 1) * 3.141592653589793 + 3.141592653589793 * i);
+        for (int i = s.length; i > 0; i--) {
+            num = fract(1.1239285023 / num * s[i - 1] * 3.141592653589793 + 3.141592653589793 * i);
         }
         if (Double.isNaN(num)) return Double.NaN;
         return num;

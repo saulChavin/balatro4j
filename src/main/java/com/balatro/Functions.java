@@ -38,13 +38,17 @@ public final class Functions implements Lock {
 
     private final InstanceParams params;
     private final Cache cache;
-    public final String seed;
+    public final byte[] seed;
     public final double hashedSeed;
     private final Lock lock;
 
-    public Functions(String s, int maxAnte, InstanceParams params) {
-        seed = s;
-        hashedSeed = pseudohash(s);
+    public Functions(@NotNull String seed, int maxAnte, InstanceParams params) {
+        this(seed.getBytes(), maxAnte, params);
+    }
+
+    public Functions(byte[] seed, int maxAnte, InstanceParams params) {
+        this.seed = seed;
+        hashedSeed = pseudohash(seed);
         this.params = params;
         cache = new Cache2D(maxAnte);
         this.lock = new LongArrayLock();
@@ -54,7 +58,7 @@ public final class Functions implements Lock {
         var c = cache.get(id);
 
         if (c == null) {
-            c = pseudohash(id + seed);
+            c = pseudohash(id.getBytes(), seed);
             cache.put(id, c);
         }
 

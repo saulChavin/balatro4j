@@ -82,16 +82,16 @@ public final class BalatroImpl implements Balatro {
 
     static final char[] CHARACTERS = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
-    public static @NotNull String generateRandomSeed() {
-        char[] chars = new char[8];
+    public static byte[] generateRandomSeed() {
+        byte[] chars = new byte[8];
         for (int i = 0; i < 8; i++) {
             int index = ThreadLocalRandom.current().nextInt(CHARACTERS.length);
-            chars[i] = CHARACTERS[index];
+            chars[i] = (byte) CHARACTERS[index];
         }
-        return new String(chars);
+        return chars;
     }
 
-    private final String seed;
+    private final byte[] seed;
     private int maxAnte;
     private List<Integer> cardsPerAnte;
     private Deck deck;
@@ -111,7 +111,7 @@ public final class BalatroImpl implements Balatro {
     private boolean showman;
 
 
-    public BalatroImpl(String seed, int maxAnte, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version,
+    public BalatroImpl(byte[] seed, int maxAnte, List<Integer> cardsPerAnte, Deck deck, Stake stake, Version version,
                        @NotNull Set<PackKind> enabledPacks, boolean analyzeTags, boolean analyzeBoss, boolean analyzeShopQueue) {
         this.seed = seed;
         this.maxAnte = maxAnte;
@@ -131,11 +131,11 @@ public final class BalatroImpl implements Balatro {
 
     @Override
     public Run analyze() {
-        return performAnalysis(maxAnte, cardsPerAnte, deck, stake, version, seed);
+        return performAnalysis(seed, maxAnte, cardsPerAnte, deck, stake, version);
     }
 
     @Contract("_, _, _, _, _, _ -> new")
-    private @NotNull RunImpl performAnalysis(int maxAnte, @NotNull List<Integer> cardsPerAnte, Deck deck, Stake stake, @NotNull Version version, String seed) {
+    private @NotNull RunImpl performAnalysis(byte[] seed, int maxAnte, @NotNull List<Integer> cardsPerAnte, Deck deck, Stake stake, @NotNull Version version) {
         if (cardsPerAnte.size() != maxAnte) {
             throw new IllegalArgumentException("cardsPerAnte must have the same size as maxAnte (%s-%s)".formatted(maxAnte, cardsPerAnte.size()));
         }

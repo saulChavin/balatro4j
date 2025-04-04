@@ -24,7 +24,7 @@ public class Performance {
             System.out.println("-------------------------------------------------");
         }
 
-        var seeds = Balatro.search(10, 10_000_000)
+        var seeds = Balatro.search(10, 100_000_000)
                 .configuration(config -> config.maxAnte(1)
                         .disableShopQueue()
                         .disablePack(PackKind.Standard)
