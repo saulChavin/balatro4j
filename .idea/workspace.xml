@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="performance improvements">
+    <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="everything running smooth">
+      <change afterPath="$PROJECT_DIR$/src/test/java/tests/CollisionTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Cache2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Cache2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Coordinate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Coordinate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Functions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Functions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/BalatroImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,18 +43,6 @@
                 <item name="Balatro4j" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Balatro4j" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="publishing" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Balatro4j" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="verification" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -108,7 +96,7 @@
   "keyToString": {
     "Application.JokerFile.executor": "Run",
     "Application.Localization.executor": "Run",
-    "Application.Main.executor": "Profiler#1",
+    "Application.Main.executor": "Run",
     "Application.PreProcessedSeeds.executor": "Run",
     "DefaultHtmlFileTemplate": "HTML File",
     "Gradle.Balatro4j [:com.balatro.Main.main()].executor": "Debug",
@@ -126,6 +114,9 @@
     "Gradle.BalatroTests.testJHZ7FPM.executor": "Run",
     "Gradle.BalatroTests.testJokerFile.executor": "Run",
     "Gradle.BalatroTests.testParseSearch.executor": "Run",
+    "Gradle.CollisionTest.executor": "Run",
+    "Gradle.CollisionTest.testCollisions.executor": "Run",
+    "Gradle.CollitionTest.testCollitions.executor": "Run",
     "Gradle.LockTests.executor": "Run",
     "Gradle.LockTests.testCache2D.executor": "Run",
     "Gradle.LockTests.testLegendaryLock.executor": "Run",
@@ -147,7 +138,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Gradle.Balatro4j [test]">
+  <component name="RunManager" selected="Gradle.CollisionTest.testCollisions">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.balatro.Main" />
       <module name="Balatro4j.main" />
@@ -160,28 +151,6 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="Balatro4j [nativeRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="nativeRun" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
     </configuration>
     <configuration name="Balatro4j [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -205,7 +174,7 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="BalatroTests.testJHZ7FPM" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="CollisionTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -218,7 +187,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;tests.BalatroTests.testJHZ7FPM&quot;" />
+            <option value="&quot;tests.CollisionTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -229,7 +198,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="LockTests.testLegendaryLock" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="CollisionTest.testCollisions" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -242,7 +211,31 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;tests.LockTests.testLegendaryLock&quot;" />
+            <option value="&quot;tests.CollisionTest.testCollisions&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="CollitionTest.testCollitions" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;tests.CollitionTest.testCollitions&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -255,11 +248,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.Balatro4j [test]" />
-        <item itemvalue="Gradle.Balatro4j [nativeRun]" />
+        <item itemvalue="Gradle.CollisionTest.testCollisions" />
+        <item itemvalue="Gradle.CollisionTest" />
+        <item itemvalue="Gradle.CollitionTest.testCollitions" />
         <item itemvalue="Application.Main" />
-        <item itemvalue="Gradle.BalatroTests.testJHZ7FPM" />
-        <item itemvalue="Gradle.LockTests.testLegendaryLock" />
+        <item itemvalue="Gradle.Balatro4j [test]" />
       </list>
     </recent_temporary>
   </component>
@@ -320,6 +313,7 @@
       <workItem from="1743718525786" duration="3129000" />
       <workItem from="1743722515170" duration="3148000" />
       <workItem from="1743780672020" duration="2196000" />
+      <workItem from="1743795084069" duration="1200000" />
     </task>
     <task id="LOCAL-00001" summary="fixed serialization problems">
       <option name="closed" value="true" />
@@ -441,7 +435,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743721653522</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="everything running smooth">
+      <option name="closed" value="true" />
+      <created>1743786975328</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1743786975328</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -475,7 +477,8 @@
     <MESSAGE value="improved performance &amp; bug fixes" />
     <MESSAGE value="bug fixes" />
     <MESSAGE value="performance improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="performance improvements" />
+    <MESSAGE value="everything running smooth" />
+    <option name="LAST_COMMIT_MESSAGE" value="everything running smooth" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
 </project>

@@ -83,8 +83,8 @@ public final class BalatroImpl implements Balatro {
     static final String CHARACTERS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public static @NotNull String generateRandomSeed() {
-        StringBuilder result = new StringBuilder(7);
-        for (int i = 0; i < 7; i++) {
+        StringBuilder result = new StringBuilder(8);
+        for (int i = 0; i < 8; i++) {
             int index = ThreadLocalRandom.current().nextInt(CHARACTERS.length());
             result.append(CHARACTERS.charAt(index));
         }

@@ -4,6 +4,7 @@ import com.balatro.api.Balatro;
 import com.balatro.api.Run;
 import com.balatro.enums.Edition;
 import com.balatro.enums.PackKind;
+import com.balatro.enums.RareJoker;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -24,12 +25,13 @@ public class Main {
         }
 
         var seeds = Balatro.search(10, 10_000_000)
-                .configuration(config -> config.maxAnte(1).disableShopQueue()
-                        .disablePack(PackKind.Buffoon)
+                .configuration(config -> config.maxAnte(1)
                         .disablePack(PackKind.Standard)
                         .disablePack(PackKind.Celestial)
                 )
-                .filter(Perkeo.inPack(Edition.Negative).or(Triboulet.inPack(Edition.Negative)))
+                .filter(Perkeo.inPack(Edition.Negative).or(Triboulet.inPack(Edition.Negative))
+                        .and(RareJoker.Blueprint.inPack().or(RareJoker.Blueprint.inShop()))
+                        .and(RareJoker.Invisible_Joker.inPack().or(RareJoker.Invisible_Joker.inShop())))
                 .find();
 
         System.out.println("Seeds found: " + seeds.size());
