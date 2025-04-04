@@ -7,8 +7,10 @@ import com.balatro.cache.Data;
 import com.balatro.cache.JokerFile;
 import com.balatro.cache.PreProcessedSeeds;
 import com.balatro.cache.Query;
+import com.balatro.enums.Boss;
 import com.balatro.enums.Edition;
 import com.balatro.enums.Tag;
+import com.balatro.enums.Voucher;
 import com.balatro.structs.EditionItem;
 import com.balatro.structs.ItemPosition;
 import org.junit.jupiter.api.Assertions;
@@ -41,11 +43,11 @@ public class BalatroTests {
     }
 
     @Test
-    void testParseSearch(){
+    void testParseSearch() {
         PreProcessedSeeds.parseSearch(List.of(new Query("Triboulet"),
                 new Query("Sock and Buskin"),
                 new Query("Pareidolia")
-                ));
+        ));
     }
 
     @Test
@@ -59,18 +61,22 @@ public class BalatroTests {
     }
 
     @Test
-    void testJHZ7FPM(){
+    void testJHZ7FPM() {
         var ante = Balatro.builder("JHZ7FPM", 1)
                 .analyzeAll()
                 .getFirstAnte();
-
-        Assertions.assertTrue(ante.hasLegendary(Perkeo));
-        Assertions.assertTrue(ante.hasLegendary(Triboulet));
 
         var json = ante
                 .toJson();
 
         System.out.println(json);
+
+        Assertions.assertEquals(Voucher.Hieroglyph, ante.getVoucher());
+        Assertions.assertEquals(Boss.The_Head, ante.getBoss());
+        Assertions.assertTrue(ante.hasLegendary(Perkeo));
+        Assertions.assertTrue(ante.hasLegendary(Triboulet));
+
+
     }
 
     @Test
@@ -201,7 +207,7 @@ public class BalatroTests {
         Assertions.assertTrue(found);
     }
 
-   // @Test
+    // @Test
     @Order(Integer.MAX_VALUE)
     void seedSearchTest() {
         var seeds = Balatro.search(10, 1_000_000)

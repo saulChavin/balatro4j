@@ -118,8 +118,8 @@ public final class LuaRandom {
         return Double.longBitsToDouble(randdblmem(seed)) - 1.0;
     }
 
-    public static int randint(double seed, int min, int max) {
-        return (int) (random(seed) * (max - min + 1)) + min;
+    public static int randint(double seed, int max) {
+        return (int) (random(seed) * (max + 1));
     }
 
 }

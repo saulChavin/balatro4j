@@ -42,15 +42,16 @@ public final class Functions implements Lock {
     public final double hashedSeed;
     private final Lock lock;
 
-    public Functions(String s, InstanceParams params) {
+    public Functions(String s, int maxAnte, InstanceParams params) {
         seed = s;
         hashedSeed = pseudohash(s);
         this.params = params;
-        cache = new Cache();
+        cache = new CacheMap();
         this.lock = new LongArrayLock();
     }
 
-    private double getNode(String id) {
+    private int randintResample(String id, int max) {
+        System.out.println(id);
         var c = cache.get(id);
 
         if (c == null) {
@@ -62,18 +63,33 @@ public final class Functions implements Lock {
 
         cache.put(id, value);
 
+        return LuaRandom.randint((value + hashedSeed) / 2, max);
+    }
+
+    private double getNode(Coordinate id) {
+        var c = cache.get(id);
+
+        if (c == -1.0) {
+            c = pseudohash(id + seed);
+            cache.put(id, c);
+        }
+
+        var value = round13((c * 1.72431234 + 2.134453429141) % 1);
+
+        cache.put(id, value);
+
         return (value + hashedSeed) / 2;
     }
 
-    private double random(String id) {
-        return LuaRandom.random(getNode(id));
+    private double random(Coordinate coordinate) {
+        return LuaRandom.random(getNode(coordinate));
     }
 
-    private int randint(String ID, int max) {
-        return LuaRandom.randint(getNode(ID), 0, max);
+    private int randint(Coordinate c, int max) {
+        return LuaRandom.randint(getNode(c), max);
     }
 
-    public PackType randweightedchoice(String ID, PackType[] items) {
+    public PackType randweightedchoice(Coordinate ID, PackType[] items) {
         double poll = random(ID) * 22.42;
         int idx = 0;
         double weight = 0;
@@ -84,7 +100,7 @@ public final class Functions implements Lock {
         return items[idx - 1];
     }
 
-    public <T extends Item> T randchoice(String id, @NotNull T @NotNull [] items) {
+    public <T extends Item> T randchoice(Coordinate id, @NotNull T @NotNull [] items) {
         T item = items[randint(id, items.length - 1)];
 
         if (params.isShowman()) return item;
@@ -92,7 +108,7 @@ public final class Functions implements Lock {
         if (isLocked(item)) {
             int resample = 2;
             while (true) {
-                item = items[randint(id + "_resample" + resample, items.length - 1)];
+                item = items[randintResample(id.resample(resample), items.length - 1)];
                 resample++;
                 if (!isLocked(item) || resample > 1000) {
                     return item;
@@ -103,7 +119,7 @@ public final class Functions implements Lock {
     }
 
     // Card Generators
-    public Item nextTarot(String source, int ante, boolean soulable) {
+    public Item nextTarot(Coordinate source, int ante, boolean soulable) {
         if (soulable && (params.isShowman() || !isLocked(Specials.THE_SOUL)) && random(soul_TarotArr[ante]) > 0.997) {
             var data = nextJoker("sou", joker1SouArr, joker2SouArr, joker3SouArr, joker4SouArr, raritySouArr, editionSouArr, ante, true);
             lock(data.joker);
@@ -113,14 +129,14 @@ public final class Functions implements Lock {
         return randchoice(source, TAROTS);
     }
 
-    public Item nextPlanet(String source, int ante, boolean soulable) {
+    public Item nextPlanet(Coordinate source, int ante, boolean soulable) {
         if (soulable && (params.isShowman() || !isLocked(Specials.BLACKHOLE)) && random(soul_PlanetArr[ante]) > 0.997) {
             return Specials.BLACKHOLE;
         }
         return randchoice(source, PLANETS);
     }
 
-    public Item nextSpectral(String source, int ante, boolean soulable) {
+    public Item nextSpectral(Coordinate source, int ante, boolean soulable) {
         if (soulable) {
             Item forcedKey = null;
             Edition edition = null;
@@ -148,7 +164,7 @@ public final class Functions implements Lock {
         return randchoice(source, SPECTRALS);
     }
 
-    private Edition getEdition(int ante, String[] editionArr) {
+    private Edition getEdition(int ante, Coordinate[] editionArr) {
         // Get edition
         int editionRate = 1;
 
@@ -178,8 +194,8 @@ public final class Functions implements Lock {
     static Set<String> setB = Set.of("Ceremonial Dagger", "Ride the Bus", "Runner", "Constellation", "Green Joker", "Red Card", "Madness", "Square Joker", "Vampire", "Rocket", "Obelisk", "Lucky Cat", "Flash Card", "Spare Trousers", "Castle", "Wee Joker");
 
     public JokerData nextJoker(@NotNull String source,
-                               String[] joker1Arr, String[] joker2Arr, String[] joker3Arr, String[] joker4Arr,
-                               String[] rarityArr, String[] editionArr,
+                               Coordinate[] joker1Arr, Coordinate[] joker2Arr, Coordinate[] joker3Arr, Coordinate[] joker4Arr,
+                               Coordinate[] rarityArr, Coordinate[] editionArr,
                                int ante, boolean hasStickers) {
         // Get rarity
         int rarity = 1;
@@ -206,7 +222,7 @@ public final class Functions implements Lock {
         switch (rarity) {
             case 4 -> {
                 if (params.version > 10099) {
-                    joker = randchoice("Joker4", LEGENDARY_JOKERS);
+                    joker = randchoice(Joker4, LEGENDARY_JOKERS);
                 } else {
                     joker = randchoice(joker4Arr[ante], LEGENDARY_JOKERS);
                 }
@@ -395,53 +411,56 @@ public final class Functions implements Lock {
         return randweightedchoice(shop_packArr[ante], PACKS);
     }
 
-    public static String[] planetShoArr;
-    public static String[] planetpl1lArr;
-    public static String[] tarotShoArr;
-    public static String[] tarotAr1Arr;
-    public static String[] tarotarArr;
-    public static String[] spectralShoArr;
-    public static String[] spectralAr2Arr;
-    public static String[] spectralSpeArr;
-    public static String[] joker4ShoArr;
-    public static String[] joker4BufArr;
-    public static String[] joker4SouArr;
-    public static String[] joker3ShoArr;
-    public static String[] joker3BufArr;
-    public static String[] joker3SouArr;
-    public static String[] joker2ShoArr;
-    public static String[] joker2BufArr;
-    public static String[] joker2SouArr;
-    public static String[] joker1ShoArr;
-    public static String[] joker1BufArr;
-    public static String[] joker1SouArr;
+    public static Coordinate[] planetShoArr;
+    public static Coordinate[] planetpl1lArr;
+    public static Coordinate[] tarotShoArr;
+    public static Coordinate[] tarotAr1Arr;
+    public static Coordinate[] tarotarArr;
+    public static Coordinate[] spectralShoArr;
+    public static Coordinate[] spectralAr2Arr;
+    public static Coordinate[] spectralSpeArr;
+    public static Coordinate[] joker4ShoArr;
+    public static Coordinate[] joker4BufArr;
+    public static Coordinate[] joker4SouArr;
+    public static Coordinate[] joker3ShoArr;
+    public static Coordinate[] joker3BufArr;
+    public static Coordinate[] joker3SouArr;
+    public static Coordinate[] joker2ShoArr;
+    public static Coordinate[] joker2BufArr;
+    public static Coordinate[] joker2SouArr;
+    public static Coordinate[] joker1ShoArr;
+    public static Coordinate[] joker1BufArr;
+    public static Coordinate[] joker1SouArr;
 
-    public static String[] rarityShoArr;
-    public static String[] rarityBufArr;
-    public static String[] raritySouArr;
-    public static String[] editionShoArr;
-    public static String[] editionBufArr;
-    public static String[] editionSouArr;
+    public static Coordinate[] rarityShoArr;
+    public static Coordinate[] rarityBufArr;
+    public static Coordinate[] raritySouArr;
+    public static Coordinate[] editionShoArr;
+    public static Coordinate[] editionBufArr;
+    public static Coordinate[] editionSouArr;
 
-    public static String[] packssjrArr;
-    public static String[] etperpollArr;
-    public static String[] packetperArr;
-    public static String[] stake_shop_joker_eternalArr;
-    public static String[] ssjpArr;
-    public static String[] ssjrArr;
-    public static String[] shop_packArr;
-    public static String[] stdsetArr;
-    public static String[] standard_editionArr;
-    public static String[] enhancedstaArr;
-    public static String[] stdsealArr;
-    public static String[] stdsealtypeArr;
-    public static String[] frontstaArr;
-    public static String[] soul_SpectralArr;
-    public static String[] soul_PlanetArr;
-    public static String[] soul_TarotArr;
-    public static String[] cdtArr;
-    public static String[] VoucherArr;
-    public static String[] TagArr;
+    public static Coordinate[] packssjrArr;
+    public static Coordinate[] etperpollArr;
+    public static Coordinate[] packetperArr;
+    public static Coordinate[] stake_shop_joker_eternalArr;
+    public static Coordinate[] ssjpArr;
+    public static Coordinate[] ssjrArr;
+    public static Coordinate[] shop_packArr;
+    public static Coordinate[] stdsetArr;
+    public static Coordinate[] standard_editionArr;
+    public static Coordinate[] enhancedstaArr;
+    public static Coordinate[] stdsealArr;
+    public static Coordinate[] stdsealtypeArr;
+    public static Coordinate[] frontstaArr;
+    public static Coordinate[] soul_SpectralArr;
+    public static Coordinate[] soul_PlanetArr;
+    public static Coordinate[] soul_TarotArr;
+    public static Coordinate[] cdtArr;
+    public static Coordinate[] VoucherArr;
+    public static Coordinate[] TagArr;
+    public static Coordinate boss = new Coordinate("boss", -1, 0);
+    public static Coordinate omen_globe = new Coordinate("omen_globe", -1, 1);
+    public static Coordinate Joker4 = new Coordinate("Joker4", -1, 2);
 
     static {
         heat(30);
@@ -454,115 +473,107 @@ public final class Functions implements Lock {
         if (rarityShoArr != null && rarityShoArr.length == max) return;
         long init = System.currentTimeMillis();
 
-        rarityShoArr = new String[max];
-        rarityBufArr = new String[max];
-        raritySouArr = new String[max];
-        packssjrArr = new String[max];
-        etperpollArr = new String[max];
-        packetperArr = new String[max];
-        stake_shop_joker_eternalArr = new String[max];
-        ssjpArr = new String[max];
-        ssjrArr = new String[max];
-        shop_packArr = new String[max];
-        TagArr = new String[max];
-        VoucherArr = new String[max];
-        cdtArr = new String[max];
-        soul_PlanetArr = new String[max];
-        stdsetArr = new String[max];
-        standard_editionArr = new String[max];
-        enhancedstaArr = new String[max];
-        stdsealArr = new String[max];
-        stdsealtypeArr = new String[max];
-        frontstaArr = new String[max];
-        soul_SpectralArr = new String[max];
-        soul_TarotArr = new String[max];
-
-        planetShoArr = new String[max];
-        planetpl1lArr = new String[max];
-
-        tarotShoArr = new String[max];
-        tarotarArr = new String[max];
-        tarotAr1Arr = new String[max];
-
-        spectralShoArr = new String[max];
-        spectralAr2Arr = new String[max];
-        spectralSpeArr = new String[max];
-
-        joker4ShoArr = new String[max];
-        joker4BufArr = new String[max];
-        joker4SouArr = new String[max];
-
-        joker3ShoArr = new String[max];
-        joker3BufArr = new String[max];
-        joker3SouArr = new String[max];
-
-        joker2ShoArr = new String[max];
-        joker2BufArr = new String[max];
-        joker2SouArr = new String[max];
-
-        joker1ShoArr = new String[max];
-        joker1BufArr = new String[max];
-        joker1SouArr = new String[max];
-
-        editionShoArr = new String[max];
-        editionBufArr = new String[max];
-        editionSouArr = new String[max];
+        rarityShoArr = new Coordinate[max];
+        rarityBufArr = new Coordinate[max];
+        raritySouArr = new Coordinate[max];
+        packssjrArr = new Coordinate[max];
+        etperpollArr = new Coordinate[max];
+        packetperArr = new Coordinate[max];
+        stake_shop_joker_eternalArr = new Coordinate[max];
+        ssjpArr = new Coordinate[max];
+        ssjrArr = new Coordinate[max];
+        shop_packArr = new Coordinate[max];
+        TagArr = new Coordinate[max];
+        VoucherArr = new Coordinate[max];
+        cdtArr = new Coordinate[max];
+        soul_PlanetArr = new Coordinate[max];
+        stdsetArr = new Coordinate[max];
+        standard_editionArr = new Coordinate[max];
+        enhancedstaArr = new Coordinate[max];
+        stdsealArr = new Coordinate[max];
+        stdsealtypeArr = new Coordinate[max];
+        frontstaArr = new Coordinate[max];
+        soul_SpectralArr = new Coordinate[max];
+        soul_TarotArr = new Coordinate[max];
+        planetShoArr = new Coordinate[max];
+        planetpl1lArr = new Coordinate[max];
+        tarotShoArr = new Coordinate[max];
+        tarotarArr = new Coordinate[max];
+        tarotAr1Arr = new Coordinate[max];
+        spectralShoArr = new Coordinate[max];
+        spectralAr2Arr = new Coordinate[max];
+        spectralSpeArr = new Coordinate[max];
+        joker4ShoArr = new Coordinate[max];
+        joker4BufArr = new Coordinate[max];
+        joker4SouArr = new Coordinate[max];
+        joker3ShoArr = new Coordinate[max];
+        joker3BufArr = new Coordinate[max];
+        joker3SouArr = new Coordinate[max];
+        joker2ShoArr = new Coordinate[max];
+        joker2BufArr = new Coordinate[max];
+        joker2SouArr = new Coordinate[max];
+        joker1ShoArr = new Coordinate[max];
+        joker1BufArr = new Coordinate[max];
+        joker1SouArr = new Coordinate[max];
+        editionShoArr = new Coordinate[max];
+        editionBufArr = new Coordinate[max];
+        editionSouArr = new Coordinate[max];
 
         for (int ante = 0; ante < max; ante++) {
-            stdsetArr[ante] = "stdset" + ante;
-            standard_editionArr[ante] = "standard_edition" + ante;
-            enhancedstaArr[ante] = "Enhancedsta" + ante;
-            stdsealArr[ante] = "stdseal" + ante;
-            stdsealtypeArr[ante] = "stdsealtype" + ante;
-            frontstaArr[ante] = "frontsta" + ante;
-            soul_SpectralArr[ante] = "soul_Spectral" + ante;
-            soul_PlanetArr[ante] = "soul_Planet" + ante;
-            soul_TarotArr[ante] = "soul_Tarot" + ante;
-            cdtArr[ante] = "cdt" + ante;
-            VoucherArr[ante] = "Voucher" + ante;
-            TagArr[ante] = "Tag" + ante;
-            shop_packArr[ante] = "shop_pack" + ante;
-            ssjrArr[ante] = "ssjr" + ante;
-            ssjpArr[ante] = "ssjp" + ante;
-            stake_shop_joker_eternalArr[ante] = "stake_shop_joker_eternal" + ante;
-            packetperArr[ante] = "packetper" + ante;
-            etperpollArr[ante] = "etperpoll" + ante;
-            packssjrArr[ante] = "packssjr" + ante;
+            stdsetArr[ante] = new Coordinate("stdset" + ante, ante, 0);
+            standard_editionArr[ante] = new Coordinate("standard_edition" + ante, ante, 1);
+            enhancedstaArr[ante] = new Coordinate("Enhancedsta" + ante, ante, 2);
+            stdsealArr[ante] = new Coordinate("stdseal" + ante, ante, 3);
+            stdsealtypeArr[ante] = new Coordinate("stdsealtype" + ante, ante, 4);
+            frontstaArr[ante] = new Coordinate("frontsta" + ante, ante, 5);
+            soul_SpectralArr[ante] = new Coordinate("soul_Spectral" + ante, ante, 6);
+            soul_PlanetArr[ante] = new Coordinate("soul_Planet" + ante, ante, 7);
+            soul_TarotArr[ante] = new Coordinate("soul_Tarot" + ante, ante, 8);
+            cdtArr[ante] = new Coordinate("cdt" + ante, ante, 9);
+            VoucherArr[ante] = new Coordinate("Voucher" + ante, ante, 10);
+            TagArr[ante] = new Coordinate("Tag" + ante, ante, 11);
+            shop_packArr[ante] = new Coordinate("shop_pack" + ante, ante, 12);
+            ssjrArr[ante] = new Coordinate("ssjr" + ante, ante, 13);
+            ssjpArr[ante] = new Coordinate("ssjp" + ante, ante, 14);
+            stake_shop_joker_eternalArr[ante] = new Coordinate("stake_shop_joker_eternal" + ante, ante, 15);
+            packetperArr[ante] = new Coordinate("packetper" + ante, ante, 16);
+            etperpollArr[ante] = new Coordinate("etperpoll" + ante, ante, 17);
+            packssjrArr[ante] = new Coordinate("packssjr" + ante, ante, 18);
 
-            planetShoArr[ante] = "Planetsho" + ante;
-            planetpl1lArr[ante] = "Planetpl1" + ante;
+            planetShoArr[ante] = new Coordinate("Planetsho" + ante, ante, 19);
+            planetpl1lArr[ante] = new Coordinate("Planetpl1" + ante, ante, 20);
 
-            tarotShoArr[ante] = "Tarotsho" + ante;
-            tarotarArr[ante] = "Tarotar" + ante;
-            tarotAr1Arr[ante] = "Tarotar1" + ante;
+            tarotShoArr[ante] = new Coordinate("Tarotsho" + ante, ante, 21);
+            tarotarArr[ante] = new Coordinate("Tarotar" + ante, ante, 22);
+            tarotAr1Arr[ante] = new Coordinate("Tarotar1" + ante, ante, 23);
 
-            spectralShoArr[ante] = "Spectralsho" + ante;
-            spectralAr2Arr[ante] = "Spectralar2" + ante;
-            spectralSpeArr[ante] = "Spectralspe" + ante;
+            spectralShoArr[ante] = new Coordinate("Spectralsho" + ante, ante, 24);
+            spectralAr2Arr[ante] = new Coordinate("Spectralar2" + ante, ante, 25);
+            spectralSpeArr[ante] = new Coordinate("Spectralspe" + ante, ante, 26);
 
-            rarityShoArr[ante] = "rarity" + ante + "sho";
-            rarityBufArr[ante] = "rarity" + ante + "buf";
-            raritySouArr[ante] = "rarity" + ante + "sou";
+            rarityShoArr[ante] = new Coordinate("rarity" + ante + "sho", ante, 27);
+            rarityBufArr[ante] = new Coordinate("rarity" + ante + "buf", ante, 28);
+            raritySouArr[ante] = new Coordinate("rarity" + ante + "sou", ante, 29);
 
-            editionShoArr[ante] = "edisho" + ante;
-            editionBufArr[ante] = "edibuf" + ante;
-            editionSouArr[ante] = "edisou" + ante;
+            editionShoArr[ante] = new Coordinate("edisho" + ante, ante, 30);
+            editionBufArr[ante] = new Coordinate("edibuf" + ante, ante, 31);
+            editionSouArr[ante] = new Coordinate("edisou" + ante, ante, 32);
 
-            joker4ShoArr[ante] = "Joker4sho" + ante;
-            joker4BufArr[ante] = "Joker4buf" + ante;
-            joker4SouArr[ante] = "Joker4sou" + ante;
+            joker4ShoArr[ante] = new Coordinate("Joker4sho" + ante, ante, 33);
+            joker4BufArr[ante] = new Coordinate("Joker4buf" + ante, ante, 34);
+            joker4SouArr[ante] = new Coordinate("Joker4sou" + ante, ante, 35);
 
-            joker3ShoArr[ante] = "Joker3sho" + ante;
-            joker3BufArr[ante] = "Joker3buf" + ante;
-            joker3SouArr[ante] = "Joker3sou" + ante;
+            joker3ShoArr[ante] = new Coordinate("Joker3sho" + ante, ante, 36);
+            joker3BufArr[ante] = new Coordinate("Joker3buf" + ante, ante, 37);
+            joker3SouArr[ante] = new Coordinate("Joker3sou" + ante, ante, 38);
 
-            joker2ShoArr[ante] = "Joker2sho" + ante;
-            joker2BufArr[ante] = "Joker2buf" + ante;
-            joker2SouArr[ante] = "Joker2sou" + ante;
+            joker2ShoArr[ante] = new Coordinate("Joker2sho" + ante, ante, 39);
+            joker2BufArr[ante] = new Coordinate("Joker2buf" + ante, ante, 40);
+            joker2SouArr[ante] = new Coordinate("Joker2sou" + ante, ante, 41);
 
-            joker1ShoArr[ante] = "Joker1sho" + ante;
-            joker1BufArr[ante] = "Joker1buf" + ante;
-            joker1SouArr[ante] = "Joker1sou" + ante;
+            joker1ShoArr[ante] = new Coordinate("Joker1sho" + ante, ante, 42);
+            joker1BufArr[ante] = new Coordinate("Joker1buf" + ante, ante, 43);
+            joker1SouArr[ante] = new Coordinate("Joker1sou" + ante, ante, 44);
         }
 
         System.out.println("Heating to: " + max + " took: " + (System.currentTimeMillis() - init) + "ms");
@@ -614,7 +625,7 @@ public final class Functions implements Lock {
         var pack = new Item[size];
 
         for (int i = 0; i < size; i++) {
-            if (isVoucherActive(Voucher.Omen_Globe) && random("omen_globe") > 0.8) {
+            if (isVoucherActive(Voucher.Omen_Globe) && random(omen_globe) > 0.8) {
                 pack[i] = nextSpectral(spectralAr2Arr[ante], ante, true);
             } else {
                 pack[i] = nextTarot(tarotAr1Arr[ante], ante, true);
@@ -785,19 +796,19 @@ public final class Functions implements Lock {
             return nextBoss(ante);
         }
 
-        var chosenBoss = _randchoice("boss", bossPool);
+        var chosenBoss = _randchoice(boss, bossPool);
         lock(chosenBoss);
         return chosenBoss;
     }
 
     @SuppressWarnings("SameParameterValue")
-    private <T extends Item> T _randchoice(String id, @NotNull List<T> items) {
+    private <T extends Item> T _randchoice(Coordinate id, @NotNull List<T> items) {
         T item = items.get(randint(id, items.size() - 1));
 
         if (isLocked(item)) {
             int resample = 2;
             while (true) {
-                item = items.get(randint(id + "_resample" + resample, items.size() - 1));
+                item = items.get(randintResample(id.resample(resample), items.size() - 1));
                 resample++;
                 if (!isLocked(item) || resample > 1000) {
                     return item;

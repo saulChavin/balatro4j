@@ -1,35 +1,18 @@
 package com.balatro;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
+public interface Cache {
 
-final class Cache {
+    Double get(String id);
 
-    private final Map<String, Double> nodes;
-    private boolean generatedFirstPack;
+    void setGeneratedFirstPack(boolean generatedFirstPack);
 
-    public Cache() {
-        nodes = new LinkedHashMap<>();
-        generatedFirstPack = false;
-    }
+    boolean isGeneratedFirstPack();
 
-    public boolean isGeneratedFirstPack() {
-        return generatedFirstPack;
-    }
+    void put(String id, double value);
 
-    public void setGeneratedFirstPack(boolean generatedFirstPack) {
-        this.generatedFirstPack = generatedFirstPack;
-    }
+    double get(@NotNull Coordinate c);
 
-    public @Nullable Double get(String key) {
-        return nodes.get(key);
-    }
-
-    public void put(String key, Double value) {
-        nodes.put(key, value);
-    }
+    void put(@NotNull Coordinate c, double value);
 }
