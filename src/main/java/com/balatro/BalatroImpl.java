@@ -80,15 +80,15 @@ public final class BalatroImpl implements Balatro {
             Voucher.Tarot_Tycoon
     );
 
-    static final String CHARACTERS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static final char[] CHARACTERS = {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
     public static @NotNull String generateRandomSeed() {
-        StringBuilder result = new StringBuilder(8);
+        char[] chars = new char[8];
         for (int i = 0; i < 8; i++) {
-            int index = ThreadLocalRandom.current().nextInt(CHARACTERS.length());
-            result.append(CHARACTERS.charAt(index));
+            int index = ThreadLocalRandom.current().nextInt(CHARACTERS.length);
+            chars[i] = CHARACTERS[index];
         }
-        return result.toString();
+        return new String(chars);
     }
 
     private final String seed;
@@ -274,7 +274,7 @@ public final class BalatroImpl implements Balatro {
             }
         }
 
-        return new RunImpl(seed, Collections.unmodifiableList(antes));
+        return new RunImpl(new String(seed), Collections.unmodifiableList(antes));
     }
 
     private static @NotNull Edition getSticker(@NotNull JokerData joker, Stake stake) {
