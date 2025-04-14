@@ -99,7 +99,7 @@ public class BalatroTests {
         List<Run> runs = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            runs.add(Balatro.builder("123456" + i, 8)
+            runs.add(Balatro.builder("1234567" + i, 8)
                     .analyzeAll());
         }
 

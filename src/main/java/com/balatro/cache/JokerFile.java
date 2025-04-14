@@ -48,13 +48,13 @@ public class JokerFile {
 
     public static @NotNull List<Data> read(@NotNull InputStream bis) throws IOException {
         List<Data> dataList = new ArrayList<>();
-        byte[] seedBytes = new byte[7];
+        byte[] seedBytes = new byte[8];
         byte[] intBytes = new byte[Integer.BYTES];
         ByteBuffer intBuffer = ByteBuffer.allocate(Integer.BYTES);
 
         while (bis.read(seedBytes) != -1) {
             String seed = new String(seedBytes);
-            if (!seed.matches("[a-zA-Z0-9]{7}")) {
+            if (!seed.matches("[a-zA-Z0-9]{8}")) {
                 throw new IllegalStateException("Invalid seed: '" + seed + "'");
             }
 

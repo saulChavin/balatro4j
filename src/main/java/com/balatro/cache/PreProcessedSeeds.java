@@ -8,12 +8,16 @@ import com.balatro.structs.EditionItem;
 import com.balatro.structs.ItemPosition;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.balatro.enums.LegendaryJoker.*;
@@ -29,6 +33,8 @@ public class PreProcessedSeeds {
 
         var result = p.search(List.of(Perkeo, Triboulet, RareJoker.Blueprint, RareJoker.Brainstorm,
                 UnCommonJoker.Sock_and_Buskin, CommonJoker.Hanging_Chad, RareJoker.Invisible_Joker));
+
+        System.out.println("Found " + result.size() + " results");
 
         for (QueryResult queryResult : result) {
             System.out.println(queryResult.seed() + " " + queryResult.score());
