@@ -33,9 +33,30 @@ public class Util {
     public static double round13(double x) {
         double tentative = Math.floor(x * inv_prec) / inv_prec;
         double truncated = ((x * two_inv_prec) % 1.0) * five_inv_prec;
-        if (tentative != x && truncated % 1.0 >= 0.5 && tentative != Math.nextAfter(x, 1)) {
+        if (tentative != x && truncated % 1.0 >= 0.5 && tentative != nextAfter(x, 1)) {
             return (Math.floor(x * inv_prec) + 1) / inv_prec;
         }
         return tentative;
+    }
+
+    public static double nextAfter(double start, double direction) {
+        if (direction < start) {
+            if (start == 0.0) {
+                // +-0.0
+                return -Double.MIN_VALUE;
+            }
+            final long bits = Double.doubleToRawLongBits(start);
+            return Double.longBitsToDouble(bits + ((bits > 0) ? -1 : 1));
+        } else if (direction > start) {
+            // Going towards +Infinity.
+            // +0.0 to get rid of eventual -0.0
+            final long bits = Double.doubleToRawLongBits(start + 0.0f);
+            return Double.longBitsToDouble(bits + (bits >= 0 ? 1 : -1));
+        } else if (start == direction) {
+            return direction;
+        } else {
+            // Returning a NaN derived from the input NaN(s).
+            return start + direction;
+        }
     }
 }
