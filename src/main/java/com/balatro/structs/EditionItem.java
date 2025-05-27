@@ -33,6 +33,20 @@ public record EditionItem(Item item, @NotNull Edition edition) implements Item {
     }
 
     @JsonIgnore
+    public boolean isTarot() {
+        return item instanceof Tarot;
+    }
+
+    @JsonIgnore
+    public boolean isSpectral() {
+        return item instanceof Spectral;
+    }
+
+    public boolean is(Item item) {
+        return this.item.equals(item);
+    }
+
+    @JsonIgnore
     public boolean isLegendary() {
         return item instanceof LegendaryJoker;
     }
@@ -91,7 +105,13 @@ public record EditionItem(Item item, @NotNull Edition edition) implements Item {
 
     @Contract(value = " -> new", pure = true)
     public @NotNull JokerData jokerData() {
-        return new JokerData(item, 0, edition, null);
+        int rarity = 0;
+
+        if (item instanceof Joker joker) {
+            rarity = joker.getType().getRarity();
+        }
+
+        return new JokerData(item, rarity, edition, null);
     }
 
     @Override

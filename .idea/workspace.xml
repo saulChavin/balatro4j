@@ -5,10 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b0a0b0fd-d34c-44ab-820d-a89287e66fd0" name="Changes" comment="improvements">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/balatro/AnteScorer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/balatro/AnteScorerImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Rebuild.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/tests/ScoringTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/JokerFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/JokerFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/AnteImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/AnteImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/Ante.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/Ante.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/api/Run.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/api/Run.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/Data.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/Data.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/cache/PreProcessedSeeds.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/cache/PreProcessedSeeds.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/BalatroTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/enums/Edition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/enums/Edition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/enums/JokerType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/enums/JokerType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/enums/PackType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/enums/PackType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/structs/EditionItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/structs/EditionItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/balatro/structs/PackInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/balatro/structs/PackInfo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +57,7 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Balatro4j" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
+                <item name="publishing" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -77,7 +92,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;git@github.com:alex-cova/balatro4j.git&quot;,
-    &quot;accountId&quot;: &quot;43cd3933-db42-424b-a37e-cdd2bd47c6f1&quot;
+    &quot;accountId&quot;: &quot;8baec085-ddcc-49f3-86b0-1e45307b1d3b&quot;
   }
 }</component>
   <component name="KubernetesApiPersistence">{}</component>
@@ -97,80 +112,58 @@
     <option name="showModules" value="false" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.JokerFile.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Localization.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Performance.executor&quot;: &quot;Profiler#1&quot;,
-    &quot;Application.PreProcessedSeeds.executor&quot;: &quot;Run&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Gradle.Balatro4j [:com.balatro.Main.main()].executor&quot;: &quot;Debug&quot;,
-    &quot;Gradle.Balatro4j [check].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Balatro4j [nativeCompile].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Balatro4j [nativeRun].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Balatro4j [publishToMavenLocal].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Balatro4j [test].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BalatroTests.apiTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BalatroTests.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BalatroTests.test33JCJSA.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BalatroTests.testComplexQuery.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BalatroTests.testFilters.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BalatroTests.testIGSPUNF.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BalatroTests.testJHZ7FPM.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BalatroTests.testJokerFile.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.BalatroTests.testParseSearch.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.CollisionTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.CollisionTest.testCollisions.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.CollitionTest.testCollitions.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LockTests.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LockTests.testCache2D.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.LockTests.testLegendaryLock.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last.edited.regexp&quot;: &quot;123450&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.JokerFile.executor": "Run",
+    "Application.Localization.executor": "Run",
+    "Application.Main.executor": "Run",
+    "Application.Performance.executor": "Profiler#1",
+    "Application.PreProcessedSeeds.executor": "Run",
+    "Application.Rebuild.executor": "Run",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Gradle.Balatro4j [:com.balatro.Main.main()].executor": "Debug",
+    "Gradle.Balatro4j [check].executor": "Run",
+    "Gradle.Balatro4j [nativeCompile].executor": "Run",
+    "Gradle.Balatro4j [nativeRun].executor": "Run",
+    "Gradle.Balatro4j [publishToMavenLocal].executor": "Run",
+    "Gradle.Balatro4j [test].executor": "Run",
+    "Gradle.BalatroTests.apiTest.executor": "Run",
+    "Gradle.BalatroTests.executor": "Run",
+    "Gradle.BalatroTests.test33JCJSA.executor": "Run",
+    "Gradle.BalatroTests.testComplexQuery.executor": "Run",
+    "Gradle.BalatroTests.testFilters.executor": "Run",
+    "Gradle.BalatroTests.testIGSPUNF.executor": "Run",
+    "Gradle.BalatroTests.testJHZ7FPM.executor": "Run",
+    "Gradle.BalatroTests.testJokerFile.executor": "Run",
+    "Gradle.BalatroTests.testParseSearch.executor": "Run",
+    "Gradle.CollisionTest.executor": "Run",
+    "Gradle.CollisionTest.testCollisions.executor": "Run",
+    "Gradle.CollitionTest.testCollitions.executor": "Run",
+    "Gradle.LockTests.executor": "Run",
+    "Gradle.LockTests.testCache2D.executor": "Run",
+    "Gradle.LockTests.testLegendaryLock.executor": "Run",
+    "Gradle.ScoringTest.testScoring.executor": "Run",
+    "Gradle.balatro4j [publishToMavenLocal].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "go.import.settings.migrated": "true",
+    "kotlin-language-version-configured": "true",
+    "last.edited.regexp": "123450",
+    "last_opened_file_path": "/Users/alex/Developer/balatro4j",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected="Application.PreProcessedSeeds">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.balatro.Main" />
-      <module name="Balatro4j.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.balatro.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Performance" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.balatro.Performance" />
-      <module name="Balatro4j.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.balatro.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+}]]></component>
+  <component name="RunManager" selected="Application.Rebuild">
     <configuration name="PreProcessedSeeds" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.balatro.cache.PreProcessedSeeds" />
       <module name="Balatro4j.main" />
@@ -184,27 +177,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Balatro4j [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
+    <configuration name="Rebuild" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="tests.Rebuild" />
+      <module name="Balatro4j.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration name="BalatroTests.testJokerFile" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -230,21 +214,67 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="ScoringTest.testScoring" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;tests.ScoringTest.testScoring&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="balatro4j [publishToMavenLocal]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="publishToMavenLocal" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Rebuild" />
+        <item itemvalue="Gradle.ScoringTest.testScoring" />
         <item itemvalue="Application.PreProcessedSeeds" />
+        <item itemvalue="Gradle.balatro4j [publishToMavenLocal]" />
         <item itemvalue="Gradle.BalatroTests.testJokerFile" />
-        <item itemvalue="Application.Performance" />
-        <item itemvalue="Gradle.Balatro4j [test]" />
-        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.129" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.129" />
       </set>
     </attachedChunks>
   </component>
@@ -305,6 +335,13 @@
       <workItem from="1744049650180" duration="119000" />
       <workItem from="1744605691640" duration="754000" />
       <workItem from="1744666430983" duration="1179000" />
+      <workItem from="1747934583990" duration="132000" />
+      <workItem from="1747934735072" duration="309000" />
+      <workItem from="1747935389713" duration="1888000" />
+      <workItem from="1748026069714" duration="241000" />
+      <workItem from="1748026900286" duration="306000" />
+      <workItem from="1748289594803" duration="3091000" />
+      <workItem from="1748300248043" duration="3611000" />
     </task>
     <task id="LOCAL-00001" summary="fixed serialization problems">
       <option name="closed" value="true" />

@@ -87,5 +87,12 @@ public enum PackType implements Item {
         return this == Spectral_Pack || this == Jumbo_Spectral_Pack || this == Mega_Spectral_Pack;
     }
 
+    public boolean isStandard() {
+        return this == Standard_Pack || this == Jumbo_Standard_Pack || this == Mega_Standard_Pack;
+    }
+
+    public boolean isArcana() {
+        return this == Arcana_Pack || this == Jumbo_Arcana_Pack || this == Mega_Arcana_Pack;
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.balatro.structs;
 
+import com.balatro.api.Item;
 import com.balatro.enums.Edition;
 import com.balatro.enums.PackKind;
 import com.balatro.enums.PackType;
@@ -31,6 +32,10 @@ public class PackInfo {
 
     public PackKind getKind() {
         return type.getKind();
+    }
+
+    public boolean containsOption(@NotNull Item item) {
+        return containsOption(item.getName());
     }
 
     public boolean containsOption(String name) {

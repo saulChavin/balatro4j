@@ -28,8 +28,7 @@ public class PreProcessedSeeds {
 
     public static void main(String[] args) {
         var p = new PreProcessedSeeds();
-        p.start(10, 100_000_000);
-
+        p.start(Runtime.getRuntime().availableProcessors(), 100_000);
 
         var result = p.search(List.of(Perkeo, Triboulet, RareJoker.Blueprint, RareJoker.Brainstorm,
                 UnCommonJoker.Sock_and_Buskin, CommonJoker.Hanging_Chad, RareJoker.Invisible_Joker));

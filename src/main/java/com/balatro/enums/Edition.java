@@ -2,6 +2,7 @@ package com.balatro.enums;
 
 import com.balatro.api.Item;
 import com.balatro.jackson.ItemSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(using = ItemSerializer.class)
@@ -28,6 +29,17 @@ public enum Edition implements Item {
     @Override
     public int getYIndex() {
         return -1;
+    }
+
+    @JsonIgnore
+    public float getMultiplier() {
+        return switch (this) {
+            case Negative -> 2.0f;
+            case Polychrome -> 1.5f;
+            case Holographic -> 1.2f;
+            case Foil -> 1.1f;
+            default -> 0; // No Edition or other cases
+        };
     }
 
 }

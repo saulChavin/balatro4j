@@ -41,9 +41,6 @@ public interface Ante extends CommonQueries {
     Map<String, JokerData> getLegendaryJokers();
 
     @JsonIgnore
-    Double getScore();
-
-    @JsonIgnore
     int getBufferedJokerCount();
 
     @JsonIgnore

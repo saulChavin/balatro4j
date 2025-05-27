@@ -12,15 +12,15 @@ plugins {
 group = "com.balatro"
 version = "1.0-SNAPSHOT"
 
-java.sourceCompatibility = JavaVersion.VERSION_23
-java.targetCompatibility = JavaVersion.VERSION_23
+java.sourceCompatibility = JavaVersion.VERSION_21
+java.targetCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compileOnly("org.jetbrains:annotations:26.0.1")
+    compileOnly("org.jetbrains:annotations:26.0.2")
     implementation("com.fasterxml.jackson.core:jackson-core:2.18.2")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
@@ -52,7 +52,7 @@ tasks.withType<Test> {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(23))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 

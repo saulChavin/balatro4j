@@ -1,6 +1,8 @@
 package com.balatro.api;
 
 
+import com.balatro.AnteScorerImpl;
+import com.balatro.enums.Edition;
 import com.balatro.enums.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -47,14 +49,8 @@ public interface Run extends Queryable {
     }
 
     @JsonIgnore
-    default double getScore() {
-        var score = 0.0;
-
-        for (var ante : antes()) {
-            score += ante.getScore();
-        }
-
-        return score;
+    default float getScore() {
+        return new AnteScorerImpl().calculate(this);
     }
 
     @JsonIgnore
@@ -161,5 +157,15 @@ public interface Run extends Queryable {
         return antes().stream()
                 .mapToInt(Ante::getPlanetPackCount)
                 .sum();
+    }
+
+    @JsonIgnore
+    default boolean hasJoker(Joker joker) {
+        return hasInBuffonPack(joker) || hasInShop(joker);
+    }
+
+    @JsonIgnore
+    default boolean hasJoker(Joker joker, int maxShopIndex) {
+        return hasInBuffonPack(joker) || hasInShop(joker, maxShopIndex, Edition.NoEdition);
     }
 }

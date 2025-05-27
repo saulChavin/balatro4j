@@ -14,13 +14,17 @@ import java.util.List;
 public final class Data {
 
     private final String seed;
-    private final int score;
+    private int score;
     private final int[] data;
 
     public Data(String seed, int score, int[] data) {
         this.seed = seed;
         this.score = score;
         this.data = data;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public Data(@NotNull Run run) {
@@ -76,7 +80,6 @@ public final class Data {
     public int getScore() {
         return score;
     }
-
 
     public int[] getData() {
         return data;
