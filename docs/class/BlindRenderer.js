@@ -5,7 +5,7 @@ export class BlindRenderer extends CardRenderer {
 	// const tagWidth = 204 / 6;
 	// const tagHeight = 170 / 5;
 	constructor() {
-		super("../public/BlindChips.png");
+		super("public/BlindChips.png");
 		this.gridWidth = 21;
 		this.gridHeight = 31;
 		this.imageWidth = 714;

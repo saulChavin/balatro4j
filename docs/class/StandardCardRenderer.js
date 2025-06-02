@@ -9,7 +9,7 @@ const editionMap = {
 
 function overlayEdition(ctx, canvas, index) {
 	const editionImg = new Image();
-	editionImg.src = '../public/Editions.png';
+	editionImg.src = 'public/Editions.png';
 	editionImg.onload = function () {
 		const editionWidth = editionImg.width / 5;
 		const editionHeight = editionImg.height;
@@ -32,7 +32,7 @@ export class StandardCardRenderer extends CardRenderer {
 	deckWidth;
 	deckHeight;
 	constructor() {
-		super("../public/Enhancers.png");
+		super("public/Enhancers.png");
 		this.imageWidth = 497;//enhancer image size
 		this.imageHeight = 475;//enhancer image size
 		this.deckWidth = 923;//deck image size
@@ -57,7 +57,7 @@ export class StandardCardRenderer extends CardRenderer {
 		const ctx = canvas.getContext('2d');
 
 		const deckImg = new Image();
-		deckImg.src = "../public/8BitDeck.png";
+		deckImg.src = "public/8BitDeck.png";
 
 		deckImg.onload = () => {
 			if (modifier !== "Stone") {
@@ -86,7 +86,7 @@ export class StandardCardRenderer extends CardRenderer {
 			// Draw seal
 			if (seal) {
 				const sealImg = new Image();
-				sealImg.src = "../public/Enhancers.png";
+				sealImg.src = "public/Enhancers.png";
 				sealImg.onload = () => {
 					// console.log('seal', seal);
 					const sealPos = this.getSealPosition(seal);

@@ -5,7 +5,7 @@ export class TagRenderer extends CardRenderer {
 	// const tagWidth = 204 / 6;
 	// const tagHeight = 170 / 5;
 	constructor() {
-		super("../public/tags.png");
+		super("public/tags.png");
 		this.gridWidth = 6;
 		this.gridHeight = 5;
 		this.imageWidth = 204;
