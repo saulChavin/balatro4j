@@ -3,7 +3,7 @@ import voucherData from '../data/voucherData.js';
 
 export class VoucherRenderer extends CardRenderer {
 	constructor() {
-		super("../public/Vouchers_Sprite.png");
+		super("public/Vouchers_Sprite.png");
 		this.imageHeight = 380;
 		this.imageWidth = 639;
 		this.gridWidth = 9;

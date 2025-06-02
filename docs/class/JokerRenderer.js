@@ -3,7 +3,7 @@ import jokerData from "../data/jokerData.js";
 
 export class JokerRenderer extends CardRenderer {
 	constructor() {
-		super("../public/Jokers_Sprite.png");
+		super("public/Jokers_Sprite.png");
 	}
 
 	//add behaviour of the createCard method to render jokers in the sprite sheet
