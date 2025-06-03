@@ -53,6 +53,13 @@ section#run {
 	flex: 1 1 auto;
 }
 
+@media screen and (max-width: 768px) {
+	section#run {
+		max-width: 100%;
+	}
+	
+}
+
 .run-container,
 .cards-container {
 	flex: 1 1 auto;
@@ -150,6 +157,15 @@ section#run {
 	/* max-width: 300px; */
 	border-radius: 6px;
 	margin-left: auto;
+	min-width: 60%;
+}
+
+.second-row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	overflow: hidden;
 }
 
 .packs {
@@ -164,9 +180,8 @@ section#run {
 	overflow: auto;
 	width: 100%;
 	gap: 8px;
-	max-width: 300px;
-	margin-left: auto;
-	flex: 1;
+	/* margin-left: auto; */
+	flex: 1 20% auto;
 	/* float: left; */
 }
 
@@ -197,6 +212,7 @@ section#run {
 	box-sizing: border;
 	border: 8px solid #364b50;
 	padding: 18px 8px;
+	min-width: 25%;
 }
 
 footer {

@@ -211,12 +211,14 @@ async function analyzeSeed(seed) {
 
 		anteElement.appendChild(firstRow);
 
+		const secondRow = document.createElement('div');
+		secondRow.className = "second-row"
 		//Render Vouchers
 		const voucherElement = document.createElement('div');
 		voucherElement.className = 'voucher';
 		const voucherCard = voucherRenderer.createCard(ante.voucher);
 		voucherElement.appendChild(voucherCard);
-		anteElement.appendChild(voucherElement);
+		secondRow.appendChild(voucherElement);
 
 		//Render Packs
 		const packs = ante.packs;
@@ -242,7 +244,9 @@ async function analyzeSeed(seed) {
 			});
 			// packsElement.appendChild(packElement);
 		});
-		anteElement.appendChild(packsElement);
+		secondRow.appendChild(packsElement);
+
+		anteElement.appendChild(secondRow);
 
 		// anteElement.appendChild(packsElement);
 		runContainer.appendChild(anteElement);
