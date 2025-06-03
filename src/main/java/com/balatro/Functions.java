@@ -103,24 +103,6 @@ public final class Functions implements Lock {
         return items[idx - 1];
     }
 
-    public <T extends Item> T randchoice(Coordinate id, @NotNull T @NotNull [] items) {
-        T item = items[randint(id, items.length - 1)];
-
-        if (params.isShowman()) return item;
-
-        if (isLocked(item)) {
-            int resample = 2;
-            while (true) {
-                item = items[randintResample(id.resample(resample), items.length - 1)];
-                resample++;
-                if (!isLocked(item) || resample > 1000) {
-                    return item;
-                }
-            }
-        }
-        return item;
-    }
-
     // Card Generators
     public Item nextTarot(Coordinate source, int ante, boolean soulable) {
         if (soulable && (params.isShowman() || !isLocked(Specials.THE_SOUL)) && random(soul_TarotArr[ante]) > 0.997) {
@@ -819,6 +801,24 @@ public final class Functions implements Lock {
             }
         }
 
+        return item;
+    }
+
+    public <T extends Item> T randchoice(Coordinate id, @NotNull T @NotNull [] items) {
+        T item = items[randint(id, items.length - 1)];
+
+        if (params.isShowman()) return item;
+
+        if (isLocked(item)) {
+            int resample = 2;
+            while (true) {
+                item = items[randintResample(id.resample(resample), items.length - 1)];
+                resample++;
+                if (!isLocked(item) || resample > 1000) {
+                    return item;
+                }
+            }
+        }
         return item;
     }
 

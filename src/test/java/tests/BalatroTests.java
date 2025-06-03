@@ -93,6 +93,16 @@ public class BalatroTests {
         seeds.forEach(System.out::println);
     }
 
+    @Test
+    void testNALDC19B(){
+        var json = Balatro.builder("NALDC19B", 8)
+                .showman(true)
+                .analyzeAll()
+                .toJson();
+
+        System.out.println(json);
+    }
+
 
     @Test
     void testJokerFile() throws IOException {
