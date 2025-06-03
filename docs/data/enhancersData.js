@@ -6,5 +6,6 @@ export default new Map([
 	['Steel', { x: 6, y: 1 }],
 	['Stone', { x: 5, y: 0 }],
 	['Gold', { x: 6, y: 0 }],
-	['Lucky', { x: 4, y: 1 }]
+	['Lucky', { x: 4, y: 1 }],
+	['Soul', { x: 0, y: 1 }],
 ]);
