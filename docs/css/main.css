@@ -57,7 +57,7 @@ section#run {
 	section#run {
 		max-width: 100%;
 	}
-	
+
 }
 
 .run-container,
@@ -226,4 +226,31 @@ footer {
 
 .scrolled {
 	background-color: #182325;
+}
+
+.legendary-wrapper {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.show-legendary-button {
+	position: absolute;
+	bottom: 0;
+	 left: 50%; /* Position at 50% from the left edge */
+    transform: translateX(-50%) translateY(8px); /* Center horizontally and keep your original Y translation */
+	background-color: #c14b44;
+	color: #FFF;
+	border-radius: 6px;
+	padding: 4px 8px;
+	cursor: pointer;
+	transition: opacity 0.3s, transform 0.3s;
+	opacity: 0;
+	z-index: 99;
+}
+
+.legendary-wrapper:hover .show-legendary-button {
+	opacity: 1;
+	transform: translateX(-50%) translateY(18px); /* Keep horizontal centering while moving down */
 }
