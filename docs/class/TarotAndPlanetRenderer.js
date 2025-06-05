@@ -1,6 +1,7 @@
 import CardRenderer from './CardRenderer.js';
 import tarotsAndPlanetsData from '../data/tarotsAndPlanetsData.js';
 import enhancersData from '../data/enhancersData.js';
+import { JokerRenderer } from './JokerRenderer.js';
 
 const LEGENDARIES_NAMES = [
 	"Perkeo",
@@ -64,12 +65,17 @@ export class TarotAndPlanetRenderer extends CardRenderer {
 			card.appendChild(canvas);
 			//show legendary button
 			const showLegendaryButton = document.createElement('button');
-			showLegendaryButton.className = 'show-legendary-button';
+			showLegendaryButton.className = 'show-legendary-button copy-button';
 			showLegendaryButton.innerText = 'USE';
 			showLegendaryButton.addEventListener('click', () => {
-				const legendaryCard = this.createCardWithCoordenates({ x: tarotOrPlanet.x, y: tarotOrPlanet.y });
-				legendaryCard.classList.add('legendary');
-				card.appendChild(legendaryCard);
+				const jokerRenderer = new JokerRenderer();
+				const legendaryCard = jokerRenderer.createCard(name);
+				legendaryCard.classList.add('legendary-revealed');
+				legendaryWrapper.removeChild(card);
+				legendaryWrapper.appendChild(legendaryCard);
+				// const legendaryCard = this.createCardWithCoordenates({ x: tarotOrPlanet.x, y: tarotOrPlanet.y });
+				// legendaryCard.classList.add('legendary');
+				// card.appendChild(legendaryCard);
 				showLegendaryButton.remove();
 			});
 
@@ -154,8 +160,9 @@ export class TarotAndPlanetRenderer extends CardRenderer {
 				resetAnimation();
 			});
 
-			card.addEventListener('mouseenter', () => {
-				showLegendaryButton.classList.add('hovered');
+			card.addEventListener('click', () => {
+				showLegendaryButton.classList.toggle('active');
+				card.classList.toggle('active');
 			})
 
 			return legendaryWrapper;
