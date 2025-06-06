@@ -1,4 +1,4 @@
-class LuaRandom {
+export class LuaRandom {
     static MAX_UINT64 = 9223372036854775807n; // Long.MAX_VALUE
 
     static main() {
