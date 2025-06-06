@@ -68,7 +68,7 @@ export class Lock {
     }
 
     initUnlocks(ante, freshProfile) {
-        if (ante == 2) {
+        if (ante === 2) {
             this.unlock([
                 "The Mouth", "The Fish", "The Wall", "The House", "The Mark",
                 "The Wheel", "The Arm", "The Water", "The Needle", "The Flint"
