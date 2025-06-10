@@ -1,4 +1,3 @@
-import { ItemImpl } from "../interface/Item";
 
 const Seal = {
     // Base State
