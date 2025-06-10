@@ -1,5 +1,3 @@
-import { ItemImpl } from "../interface/Item";
-import { Filter } from "../interface/Filter";
 
 const Voucher = {
     // Sales & Discounts
