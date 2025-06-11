@@ -1,4 +1,4 @@
-export const CommonJoker = {
+const CommonJoker = {
     JOKER: "Joker",
     GREEDY_JOKER: "Greedy Joker",
     LUSTY_JOKER: "Lusty Joker",

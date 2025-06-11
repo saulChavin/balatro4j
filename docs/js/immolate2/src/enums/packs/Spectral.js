@@ -24,8 +24,7 @@ const Spectral = {
     TRANCE: "Trance",
 
     // System
-    RETRY: "RETRY",
-    RETRY2: "RETRY"
+    RETRY: "RETRY"
 }
 
 export default Object.freeze(Spectral);
