@@ -1,11 +1,11 @@
 import { JokerType } from "../enum/JokerType.js";
 
 export class Joker {
-	constructor(type, name, eternal = false, prehisable = false, rental = false) {
+	constructor(type, name, eternal = false, perishable = false, rental = false) {
 		this.type = type;
 		this.name = name;
 		this.eternal = eternal;
-		this.prehisable = prehisable;
+		this.perishable = perishable;
 		this.rental = rental;
 	}
 
@@ -37,8 +37,8 @@ export class Joker {
 		return this.eternal;
 	}
 
-	isPrehisable() {
-		return this.prehisable;
+	isPerishable() {
+		return this.perishable;
 	}
 
 	isRental() {
