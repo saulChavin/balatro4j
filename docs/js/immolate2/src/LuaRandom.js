@@ -144,5 +144,40 @@ export class LuaRandom {
     }
 }
 
+function fract(n) {
+    return n % 1;
+}
+
+export function pseudohash(seed) {
+    let num = 1;
+    for (let i = seed.length; i > 0; i--) {
+        const charCode = seed.charCodeAt(i - 1);
+        num = fract(1.1239285023 / num * charCode * Math.PI + Math.PI * i);
+    }
+    return isNaN(num) ? NaN : num;
+}
+
+const inv_prec = Math.pow(10, 13);
+const two_inv_prec = Math.pow(2, 13);
+const five_inv_prec = Math.pow(5, 13);
+
+function nextAfter(x, direction) {
+    const epsilon = Number.EPSILON;
+    return direction > x ? x + epsilon : x - epsilon;
+}
+
+export function round13(x) {
+    const tentative = Math.floor(x * inv_prec) / inv_prec;
+    const truncated = (x * two_inv_prec % 1) * five_inv_prec;
+
+    if (
+        tentative !== x &&
+        tentative !== nextAfter(x, 1) &&
+        truncated % 1 >= 0.5
+    ) {
+        return (Math.floor(x * inv_prec) + 1) / inv_prec;
+    }
+    return tentative;
+}
 // Test
 console.log(LuaRandom.random(0.0)); // Should output 0.794206292431241
